@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 00:42:45 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/01/24 12:23:43 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/01/24 17:30:06 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ class vector
 		typedef typename allocator_type::const_pointer		const_iterator;
 //reverse_iterator ? + const
 
-	/*	constructor, destructor, operator	*/
+	/*	CONSTRUCTOR, DESTRUCTOR, OPERATOR	*/
 
 		//default constructor
 		explicit vector (const allocator_type& alloc = allocator_type()) : 
@@ -68,7 +68,6 @@ class vector
 	
 //vector(InputIterator first, InputIterator last);	
 	
-	
 		vector(const vector& rhs) : _size(rhs.size()), _capacity(rhs.capacity()), _array(new T[_capacity])
 		{
 			for (size_type i = 0; i < rhs.size(); i++)
@@ -77,7 +76,8 @@ class vector
 
 		~vector()
 		{
-			delete [] _array;
+			_alloc.deallocate(_array, _capacity);
+			_alloc.destroy(_array);						
 			return ;
 		}
 
@@ -96,16 +96,13 @@ class vector
 		}
 
 
-	/*	capacity	*/
+	/*	CAPACITY	*/
 
-		bool empty() const
-		{
-			return (_size == 0);
-		}
 		size_type size() const 
 		{
 			return (_size);
 		}
+
 		// size_type max_size() const
 		// {
 		// 	return ((size_t)(-1) / sizeof(ft::vector));
@@ -114,35 +111,63 @@ class vector
 		//resizes the container so that it contains n elements
 		void resize (size_type n, value_type val = value_type())
 		{
-			
+			while (n > _size)
+				push_back(val);
+			while (n < _size)
+				pop_back();
+			return ;
 		}
 		
 		size_type capacity() const
 		{
 			return (_capacity);
 		}
-		// void resize (size_type n, T val) //TODO
-		// {
-		// 	if (n < size())
-		// 	{
-		// 		_size = n;
-		// 		return ;
-		// 	}
-		// 	else if ()
-		// }
-		// void reserve(size_type n)
-		// {
-		// 	//TODO	
-		// }
-
-
-	/*	element access	*/
 		
-		T & operator[](size_type index)
+		bool empty() const
 		{
-			// if (index >= size())
-			// 	return (NULL);
-			return (_array[index]);
+			return (_size == 0);
+		}
+
+		//requests that the vector capacity be at least enough to contain n elements
+		void reserve(size_type n)
+		{
+			size_t	new_capacity;
+			//make sure the new_cap is at least 2x > than actual capacity
+			if (n <= _capacity * 2)
+				new_capacity = _capacity * 2;
+			else
+				new_capacity = n + 1;
+//max_size error with a throw
+			if ((n > _capacity))
+			{
+				if (_capacity == 0) //first alloc
+				{
+					_array = _alloc.allocate(new_capacity);
+					_capacity = new_capacity;
+				}
+				else				//realloc 
+				{
+					value_type	*new_array;
+					new_array = _alloc.allocate(new_capacity);
+					for (size_t i = 0; i < _size; i++)	//copies array into new_rray by constructing on allocated slots
+						_alloc.construct(new_array + i, _array[i]);
+					_alloc.deallocate(_array, _capacity);
+					_alloc.destroy(_array);
+					_array = new_array;
+					_capacity = new_capacity;
+				}
+			}
+		}
+
+
+	/*	ELEMENT ACCESS	*/
+		
+		reference operator[] (size_type n)
+		{
+//handle error
+//			if (n < _size)
+				return (_array[n]);
+//			return (???)
 		}
 		T & at(size_type index)
 		{
@@ -160,12 +185,15 @@ class vector
 		}
 
 
-	/*	modifiers	*/
+	/*	MODIFIERS	*/
 
 		template <class InputIterator>
 		void assign (InputIterator first, InputIterator last)
 		{
-			//todo
+			(void)first;
+			(void)last;
+			clear();
+//todo
 		}
 
 		void assign (size_type n, const value_type& val)
@@ -174,31 +202,22 @@ class vector
 			resize(n, val);			
 		}
 
-		void push_back(const T& val)
+		//add a value to the vector, realloc x2 if already full
+		void push_back (const value_type& val)
 		{
-			if (_size < _capacity)
-			{
-				_array[_size] = val;
-				_size++;			
-			}
-			else
-			{
-				_capacity *= 2;
-				T* newarray = new T[_capacity];
-				for (size_type i = 0; i < size(); i++)
-					newarray[i] = _array[i];
-				newarray[_size] = val;
-				_size++;				
-				delete [] _array;
-				_array = newarray;
-				
-			}	
+			if (_size == _capacity)
+				reserve(_size + 1);
+			//no need to allocate, done in reserve
+			_alloc.construct(_array + _size, val);
+			_size++;
 		}
-	
-		void pop_back()
+
+		//remove last vector value
+		void pop_back ()
 		{
 			if (size() == 0)
 				return ;
+			_alloc.destroy(_array + _size - 1);
 			_size--;
 		}
 
@@ -224,12 +243,12 @@ class vector
 		void clear()
 		{
 			for (size_type i = 0; i < _size; i++)
-				alloc.destroy(&_array[i]);
+				_alloc.destroy(&_array[i]);
 			_size = 0;
 		}
 			
 
-	/*	non-member function operators	*/
+	/*	NON-MEMBER FUNCTION OPERATORS	*/
 //GET OUT BITCH
 
 		bool	operator==(const vector& rhs) const
@@ -279,10 +298,10 @@ class vector
 
 //	private:
 
+		allocator_type	_alloc;
 		size_type		_size;
 		size_type		_capacity;
 		value_type*		_array;
-		allocator_type	_alloc;
 		
 };
 
