@@ -105,7 +105,7 @@ class vector
 
 		size_type max_size() const
 		{
-			return ((size_t)(-1) / sizeof(ft::vector));
+			return ((size_t)(-1) / sizeof(ft::vector<value_type>));
 		}
 
 		//resizes the container so that it contains n elements
