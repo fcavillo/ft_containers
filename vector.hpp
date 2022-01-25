@@ -33,7 +33,7 @@ class vector
 		typedef T					value_type;
 		typedef Alloc				allocator_type;
 		typedef size_t				size_type;
-		typedef ptrdiff_t			difference_type;
+		typedef std::ptrdiff_t			difference_type;
 		typedef typename allocator_type::reference			reference;
 		typedef typename allocator_type::const_reference	const_reference;
 		typedef typename allocator_type::pointer			pointer;
@@ -103,10 +103,10 @@ class vector
 			return (_size);
 		}
 
-		// size_type max_size() const
-		// {
-		// 	return ((size_t)(-1) / sizeof(ft::vector));
-		// }
+		size_type max_size() const
+		{
+			return ((size_t)(-1) / sizeof(ft::vector));
+		}
 
 		//resizes the container so that it contains n elements
 		void resize (size_type n, value_type val = value_type())
@@ -164,26 +164,45 @@ class vector
 		
 		reference operator[] (size_type n)
 		{
-//handle error
-//			if (n < _size)
-				return (_array[n]);
-//			return (???)
+			return (_array[n]);
 		}
-		T & at(size_type index)
+
+		//same as [] but with out_of_range exception
+		reference at (size_type n)
 		{
-			if (index < 0 || index >= size())
-				throw std::out_of_range("Out of range error");
-			return (_array[index]);			
+			if (n >= _size || n < 0)
+				throw std::out_of_range("Error :\t vector::at :\t Out of range error");
+			return (_array[n]);			
 		}
-		T & front()
+
+		const_reference at (size_type n) const
+		{
+			if (n >= _size || n < 0)
+				throw std::out_of_range("Error :\t vector::at :\t Out of range error");
+			return (_array[n]);			
+		}
+
+		//first element in container
+		reference front()
 		{
 			return (_array[0]);
 		}
-		T & back()
+
+		const_reference front() const
 		{
-			return (_array[size() - 1]);
+			return (_array[0]);
 		}
 
+		//last element in container
+		reference back()
+		{
+			return (_array[_size - 1]);
+		}
+
+		const_reference back() const
+		{
+			return (_array[_size - 1]);
+		}
 
 	/*	MODIFIERS	*/
 
