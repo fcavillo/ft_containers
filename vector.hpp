@@ -79,8 +79,15 @@ class vector
 
 		~vector()
 		{
-			_alloc.deallocate(_array, _capacity);
-			_alloc.destroy(_array);						
+			if (_array)
+			{
+				std::cout << "destroy bitch1" << std::endl;
+				for (iterator it = begin(); it != end(); it++)
+					_alloc.destroy(it);
+				std::cout << "destroy bitch2" << std::endl;
+				_alloc.deallocate(_array, _capacity);
+				std::cout << "destroy bitch3" << std::endl;
+			}
 			return ;
 		}
 
@@ -173,10 +180,10 @@ class vector
 			if (n > max_size())
 				throw std::length_error("Error:\t vector::reserve : n > max_size");
 			//make sure the new_cap is at least 2x > than actual capacity
-			if (n <= _capacity * 2)
-				new_capacity = _capacity * 2;
+			if (n <= _size * 2)
+				new_capacity = _size * 2;
 			else
-				new_capacity = n + 1;
+				new_capacity = n;
 			if ((n > _capacity))
 			{
 				if (_capacity == 0) //first alloc
@@ -190,8 +197,12 @@ class vector
 					new_array = _alloc.allocate(new_capacity);
 					for (size_t i = 0; i < _size; i++)	//copies array into new_array by constructing on allocated slots
 						_alloc.construct(new_array + i, _array[i]);
-					_alloc.deallocate(_array, _capacity);
-					_alloc.destroy(_array);
+					// _alloc.deallocate(_array, _capacity);
+					// _alloc.destroy(_array);
+					for (iterator it = begin(); it != end(); it++)
+						_alloc.destroy(it);
+					_alloc.deallocate(_array, _capacity);				
+//wow wow wow this is nonsense 
 					_array = new_array;
 					_capacity = new_capacity;
 				}
@@ -330,8 +341,12 @@ class vector
 			iterator	it = position;
 
 			_alloc.destroy(position);
-			for (iterator tmp = it; tmp != end(); tmp++)
+			for (iterator tmp = position; tmp != end(); tmp++)
+			{
 				_alloc.construct(tmp, *(tmp + 1));
+//necessary ?	// if (tmp + 1 != end())
+				// 	_alloc.destroy(tmp + 1);
+			}
 			_size--;
 			return (it);
 		}
