@@ -15,6 +15,9 @@
 
 #include <iostream>
 #include <memory>
+#include <stdexcept>
+#include <algorithm>
+//#include <vector>
 
 /*
 **  vectors allocate the size for a multi-element array.
@@ -42,7 +45,7 @@ class vector
 		typedef typename allocator_type::const_pointer		const_iterator;
 //reverse_iterator ? + const
 
-	/*	CONSTRUCTOR, DESTRUCTOR, OPERATOR	*/
+	/*	CONSTRUCTOR, DESTRUCTOR, OPERATOR=	*/
 
 		//default constructor
 		explicit vector (const allocator_type& alloc = allocator_type()) : 
@@ -81,23 +84,48 @@ class vector
 			return ;
 		}
 
-		vector & operator=(const vector & rhs)
+		vector & operator= (const vector & x)
 		{
-			if (rhs.size() > size())
+			if (x.size() > size())
 			{
-				delete _array;
-				_capacity = rhs.size();
-				_array = new T[capacity()];
+				for (size_t i = 0; i < _size; i++)
+					_alloc.destroy(_array[i]);
 			}
-			for (size_type i = 0; i < rhs.size(); i++)
-				_array[i] = rhs._array[i];
-			_size = rhs.size();
+			for (size_type i = 0; i < x.size(); i++)
+				_array[i] = x._array[i];
+			_size = x.size();
 			return *this;
 		}
 
 
-	/*	CAPACITY	*/
+	/*	ITERATORS	*/
 
+		iterator begin()
+		{
+			iterator	beg = &_array[0];
+			return (beg);
+		}
+
+		const_iterator begin() const
+		{
+			const_iterator	beg = &_array[0];
+			return (beg);
+		}
+
+		iterator end()
+		{
+			iterator	end = &_array[_size];
+			return (end);
+		}
+
+		const_iterator end() const
+		{
+			const_iterator	end = &_array[_size];
+			return (end);
+		}
+
+	/*	CAPACITY	*/
+    
 		size_type size() const 
 		{
 			return (_size);
@@ -105,7 +133,16 @@ class vector
 
 		size_type max_size() const
 		{
-			return ((size_t)(-1) / sizeof(ft::vector<value_type>));
+			size_type	max = 0;
+			try
+			{
+				max = _alloc.max_size();
+			}
+			catch (std::exception &e)
+			{
+				std::cout << "Error :\t vector::max_size : " << e.what() << std::endl;
+			}
+			return (max);
 		}
 
 		//resizes the container so that it contains n elements
@@ -132,12 +169,14 @@ class vector
 		void reserve(size_type n)
 		{
 			size_t	new_capacity;
+
+			if (n > max_size())
+				throw std::length_error("Error:\t vector::reserve : n > max_size");
 			//make sure the new_cap is at least 2x > than actual capacity
 			if (n <= _capacity * 2)
 				new_capacity = _capacity * 2;
 			else
 				new_capacity = n + 1;
-//max_size error with a throw
 			if ((n > _capacity))
 			{
 				if (_capacity == 0) //first alloc
@@ -149,7 +188,7 @@ class vector
 				{
 					value_type	*new_array;
 					new_array = _alloc.allocate(new_capacity);
-					for (size_t i = 0; i < _size; i++)	//copies array into new_rray by constructing on allocated slots
+					for (size_t i = 0; i < _size; i++)	//copies array into new_array by constructing on allocated slots
 						_alloc.construct(new_array + i, _array[i]);
 					_alloc.deallocate(_array, _capacity);
 					_alloc.destroy(_array);
@@ -171,14 +210,14 @@ class vector
 		reference at (size_type n)
 		{
 			if (n >= _size || n < 0)
-				throw std::out_of_range("Error :\t vector::at :\t Out of range error");
+				throw std::out_of_range("Error :\t vector::at : Out of range error");
 			return (_array[n]);			
 		}
 
 		const_reference at (size_type n) const
 		{
 			if (n >= _size || n < 0)
-				throw std::out_of_range("Error :\t vector::at :\t Out of range error");
+				throw std::out_of_range("Error :\t vector::at : Out of range error");
 			return (_array[n]);			
 		}
 
@@ -209,10 +248,8 @@ class vector
 		template <class InputIterator>
 		void assign (InputIterator first, InputIterator last)
 		{
-			(void)first;
-			(void)last;
 			clear();
-//todo
+			insert(begin(), first, last);
 		}
 
 		void assign (size_type n, const value_type& val)
@@ -240,24 +277,81 @@ class vector
 			_size--;
 		}
 
-		void insert(size_type position, const T & val)
+		//inserts val at position, returning iterator to the position
+		iterator insert (iterator position, const value_type& val)
 		{
-			if (position < 0 || position >= size())
-				return ;
-			push_back(_array[size() - 1]);
-			for (size_type i = size() - 1; i > position ; i--)
-				_array[i] = _array[i - 1]; 		
-			_array[position] = val;	
+			size_t	pos = position - begin();	//convert position to a size_t
+			size_t	n = 1;
+
+			insert(position, n, val);
+			return (&_array[pos]);
 		}
-		void erase(size_type position)
+
+		//inserts n * val from position
+		void insert (iterator position, size_type n, const value_type& val)
 		{
-			if (position < 0 || position >= size())
+			vector		tmp;
+			iterator	it = begin();
+
+			if (n <= 0)
 				return ;
-			for (size_type i = position; i < size() - 1; i++)
-				_array[i] = _array[i + 1];
-			_size--; 
+			//reserve might change the overall capacity
+			tmp.reserve(_size + n); 
+			for (; it != position; it++)
+				tmp.push_back(*it);
+			for (; n > 0; n--)
+				tmp.push_back(val);
+			for (; it != end(); it++)
+				tmp.push_back(*it);
+			swap(tmp);
 		}
-		
+
+		//insert an array from first to last from position
+		template <class InputIterator>
+		void insert (iterator position, InputIterator first, InputIterator last)
+		{
+			vector		tmp;
+			iterator	it = begin();
+
+			if (it == NULL)
+				return;
+			for (; it != position; it++)
+				tmp.push_back(*it);
+			for (; first != last; first++)
+				tmp.push_back(*first);
+			for (; it != end(); it++)
+				tmp.push_back(*it);
+			swap(tmp);
+		}		
+
+		//erase val from position
+		iterator erase (iterator position)
+		{
+			iterator	it = position;
+
+			_alloc.destroy(position);
+			for (iterator tmp = it; tmp != end(); tmp++)
+				_alloc.construct(tmp, *(tmp + 1));
+			_size--;
+			return (it);
+		}
+				
+		//erase vals from first to last
+		iterator erase (iterator first, iterator last)
+		{
+			for (; first != last; --last)
+				first = erase(first);
+			return (last);
+		}		
+		//exchange this' content with x's
+		void swap (vector& x)
+		{
+			std::swap(this->_alloc, x._alloc);
+			std::swap(this->_size, x._size);
+			std::swap(this->_capacity, x._capacity);
+			std::swap(this->_array, x._array);
+		}
+
 		//empty vector
 		void clear()
 		{
@@ -310,10 +404,12 @@ class vector
 		}
 		
 		
-		// allocator_type get_allocator() const
-		// {
-		// 	return (Alloc.)
-		// }
+	/*	ALLOCATOR	*/
+
+		allocator_type get_allocator() const
+		{
+			return (_alloc);
+		}
 
 //	private:
 
