@@ -64,12 +64,12 @@ class vector
 		_size(0), 
 		_capacity(0), 
 		_array(NULL)
-		{					
+		{
 			_array = _alloc.allocate(n);
 			_capacity = n;
 			while (n--)
 			{
-				_alloc.construct(_array[_size]);
+				_alloc.construct(_array + _size, val);
 				_size++;
 			}
 //			assign(n, val);
@@ -373,7 +373,7 @@ class vector
 			allocator_type	tmp_alloc 	= _alloc;
 			size_type		tmp_size 	= _size;
 			size_type		tmp_capacity = _capacity;
-			value_type*		tmp_array 	= _ array;
+			value_type*		tmp_array 	= _array;
 
 			x._alloc 	= this->_alloc;
 			x._size 	= this->_size;
@@ -383,7 +383,7 @@ class vector
 			this->_array 	= tmp_array;
 			this->_size 	= tmp_size;
 			this-> _capacity = tmp_capacity;
-			this->_alloc	 = tmp__alloc;
+			this->_alloc	 = tmp_alloc;
 			return;
 		}
 

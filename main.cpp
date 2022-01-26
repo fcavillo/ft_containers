@@ -17,20 +17,33 @@
 
 int		main()
 {
-	ft::vector<int>	vect;
-	ft::vector<int>	vect2(5, 3);
-	std::vector<int>		rvect;
+	// ft::vector<int>	vect;
+	// ft::vector<int>	vect2(5, 3);
+	// std::vector<int>		rvect;
 
-	ft::vector<int> vct(5);
-	ft::vector<int> vct2;
-
-	const int cut = 3;
-
+	ft::vector<int> vct(7);
+//	std::cout << vct << std::endl;
+//	std::vector<int>		vct(5);
 	for (unsigned long int i = 0; i < vct.size(); ++i)
-		vct[i] = (vct.size() - i) * 7;
- 	std::cout << vct << " " << vct.size() << "/" << vct.capacity() << std::endl;
-	vct2.insert(vct2.begin(), vct.begin(), vct.begin() + cut);
- 	std::cout << vct2 << " " << vct2.size() << "/" << vct2.capacity() << std::endl;
+	{
+//		std::cout << "i = " << i << " size = " << vct.size() << "* = " << (vct.size() - i) * 3 << std::endl;
+		vct.at(i) = (vct.size() - i) * 3;
+		std::cout << "vct.at(): " << vct.at(i) << " | ";
+		std::cout << "vct[]: " << vct[i] << std::endl;
+	}
+	std::cout << "size: " << vct.size() << std::endl;
+	std::cout << "capacity: " << vct.capacity() << std::endl;
+	std::cout << "max_size: " << vct.max_size() << std::endl;
+
+//	ft::vector<int> vct2;
+
+	// const int cut = 3;
+
+	// for (unsigned long int i = 0; i < vct.size(); ++i)
+	// 	vct[i] = (vct.size() - i) * 7;
+ 	// std::cout << vct << " " << vct.size() << "/" << vct.capacity() << std::endl;
+	// vct2.insert(vct2.begin(), vct.begin(), vct.begin() + cut);
+ 	// std::cout << vct2 << " " << vct2.size() << "/" << vct2.capacity() << std::endl;
 
 
 // 	std::cout << vect2 << " " << vect2.size() << "/" << vect2.capacity() << std::endl;
