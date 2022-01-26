@@ -63,18 +63,27 @@ class vector
 		_alloc(alloc),
 		_size(0), 
 		_capacity(0), 
-		_array(NULL)						
-		{							
-			assign(n, val);
-			return ;
+		_array(NULL)
+		{					
+			_array = _alloc.allocate(n);
+			_capacity = n;
+			while (n--)
+			{
+				_alloc.construct(_array[_size]);
+				_size++;
+			}
+//			assign(n, val);
 		}
-	
+
 //vector(InputIterator first, InputIterator last);	
 	
-		vector(const vector& rhs) : _size(rhs.size()), _capacity(rhs.capacity()), _array(new T[_capacity])
+		vector(const vector& rhs) :
+		_alloc(rhs._alloc),
+		_size(rhs.size()),
+		_capacity(rhs.capacity()), 
+		_array(new T[_capacity])
 		{
-			for (size_type i = 0; i < rhs.size(); i++)
-				_array[i] = rhs._array[i];
+			insert(begin(), rhs.begin(), rhs.end());
 		}
 
 		~vector()
@@ -93,14 +102,10 @@ class vector
 
 		vector & operator= (const vector & x)
 		{
-			if (x.size() > size())
-			{
-				for (size_t i = 0; i < _size; i++)
-					_alloc.destroy(_array[i]);
-			}
-			for (size_type i = 0; i < x.size(); i++)
-				_array[i] = x._array[i];
-			_size = x.size();
+			if (x == *this)
+				return *this;
+			clear();
+			insert(begin(), x.begin(), x.end());
 			return *this;
 		}
 
@@ -179,7 +184,7 @@ class vector
 
 			if (n > max_size())
 				throw std::length_error("Error:\t vector::reserve : n > max_size");
-			//make sure the new_cap is at least 2x > than actual capacity
+			//make sure the new_cap is at least 2x > than actual size
 			if (n <= _size * 2)
 				new_capacity = _size * 2;
 			else
@@ -324,10 +329,11 @@ class vector
 			vector		tmp;
 			iterator	it = begin();
 
-			if (it == NULL)
-				return;
-			for (; it != position; it++)
-				tmp.push_back(*it);
+//			if (it != NULL)
+//			{
+				for (; it != position; it++)
+					tmp.push_back(*it);
+//			}
 			for (; first != last; first++)
 				tmp.push_back(*first);
 			for (; it != end(); it++)
@@ -361,10 +367,24 @@ class vector
 		//exchange this' content with x's
 		void swap (vector& x)
 		{
-			std::swap(this->_alloc, x._alloc);
-			std::swap(this->_size, x._size);
-			std::swap(this->_capacity, x._capacity);
-			std::swap(this->_array, x._array);
+			if (x == *this)
+				return;
+			
+			allocator_type	tmp_alloc 	= _alloc;
+			size_type		tmp_size 	= _size;
+			size_type		tmp_capacity = _capacity;
+			value_type*		tmp_array 	= _ array;
+
+			x._alloc 	= this->_alloc;
+			x._size 	= this->_size;
+			x._capacity = this->_capacity;
+			x._array 	= this->_array;
+
+			this->_array 	= tmp_array;
+			this->_size 	= tmp_size;
+			this-> _capacity = tmp_capacity;
+			this->_alloc	 = tmp__alloc;
+			return;
 		}
 
 		//empty vector
