@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 01:24:09 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/01/27 15:26:54 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/01/27 17:01:48 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,26 +17,44 @@
 
 int		main()
 {
-	 ft::vector<int>	vect(1, 1);
+	 ft::vector<std::string>	vect(5);
 	//  std::vector<int>	vect;
 	// ft::vector<int>	vect2(5, 3);
 	// std::vector<int>		rvect;
 	std::cout << "1" << std::endl;
-	 vect.push_back(2);
-	 vect.push_back(3);
-	 vect.push_back(4);
-	// for (size_t i = 0; i < vect.size(); i++)
-	// 	std::cout << vect[i] << std::endl;	
+	//  vect.push_back(2);
+	//  vect.push_back(3);
+	//  vect.push_back(4);
+	for (unsigned long int i = 0; i < vect.size(); ++i)
+		vect[i] = std::string((vect.size() - i), i + 65);
+	for (size_t i = 0; i < vect.size(); i++)
+		std::cout << vect[i] << std::endl;	
 //	vect.assign(2, 5);
+	 std::cout << "2" << std::endl;
+	// for (size_t i = 0; i < vect.size(); i++)
+	// 	std::cout << vect[i] << std::endl;
+	// vect.erase(vect.begin());
+	// for (size_t i = 0; i < vect.size(); i++)
+	// 	std::cout << vect[i] << std::endl;
+	static int i = 0;
+	vect.erase(vect.begin());
+	 std::cout << "2.3" << std::endl;
+	vect.erase(vect.begin() + 2);
+	 std::cout << "2.5" << std::endl;
+	std::cout << "[" << i++ << "] " << "erase: " << (vect.erase(vect.begin() + 2)) - vect.begin() << std::endl;
+	for (size_t i = 0; i < vect.size(); i++)
+		std::cout << vect[i] << std::endl;	
 	std::cout << "2" << std::endl;
-
-	ft::vector<int>		vect2(vect);
-	std::cout << "vct[0] = " << vect2[0] << std::endl;
-	std::cout << "3" << std::endl;
-	std::cout << "f = ";
-	std::cout << vect2.front() << std::endl;
-	std::cout << "e = ";
-	std::cout << vect2.end() << std::endl;
+	std::cout << "size: " << vect.size() << std::endl;
+	std::cout << "capacity: " << vect.capacity() << std::endl;
+	std::cout << "max_size: " << vect.max_size() << std::endl;
+	// ft::vector<int>		vect2(vect);
+	// std::cout << "vct[0] = " << vect2[0] << std::endl;
+	// std::cout << "3" << std::endl;
+	// std::cout << "f = ";
+	// std::cout << vect2.front() << std::endl;
+	// std::cout << "e = ";
+	// std::cout << vect2.end() << std::endl;
 	
 
 // 	for (size_t i = 0; i < vect2.size(); i++)

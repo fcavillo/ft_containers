@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 00:42:45 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/01/27 16:31:22 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/01/27 17:03:34 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -405,15 +405,19 @@ class vector
 		iterator erase (iterator position)
 		{
 			iterator	it = position;
-
+// std::cout << "in erase" << std::endl;
 			_alloc.destroy(position);
-			for (iterator tmp = position; tmp != end(); tmp++)
+// std::cout << "destroyed" << std::endl;
+			for (iterator tmp = position; tmp != end() - 1; tmp++)
 			{
+// std::cout << "constructin'" << std::endl;
 				_alloc.construct(tmp, *(tmp + 1));
 //necessary ?	// if (tmp + 1 != end())
 				// 	_alloc.destroy(tmp + 1);
+// std::cout << "constructed'" << std::endl;
 			}
 			_size--;
+// std::cout << "erase done" << std::endl;
 			return (it);
 		}
 				
