@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 00:42:45 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/01/24 17:30:06 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/01/27 12:28:05 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,9 @@
 #include <memory>
 #include <stdexcept>
 #include <algorithm>
+
+
+#include "utils.hpp"
 //#include <vector>
 
 /*
@@ -75,7 +78,25 @@ class vector
 //			assign(n, val);
 		}
 
-//vector(InputIterator first, InputIterator last);	
+
+		//enable_if only lets the 'last' parameter exist as long as it is not an int, to counter the previous constructor
+		template <class InputIterator>
+		vector (InputIterator first, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type last,
+				const allocator_type &alloc = allocator_type()) :
+		_alloc(alloc),
+		_size(0)
+		{
+			size_t	s = last - first;
+
+			_array = _alloc.allocate(s);
+			_capacity = s;
+
+			while (s--)
+			{
+				_alloc.construct(_array + _size, *first++);
+				_size++;
+			}
+		}
 	
 		vector(const vector& rhs) :
 		_alloc(rhs._alloc),
@@ -90,12 +111,12 @@ class vector
 		{
 			if (_array)
 			{
-				std::cout << "destroy bitch1" << std::endl;
+				// std::cout << "destroy bitch1" << std::endl;
 				for (iterator it = begin(); it != end(); it++)
 					_alloc.destroy(it);
-				std::cout << "destroy bitch2" << std::endl;
+				// std::cout << "destroy bitch2" << std::endl;
 				_alloc.deallocate(_array, _capacity);
-				std::cout << "destroy bitch3" << std::endl;
+				// std::cout << "destroy bitch3" << std::endl;
 			}
 			return ;
 		}
@@ -323,8 +344,10 @@ class vector
 		}
 
 		//insert an array from first to last from position
+		//only use this insert is the InputIterators sent are indeed pointers
 		template <class InputIterator>
-		void insert (iterator position, InputIterator first, InputIterator last)
+		void insert (iterator position, InputIterator first, InputIterator last,
+		typename ft::enable_if<!ft::is_integral<InputIterator>::value >::type* = 0)
 		{
 			vector		tmp;
 			iterator	it = begin();
@@ -403,9 +426,10 @@ class vector
 		{
 			if (size() != rhs.size())
 				return (false);
-			for (int i = 0; i < size(); i++)
+			for (size_t i = 0; i < size(); i++)
 				if (_array[i] != rhs._array[i])
 					return (false);
+			return (true);
 		}
 		bool	operator!=(const vector& rhs) const
 		{
