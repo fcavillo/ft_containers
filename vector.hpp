@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 00:42:45 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/01/27 14:27:30 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/01/27 16:31:22 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -243,7 +243,12 @@ class vector
 		
 		reference operator[] (size_type n)
 		{
-			return (_array[n]);
+			return (*(_array + n));
+		}
+
+		const_reference operator[] (size_type n) const
+		{
+			return (*(_array + n));
 		}
 
 		//same as [] but with out_of_range exception
@@ -264,23 +269,23 @@ class vector
 		//first element in container
 		reference front()
 		{
-			return (_array[0]);
+			return (*_array);
 		}
 
 		const_reference front() const
 		{
-			return (_array[0]);
+			return (*_array);
 		}
 
 		//last element in container
 		reference back()
 		{
-			return (_array[_size - 1]);
+			return (*(_array + size() - 1));
 		}
 
 		const_reference back() const
 		{
-			return (_array[_size - 1]);
+			return (*(_array + size() - 1));
 		}
 
 	/*	MODIFIERS	*/
@@ -302,7 +307,7 @@ class vector
 		//add a value to the vector, realloc x2 if already full
 		void push_back (const value_type& val)
 		{
-// std::cout << "push_back" << std::endl;
+//  std::cout << "pushing_back " << val << " size = " << size() << "/" << capacity() << std::endl;
 			if (_size == _capacity)
 			{
 				size_t	new_cap;
@@ -316,6 +321,7 @@ class vector
 			//no need to allocate, done in reserve
 			_alloc.construct(_array + _size, val);
 			_size++;
+// std::cout << "pushed_back " << val << " size = " << size() << "/" << capacity() << "[i] = " << _array[_size-1] <<std::endl;
 		}
 
 		//remove last vector value
@@ -342,7 +348,7 @@ class vector
 		{
 			vector		tmp;
 			iterator	it = begin();
-
+// std::cout << "inserts n * val from position" << std::endl;
 			if (n <= 0)
 				return ;
 			//reserve might change the overall capacity
@@ -353,6 +359,7 @@ class vector
 				tmp.push_back(val);
 			for (; it != end(); it++)
 				tmp.push_back(*it);
+				
 			swap(tmp);
 		}
 
@@ -364,17 +371,34 @@ class vector
 		{
 			vector		tmp;
 			iterator	it = begin();
+// std::cout << "insert an array from first to last from position" << std::endl;
+// std::cout << "1 size = " << size() << "/" << capacity() <<std::endl;
 
-//			if (it != NULL)
-//			{
+			// if (it != NULL)
+			// {
 				for (; it != position; it++)
+				{
 					tmp.push_back(*it);
-//			}
+// std::cout << "pb old" << std::endl;				
+				}
+			// }
 			for (; first != last; first++)
+			{
 				tmp.push_back(*first);
+// std::cout << "pb new" << std::endl;				
+			}
 			for (; it != end(); it++)
+			{
 				tmp.push_back(*it);
+// std::cout << "pb end old" << std::endl;				
+			}
+
+// std::cout << " size = " << size() << "/" << capacity() <<std::endl;
+// std::cout << "tmp.[0] = " << tmp._array[0] <<std::endl;			
 			swap(tmp);
+// std::cout << "[0] = " << _array[0] <<std::endl;			
+// std::cout << "finished insert" << std::endl;				
+
 		}		
 
 		//erase val from position
@@ -406,10 +430,10 @@ class vector
 			if (x == *this)
 				return;
 			
-			allocator_type	tmp_alloc 	= _alloc;
-			size_type		tmp_size 	= _size;
-			size_type		tmp_capacity = _capacity;
-			value_type*		tmp_array 	= _array;
+			allocator_type	tmp_alloc 	= x._alloc;
+			size_type		tmp_size 	= x._size;
+			size_type		tmp_capacity = x._capacity;
+			value_type*		tmp_array 	= x._array;
 
 			x._alloc 	= this->_alloc;
 			x._size 	= this->_size;
@@ -432,48 +456,7 @@ class vector
 		}
 			
 
-	/*	NON-MEMBER FUNCTION OPERATORS	*/
-//GET OUT BITCH
 
-		bool	operator==(const vector& rhs) const
-		{
-			if (size() != rhs.size())
-				return (false);
-			for (size_t i = 0; i < size(); i++)
-				if (_array[i] != rhs._array[i])
-					return (false);
-			return (true);
-		}
-		bool	operator!=(const vector& rhs) const
-		{
-			return !(*this == rhs);
-		}
-		bool	operator<(const vector& rhs) const
-		{
-			for (size_type i; i < size(); i++)
-			{
-				if (_array[i] < rhs._array[i])
-					return (true);
-			}
-			return (false);
-		}
-		bool	operator<=(const vector& rhs) const
-		{
-			return !(*this > rhs);
-		}
-		bool	operator>(const vector& rhs) const
-		{
-			for (size_type i; i < size(); i++)
-			{
-				if (_array[i] > rhs._array[i])
-					return (true);
-			}
-			return (false);
-		}
-		bool	operator>=(const vector& rhs) const
-		{
-			return !(*this < rhs);
-		}
 		
 		
 	/*	ALLOCATOR	*/
@@ -492,8 +475,56 @@ class vector
 		
 };
 
+	/*	NON-MEMBER FUNCTION OPERATORS	*/
+
+	template <class T, class Alloc>
+	bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+	{
+		if (lhs.size() != rhs.size())
+			return (false);
+		for (size_t i = 0; i < lhs.size(); i++)
+			if (lhs[i] != rhs[i])
+				return (false);
+		return (true);
+	}
+	
+	template <class T, class Alloc>
+	bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)	
+	{
+		return !(lhs == rhs);
+	}
+	
+	//using the lexicographical comparaison wich returns true if vect1 is < to vect2
+	template <class T, class Alloc>
+	bool operator< (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)	
+	{
+		return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
+	}
+	
+	//is v1 >= v2, then !v1 < v2
+	template <class T, class Alloc>
+	bool operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)	
+	{
+		return !(lhs < rhs);
+	}
+	
+	template <class T, class Alloc>
+	bool operator> (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)	
+	{
+		return (ft::lexicographical_compare(rhs.begin(), rhs.end(), lhs.begin(), lhs.end()));
+	}
+	
+	//is v1 <= v2, then !v1 > v2
+	template <class T, class Alloc>
+	bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)	
+	{
+		return !(lhs > rhs);
+	}
+
 }	//namespace end
 
+
+//to delete
 template<typename T>
 std::ostream & operator<<(std::ostream &o, ft::vector<T> const & rhs)
 {

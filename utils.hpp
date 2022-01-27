@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 11:52:07 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/01/27 12:19:14 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/01/27 14:53:02 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ namespace   ft
 {
 
 	/*	ENABLE_IF	*/
+	
 	//B is the condition, if true there is a member given to the function, preventing bad choices from the compiler
 	template< bool B, class T = void >
 	struct enable_if
@@ -83,6 +84,44 @@ namespace   ft
 	//general ft being called each time, going through is_integral_type, then is_integral_res
 	template <typename T>
 		struct is_integral : public is_integral_type<T> { };
+
+
+	/*	LEXICOGRAPHICAL_COMPARE	*/
+
+	//returns true if the range [first1,last1) compares lexicographically less than the range [first2,last2)
+	template <class InputIterator1, class InputIterator2>	
+	bool lexicographical_compare (InputIterator1 first1, InputIterator1 last1,
+								InputIterator2 first2, InputIterator2 last2)
+	{
+		while (first1 != last1)
+		{
+			if (first2 == last2 || *first2 < *first1) 
+				return false;
+			else if (*first1 < *first2)
+				return true;
+			++first1; 
+			++first2;
+		}
+		return (first2 != last2);
+	}
+
+	//same, but comp is the operation to use to compare 1 and 2
+	template <class InputIterator1, class InputIterator2, class Compare>
+	bool lexicographical_compare (InputIterator1 first1, InputIterator1 last1,
+								InputIterator2 first2, InputIterator2 last2,
+								Compare comp)
+	{
+		while (first1 != last1)
+		{
+			if (first2 == last2 || comp(*first2, *first1)) 
+				return false;
+			else if (comp(*first1, *first2))
+				return true;
+			++first1; 
+			++first2;
+		}
+		return (first2 != last2);		
+	}				
 	
 }
 
