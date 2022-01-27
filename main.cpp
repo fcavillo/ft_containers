@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 01:24:09 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/01/21 05:14:50 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/01/27 14:26:16 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,23 +17,36 @@
 
 int		main()
 {
-	// ft::vector<int>	vect;
+	 ft::vector<int>	vect(1, 1);
+	//  std::vector<int>	vect;
 	// ft::vector<int>	vect2(5, 3);
 	// std::vector<int>		rvect;
 
-	ft::vector<int> vct(7);
-//	std::cout << vct << std::endl;
-//	std::vector<int>		vct(5);
-	for (unsigned long int i = 0; i < vct.size(); ++i)
-	{
-//		std::cout << "i = " << i << " size = " << vct.size() << "* = " << (vct.size() - i) * 3 << std::endl;
-		vct.at(i) = (vct.size() - i) * 3;
-		std::cout << "vct.at(): " << vct.at(i) << " | ";
-		std::cout << "vct[]: " << vct[i] << std::endl;
-	}
-	std::cout << "size: " << vct.size() << std::endl;
-	std::cout << "capacity: " << vct.capacity() << std::endl;
-	std::cout << "max_size: " << vct.max_size() << std::endl;
+	vect.assign(3, 5);
+	for (size_t i = 0; i < vect.size(); i++)
+		std::cout << vect[i] << std::endl;	
+//	vect.assign(2, 5);
+
+	ft::vector<int>		vect2(vect);
+
+
+	for (size_t i = 0; i < vect2.size(); i++)
+		std::cout << vect2[i] << std::endl;
+	for (size_t i = 0; i < vect.size(); i++)
+		std::cout << vect[i] << std::endl;
+// 	ft::vector<int> vct(7);
+// //	std::cout << vct << std::endl;
+// //	std::vector<int>		vct(5);
+// 	for (unsigned long int i = 0; i < vct.size(); ++i)
+// 	{
+// //		std::cout << "i = " << i << " size = " << vct.size() << "* = " << (vct.size() - i) * 3 << std::endl;
+// 		vct.at(i) = (vct.size() - i) * 3;
+// 		std::cout << "vct.at(): " << vct.at(i) << " | ";
+// 		std::cout << "vct[]: " << vct[i] << std::endl;
+// 	}
+// 	std::cout << "size: " << vct.size() << std::endl;
+// 	std::cout << "capacity: " << vct.capacity() << std::endl;
+// 	std::cout << "max_size: " << vct.max_size() << std::endl;
 
 //	ft::vector<int> vct2;
 

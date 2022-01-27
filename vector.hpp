@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 00:42:45 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/01/27 12:28:05 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/01/27 14:27:30 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,10 +79,10 @@ class vector
 		}
 
 
-		//enable_if only lets the 'last' parameter exist as long as it is not an int, to counter the previous constructor
+		//enable_if only lets the last parameter exist as long as it is not an int, to counter the previous constructor
 		template <class InputIterator>
-		vector (InputIterator first, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type last,
-				const allocator_type &alloc = allocator_type()) :
+		vector (InputIterator first, InputIterator last, const allocator_type &alloc = allocator_type(),
+		typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = 0) :
 		_alloc(alloc),
 		_size(0)
 		{
@@ -98,13 +98,13 @@ class vector
 			}
 		}
 	
-		vector(const vector& rhs) :
-		_alloc(rhs._alloc),
-		_size(rhs.size()),
-		_capacity(rhs.capacity()), 
-		_array(new T[_capacity])
+		vector(const vector& x) :
+		_alloc(x._alloc),
+		_size(0),
+		_capacity(0), 
+		_array(NULL)
 		{
-			insert(begin(), rhs.begin(), rhs.end());
+			insert(begin(), x.begin(), x.end());
 		}
 
 		~vector()
@@ -114,7 +114,7 @@ class vector
 				// std::cout << "destroy bitch1" << std::endl;
 				for (iterator it = begin(); it != end(); it++)
 					_alloc.destroy(it);
-				// std::cout << "destroy bitch2" << std::endl;
+				// std::cout << "destroy bitch2 : going to dealloc" << std::endl;
 				_alloc.deallocate(_array, _capacity);
 				// std::cout << "destroy bitch3" << std::endl;
 			}
@@ -215,10 +215,12 @@ class vector
 				if (_capacity == 0) //first alloc
 				{
 					_array = _alloc.allocate(new_capacity);
+// std::cout << "first alloc" << std::endl;
 					_capacity = new_capacity;
 				}
 				else				//realloc 
 				{
+	// std::cout << "realloc, meaning the size to reserve (" << n << ") is bigger than capacity (" << this->capacity() << ")" << std::endl;
 					value_type	*new_array;
 					new_array = _alloc.allocate(new_capacity);
 					for (size_t i = 0; i < _size; i++)	//copies array into new_array by constructing on allocated slots
@@ -227,6 +229,7 @@ class vector
 					// _alloc.destroy(_array);
 					for (iterator it = begin(); it != end(); it++)
 						_alloc.destroy(it);
+	// std::cout << "dealloc" << std::endl;
 					_alloc.deallocate(_array, _capacity);				
 //wow wow wow this is nonsense 
 					_array = new_array;
@@ -283,7 +286,8 @@ class vector
 	/*	MODIFIERS	*/
 
 		template <class InputIterator>
-		void assign (InputIterator first, InputIterator last)
+		void assign (InputIterator first, InputIterator last,
+		typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = 0)
 		{
 			clear();
 			insert(begin(), first, last);
@@ -298,8 +302,17 @@ class vector
 		//add a value to the vector, realloc x2 if already full
 		void push_back (const value_type& val)
 		{
+// std::cout << "push_back" << std::endl;
 			if (_size == _capacity)
-				reserve(_size + 1);
+			{
+				size_t	new_cap;
+				
+				if (size() > 0)
+					new_cap = size() * 2;
+				else
+					new_cap = 1;
+				reserve(new_cap);
+			}
 			//no need to allocate, done in reserve
 			_alloc.construct(_array + _size, val);
 			_size++;
@@ -344,7 +357,7 @@ class vector
 		}
 
 		//insert an array from first to last from position
-		//only use this insert is the InputIterators sent are indeed pointers
+		//only use this insert if the InputIterators sent are indeed pointers
 		template <class InputIterator>
 		void insert (iterator position, InputIterator first, InputIterator last,
 		typename ft::enable_if<!ft::is_integral<InputIterator>::value >::type* = 0)
