@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 00:42:45 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/01/27 17:20:24 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/01/29 17:48:17 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,8 @@ class vector
 		typedef typename allocator_type::const_pointer		const_pointer;
 		typedef typename allocator_type::pointer			iterator;
 		typedef typename allocator_type::const_pointer		const_iterator;
-		typedef ft::reverse_iterator<iterator>				reverse_iterator;
-		typedef ft::reverse_iterator<const_iterator>		const_reverse_iterator;
+	//	typedef ft::reverse_iterator<iterator>				reverse_iterator;
+	//	typedef ft::reverse_iterator<const_iterator>		const_reverse_iterator;
 
 	/*	CONSTRUCTOR, DESTRUCTOR, OPERATOR=	*/
 
@@ -76,7 +76,6 @@ class vector
 				_alloc.construct(_array + _size, val);
 				_size++;
 			}
-//			assign(n, val);
 		}
 
 
@@ -87,8 +86,10 @@ class vector
 		_alloc(alloc),
 		_size(0)
 		{
-			size_t	s = last - first;
-
+			size_t	s = 0;
+			
+			for (InputIterator tmp = first; tmp != last; tmp++)
+				s++;
 			_array = _alloc.allocate(s);
 			_capacity = s;
 
