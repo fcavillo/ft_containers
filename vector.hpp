@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 00:42:45 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/01/29 17:48:17 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/01 14:10:22 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 #include <stdexcept>
 #include <algorithm>
 
-
+#include "reverse_iterator.hpp"
 #include "utils.hpp"
 //#include <vector>
 
@@ -46,8 +46,8 @@ class vector
 		typedef typename allocator_type::const_pointer		const_pointer;
 		typedef typename allocator_type::pointer			iterator;
 		typedef typename allocator_type::const_pointer		const_iterator;
-	//	typedef ft::reverse_iterator<iterator>				reverse_iterator;
-	//	typedef ft::reverse_iterator<const_iterator>		const_reverse_iterator;
+		typedef ft::reverse_iterator<iterator>				reverse_iterator;
+		typedef ft::reverse_iterator<const_iterator>		const_reverse_iterator;
 
 	/*	CONSTRUCTOR, DESTRUCTOR, OPERATOR=	*/
 
@@ -158,6 +158,32 @@ class vector
 			const_iterator	end = &_array[_size];
 			return (end);
 		}
+
+		reverse_iterator rbegin()
+		{
+			reverse_iterator	rbeg = &_array[_size - 1];
+			return (rbeg);
+		}
+		
+		const_reverse_iterator rbegin() const
+		{
+			const_reverse_iterator	rbeg = &_array[_size - 1];
+			return (rbeg);
+		}			
+
+		reverse_iterator rend()
+		{
+			reverse_iterator	rend = &_array[0];
+			rend--;
+			return (rend);
+		}
+		
+		const_reverse_iterator rend() const
+		{
+			const_reverse_iterator	rend = &_array[0];
+			rend--;
+			return (rend);
+		}	
 
 	/*	CAPACITY	*/
     
