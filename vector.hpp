@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 00:42:45 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/01 14:10:22 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/01 16:47:30 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,28 +161,22 @@ class vector
 
 		reverse_iterator rbegin()
 		{
-			reverse_iterator	rbeg = &_array[_size - 1];
-			return (rbeg);
+			return (reverse_iterator(this->end()));
 		}
 		
 		const_reverse_iterator rbegin() const
 		{
-			const_reverse_iterator	rbeg = &_array[_size - 1];
-			return (rbeg);
+			return (reverse_iterator(this->end()));
 		}			
 
 		reverse_iterator rend()
 		{
-			reverse_iterator	rend = &_array[0];
-			rend--;
-			return (rend);
+			return ((reverse_iterator(this->begin())));
 		}
 		
 		const_reverse_iterator rend() const
 		{
-			const_reverse_iterator	rend = &_array[0];
-			rend--;
-			return (rend);
+			return ((reverse_iterator(this->begin())));
 		}	
 
 	/*	CAPACITY	*/
