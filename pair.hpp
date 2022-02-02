@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/29 19:10:25 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/01/29 19:42:30 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/02 13:06:26 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ struct pair
 	template <class T1, class T2>
 	bool operator>  (const ft::pair<T1,T2>& lhs, const ft::pair<T1,T2>& rhs)
 	{ 
-		return (rhs < lhs); ///??https://www.cplusplus.com/reference/utility/pair/operators/
+		return (rhs < lhs);
 	}
 
 	template <class T1, class T2>

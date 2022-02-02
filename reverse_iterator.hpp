@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 17:24:33 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/01 17:06:11 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/02 12:56:58 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,9 +79,9 @@ class   reverse_iterator
 		//post-increment
 		reverse_iterator  operator++(int)
 		{
-			reverse_iterator	tmp = *this;
+			reverse_iterator	tmp(*this);
 			
-			this->_base--;
+			++(*this);
 			return (tmp);			
 		}
 		
@@ -108,7 +108,7 @@ class   reverse_iterator
 		{
 			reverse_iterator	tmp = *this;
 			
-			this->_base++;
+			--(*this);
 			return (tmp);			
 		}
 		
@@ -190,14 +190,14 @@ class   reverse_iterator
 	typename reverse_iterator<Iterator>::difference_type operator- (const reverse_iterator<Iterator>& lhs,
 																	const reverse_iterator<Iterator>& rhs)
 	{
-		return (lhs.base() - rhs.base());
+		return (rhs.base() - lhs.base());
 	}
 
 	template <class Iterator_L, class Iterator_R>
-	bool operator- (const reverse_iterator<Iterator_L>& lhs,
-					const reverse_iterator<Iterator_R>& rhs) 
+	std::ptrdiff_t operator- (const reverse_iterator<Iterator_L>& lhs,
+																	const reverse_iterator<Iterator_R>& rhs) 
 	{ 
-		return (lhs.base() - rhs.base()); 
+		return (rhs.base() - lhs.base()); 
 	}
 	
 };
