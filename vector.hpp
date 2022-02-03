@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 00:42:45 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/01 16:47:30 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/02 16:54:15 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ class vector
 		typedef ft::reverse_iterator<iterator>				reverse_iterator;
 		typedef ft::reverse_iterator<const_iterator>		const_reverse_iterator;
 
-	/*	CONSTRUCTOR, DESTRUCTOR, OPERATOR=	*/
+	/*	CONSTRUCTORS, DESTRUCTOR, OPERATOR=	*/
 
 		//default constructor
 		explicit vector (const allocator_type& alloc = allocator_type()) : 

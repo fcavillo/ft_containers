@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 11:52:07 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/01/27 17:24:21 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/02 14:58:25 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,6 +123,19 @@ namespace   ft
 		return (first2 != last2);		
 	}				
 	
-}
+	/*	LESS	*/
+
+	//function object for performing comparisons. Unless specialized, invokes operator< on type T
+	template< class T >
+	struct less
+	{
+		bool operator()( const T& lhs, const T& rhs ) const
+		{
+			return (lhs < rhs);
+		}
+	};
+
+
+};
 
 #endif
