@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/29 18:56:46 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/02 16:55:55 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/06 15:48:37 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,12 @@ template < class Key,											// map::key_type
 		   > 
 class map
 {
+	
 	public :
+	
 		typedef Key					key_type;
 		typedef T					mapped_type;
 		typedef	Compare				key_compare;
-		//value_compare ?
 		typedef Alloc				allocator_type;
 		typedef size_t				size_type;
 		typedef std::ptrdiff_t		difference_type;
@@ -46,6 +47,31 @@ class map
 		typedef ft::reverse_iterator<iterator>				reverse_iterator;
 		typedef ft::reverse_iterator<const_iterator>		const_reverse_iterator;		
 
+	private :
+
+		/*	NODE	*/
+
+		template <typename T>
+		struct	Node
+		{
+			ft::pair<const Key, T>	data;
+			Node*					parent;
+			Node*					left;
+			Node*					right;
+		};
+
+		/*	VARS	*/
+
+		Node*			_root;		//pointer to first tree element
+		Node*			_last;		//pointer to last tree element
+		size_type		_size;		//number of nodes
+		allocator_type	_alloc;
+		key_compare		_comp;		//used way of comparing keys
+		
+
+
+	public :
+	
 	/*	CONSTRUCTORS, DESTRUCTOR, OPERATOR=	*/
 
 explicit map (const key_compare& comp = key_compare(),
@@ -58,7 +84,15 @@ template <class InputIterator>
 
 map (const map& x);
 
+	private :
+	
+	/*	PRIVATE MEMBER FUNCTIONS	*/
 
+	Node*	createNode(const value_type & pair)
+	{
+		Node*	new = _alloc.allocate()
+	}
+	
 };
 
 	

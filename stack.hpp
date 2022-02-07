@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/29 17:53:20 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/01/29 18:36:39 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/04 14:29:41 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@
 namespace   ft
 {
 
-template <class T, class Container = std::deque<T> >
+template <class T, class Container = ft::vector<T> >
 class stack
 {
 	public:
@@ -43,8 +43,8 @@ class stack
 
 		explicit stack (const container_type& ctnr = container_type()) :
 		c(ctnr)
-			{
-		return ;
+		{
+			return ;
 		}
 
 	/*	MEMBER FUNCTIONS	*/
