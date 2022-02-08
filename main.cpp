@@ -6,13 +6,14 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 01:24:09 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/08 12:18:47 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/08 14:56:16 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vector.hpp"
 #include "stack.hpp"
 #include <vector>
+#include <list>
 #include "map.hpp"
 
 // when inserting then deleting, double free
@@ -20,7 +21,14 @@
 int		main()
 {
 	ft::map<int, char>	map;
+	
+	std::list<int> lst;
+	unsigned int lst_size = 7;
+	for (unsigned int i = 0; i < lst_size; ++i)
+		lst.push_back('a' + i);
 
+	std::cout << *(lst.begin()) << std::endl;
+	ft::map<int, int> mp(lst.begin(), lst.end());
 
 /*	 ft::vector<std::string>	vect(5);
 	//  std::vector<int>	vect;

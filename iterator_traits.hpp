@@ -6,12 +6,14 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 12:02:46 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/01 12:32:41 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/08 15:26:28 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef ITERATOR_TRAITS_HPP
 #define ITERATOR_TRAITS_HPP
+
+//https://www.cplusplus.com/reference/iterator/iterator/
 
 namespace   ft
 {

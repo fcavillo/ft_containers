@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 17:24:33 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/02 12:56:58 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/08 15:26:19 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 #define REVERSE_ITERATOR_HPP
 
 #include "iterator_traits.hpp"
+
+//https://www.cplusplus.com/reference/iterator/iterator/
 
 namespace ft
 {
