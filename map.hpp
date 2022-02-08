@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/29 18:56:46 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/06 15:48:37 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/08 12:40:53 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ class map
 		typedef Alloc				allocator_type;
 		typedef size_t				size_type;
 		typedef std::ptrdiff_t		difference_type;
-		typedef typename pair<const key_type, mapped_type>	value_type;
+		typedef pair<const key_type, mapped_type>			value_type;
 		typedef typename allocator_type::reference			reference;
 		typedef typename allocator_type::const_reference	const_reference;
 		typedef typename allocator_type::pointer			pointer;
@@ -51,7 +51,6 @@ class map
 
 		/*	NODE	*/
 
-		template <typename T>
 		struct	Node
 		{
 			ft::pair<const Key, T>	data;
@@ -62,11 +61,12 @@ class map
 
 		/*	VARS	*/
 
-		Node*			_root;		//pointer to first tree element
-		Node*			_last;		//pointer to last tree element
-		size_type		_size;		//number of nodes
-		allocator_type	_alloc;
-		key_compare		_comp;		//used way of comparing keys
+		Node*					_root;		//pointer to first tree element
+		Node*					_last;		//pointer to last tree element
+		size_type				_size;		//number of nodes
+		allocator_type			_allocPair;	//pair-size memory handling
+		std::allocator<Node>	_allocNode;	//pair + pointers to relatives -size memory handling
+		key_compare				_comp;		//used way of comparing keys
 		
 
 
@@ -74,23 +74,47 @@ class map
 	
 	/*	CONSTRUCTORS, DESTRUCTOR, OPERATOR=	*/
 
-explicit map (const key_compare& comp = key_compare(),
-				const allocator_type& alloc = allocator_type());
+	explicit map (const key_compare& comp = key_compare(),
+				const allocator_type& alloc = allocator_type()) :
+	_size(0),
+	_allocPair(alloc),
+	_comp(comp)
+	{
+		_last = createNode(ft::pair<const key_type, mapped_type>());	//the only node is empty, but allocated
+		_root = _last;													
+		_last->left = _last;
+		_last->right = _last;
+//or null ?		
+		return ;
+	}
 
-template <class InputIterator>
+	template <class InputIterator>
 	map (InputIterator first, InputIterator last,
 		const key_compare& comp = key_compare(),
-		const allocator_type& alloc = allocator_type());
+		const allocator_type& alloc = allocator_type())
+	_allocPair(alloc),
+	_comp(comp)
+	{
+		
+		return ;
+	}
 
 map (const map& x);
 
 	private :
 	
 	/*	PRIVATE MEMBER FUNCTIONS	*/
-
+	
+	//create a new node, construct content, set relatives to 0
 	Node*	createNode(const value_type & pair)
 	{
-		Node*	new = _alloc.allocate()
+		Node*	newNode = _allocNode.allocate(1); 
+
+		_allocPair.construct(&newNode->data, pair);
+		newNode->parent = 0;
+		newNode->left = 0;
+		newNode->right = 0;
+		return (newNode);
 	}
 	
 };

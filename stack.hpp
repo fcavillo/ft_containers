@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/29 17:53:20 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/04 14:29:41 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/08 10:33:02 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ class stack
 	/*	NON-MEMBER FUNCTION OVERLOAD	*/
 	
 	//these operators need access to the protected container_type variable,
-	//friend declaration grants access to private or protected members of the class declaring frienship
+	//friend declaration grants access to private or protected members of the class declaring friendship
 	template <class T_, class Container_>
 	friend bool operator== (const stack<T_,Container_>& lhs, const stack<T_,Container_>& rhs);
 

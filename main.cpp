@@ -6,19 +6,23 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 01:24:09 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/01/29 18:28:39 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/08 12:18:47 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vector.hpp"
 #include "stack.hpp"
 #include <vector>
+#include "map.hpp"
 
 // when inserting then deleting, double free
 
 int		main()
 {
-	 ft::vector<std::string>	vect(5);
+	ft::map<int, char>	map;
+
+
+/*	 ft::vector<std::string>	vect(5);
 	//  std::vector<int>	vect;
 	// ft::vector<int>	vect2(5, 3);
 	// std::vector<int>		rvect;
@@ -54,7 +58,7 @@ int		main()
 	ft::stack<int>	st2(st);
 
 	if (st == st2)
-		std::cout << "sameeeee" << std::endl;
+		std::cout << "sameeeee" << std::endl;*/
 	// ft::vector<int>		vect2(vect);
 	// std::cout << "vct[0] = " << vect2[0] << std::endl;
 	// std::cout << "3" << std::endl;
