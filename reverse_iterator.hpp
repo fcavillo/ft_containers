@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 17:24:33 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/08 15:26:19 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/08 17:18:51 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 #include "iterator_traits.hpp"
 
-//https://www.cplusplus.com/reference/iterator/iterator/
+//https://en.cppreference.com/w/cpp/iterator/reverse_iterator
 
 namespace ft
 {
@@ -32,14 +32,14 @@ class   reverse_iterator
 		typedef typename ft::iterator_traits<Iterator>::pointer				pointer;
 		typedef typename ft::iterator_traits<Iterator>::reference			reference;
 
-	/*	CONSTRUCTORS	*/
+	/*	CONSTRUCTORS, DESTRUCTOR	*/
 	
 		reverse_iterator() : _base()
 		{
 			return ;
 		}
 		
-		explicit reverse_iterator (iterator_type it) : _base(it)
+		explicit reverse_iterator (iterator_type it) : _base(it.base())
 		{
 			return ;
 		}
@@ -50,6 +50,19 @@ class   reverse_iterator
 			return ;
 		}
 
+	// ~reverse_iterator()
+	// {
+	// 	return ;
+	// } 
+	//no destructor on cppreference
+		
+		template< class U >
+		reverse_iterator& operator=( const reverse_iterator<U>& other )
+		{
+			_base = other.base();
+			return ;
+		}
+		
 	/*	MEMBER FUNCTIONS	*/
 	
 		iterator_type base() const

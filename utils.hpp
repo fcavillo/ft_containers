@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 11:52:07 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/02 14:58:25 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/08 17:40:40 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,11 @@ namespace   ft
 	
 	/*	LESS	*/
 
-	//function object for performing comparisons. Unless specialized, invokes operator< on type T
+	//function object for performing comparisons. Unless specialized, invokes operator < on type T
+	//	lhs  <  rhs	->	comp(lhs, rhs)
+	//	lhs  >  rhs	->	comp(rhs, lhs)
+	//	lhs <=  rhs	->	!comp(rhs, lhs)
+	//	lhs >=	rhs	->	!comp(lhs, rhs)
 	template< class T >
 	struct less
 	{

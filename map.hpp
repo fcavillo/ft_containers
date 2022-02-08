@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/29 18:56:46 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/08 15:17:19 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/08 16:52:17 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include <memory>
 #include "pair.hpp"
 #include "utils.hpp"
-#include "reverse_iterator.hpp"
+#include "map_iterator.hpp"
 
 //https://www.cplusplus.com/reference/map/map/
 
@@ -30,24 +30,6 @@ template < class Key,											// map::key_type
 		   > 
 class map
 {
-	
-	public :
-	
-		typedef Key					key_type;
-		typedef T					mapped_type;
-		typedef	Compare				key_compare;
-		typedef Alloc				allocator_type;
-		typedef size_t				size_type;
-		typedef std::ptrdiff_t		difference_type;
-		typedef ft::pair<key_type, mapped_type>				value_type;
-		typedef typename allocator_type::reference			reference;
-		typedef typename allocator_type::const_reference	const_reference;
-		typedef typename allocator_type::pointer			pointer;
-		typedef typename allocator_type::const_pointer		const_pointer;
-		typedef typename allocator_type::pointer			iterator;
-		typedef typename allocator_type::const_pointer		const_iterator;
-		typedef ft::reverse_iterator<iterator>				reverse_iterator;
-		typedef ft::reverse_iterator<const_iterator>		const_reverse_iterator;		
 
 	private :
 
@@ -61,6 +43,30 @@ class map
 			Node*					right;
 		};
 
+	
+	public :
+	
+	/*	ALIASES	*/
+	
+		typedef Key					key_type;
+		typedef T					mapped_type;
+		typedef	Compare				key_compare;
+		typedef Alloc				allocator_type;
+		typedef size_t				size_type;
+		typedef std::ptrdiff_t		difference_type;
+		typedef ft::pair<const key_type, mapped_type>			value_type;
+		typedef typename allocator_type::reference				reference;
+		typedef typename allocator_type::const_reference		const_reference;
+		typedef typename allocator_type::pointer				pointer;
+		typedef typename allocator_type::const_pointer			const_pointer;
+		typedef ft::map_iterator<Key, T, Compare, Node, false>	iterator;
+		typedef ft::map_iterator<Key, T, Compare, Node, true>	const_iterator;
+		typedef ft::reverse_iterator<iterator>					reverse_iterator;
+		typedef ft::reverse_iterator<const_iterator>			const_reverse_iterator;		
+
+
+	private :
+	
 	/*	VARS	*/
 
 		Node*					_root;		//pointer to first tree element
@@ -107,8 +113,10 @@ class map
 			_last->right = _last;
 	//++f or f++
 		std::cout << *first << std::endl;
-			for (; first != last; first++)
-				insert(*first);
+		iterator	it;
+		(void)it;
+			// for (; first != last; first++)
+			// 	insert(*first);
 			// insert(first, last);
 			(void)last;
 			return ;
