@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/29 18:56:46 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/09 16:58:26 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/09 17:11:35 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 #include "map_iterator.hpp"
 
 //https://www.cplusplus.com/reference/map/map/
+
+//start doing empty, begin, end, size..
 
 namespace   ft
 {
@@ -232,15 +234,15 @@ std::cout << "insert 3" << std::endl;
 		//returns 0 if key exists already
 		Node*	insertNode(Node* position, const value_type& pair)
 		{
-//first node creation
+			//first node creation
 			if (_root == _last)
 			{
 				_root = createNode(pair);
 
 				_root->left = _last;
 				_root->right = _last;
-				// _last->left = _root;
-				// _last->right = _root;
+				_last->left = _root;
+				_last->right = _root;
 
 				return (_root);
 			}
