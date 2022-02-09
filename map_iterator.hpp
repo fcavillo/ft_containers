@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 15:23:19 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/08 18:01:52 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/09 16:16:37 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,18 @@
 
 //https://www.cplusplus.com/reference/iterator/iterator/
 
+/*	
+*	implementation list for the map_iterator :
+*	-	constructor, copy constructor, destructor
+*	-	operator=
+*	-	pointer and reference
+*	-	operator++ pre and post-increment
+*	-	operator-- pre and post-decrement
+*	-	operator== amd operator !=
+*/
+
+
+//Const iterators to do
 namespace   ft
 {
 
@@ -22,7 +34,7 @@ template < class Key,											// map::key_type
 		   class T,												// map::mapped_type
 		   class Compare,										// map::key_compare
 		   typename Node,										// node struct
-		   bool C > 											// 1 for const, 0 for regular
+		   bool C > 											// 1 for const, 0 for regular ??
 class map_iterator
 {
 	public :
@@ -32,7 +44,6 @@ class map_iterator
 		typedef	Compare				key_compare;
 		typedef size_t				size_type;
 		typedef std::ptrdiff_t		difference_type;
-		// typedef	Node*				nodePtr;
 		typedef ft::pair<const key_type, mapped_type>				value_type;
 		typedef typename std::bidirectional_iterator_tag			iterator_category;;
 		typedef value_type				*pointer;
@@ -41,7 +52,7 @@ class map_iterator
 	private :
 
 		Node*		_node;		//curent node pointed by iterator
-		Node*		_last;		//pointer to NULL pointer Type Nil : non-existant leaves
+		Node*		_last;		//pointer to NULL pointer Type Nil : non-existant leaves, past-the-end element
 		key_compare	_comp;		//used way of comparing keys to sort the map, needed to know wich way to iterate
 
 	public :
@@ -109,10 +120,10 @@ class map_iterator
 		
 		pointer		operator->() const
 		{
-			return (&_node->content);	
+			return (&_node->data);	
 		}
 
-		//++ operator goes from one key to the immediate superior one
+		//++ pre-increment operator goes from one key to the immediate superior one
 		map_iterator&	operator++()
 		{
 			Node*	prevNode = _node;
@@ -123,35 +134,176 @@ class map_iterator
 			// 	_node == _last->right;
 			// 	return (*this);
 			// }
-
+			
 			//until reaching last and while prev >= node, we ++ (see ft::less in utils)
 			while (_node != _last && !_comp(prevNode->data.first, _node->data.first))
 			{
+//????
 				//right child is last
 				if (_node->right && _node->right == _last)
 				{
 					_node = _node->right;
 				}
-//cut some stuff				
-				//right child is higher
+//cut some stuff
+				//right child is higher, so we check the right subtree by starting at it's lowest node
 				else if (_node->right && _comp(prevNode->data.first, _node->data.first))
 				{
 					_node = _node->right;
 
 					Node* 	tmp = 0;
-					if ((tmp = searchMin(_node)))
+					if ((tmp = lowestNode(_node)))
 						_node = tmp;
 				}
-				//no right child, try again with parent
+				//no right child, try again from parent
 				else
 					_node = _node->parent;
 			}
 			return (*this);
-
-				
 		}
+
+		//++ post-increment operator goes from one key to the immediate superior one
+		map_iterator	operator++(int)
+		{
+			map_iterator	ret(*this);
+
+			// iterator is starting on last, go back to root
+			// if (_node == _last)
+			// {
+			// 	_node == _last->right;
+			// 	return (ret);
+			// }
 			
-		
+			//until reaching last and while prev >= node, we ++ (see ft::less in utils)
+			while (_node != _last && !_comp(ret->first, _node->data.first))
+			{
+//????
+				//right child is last
+				if (_node->right && _node->right == _last)
+				{
+					_node = _node->right;
+				}
+//cut some stuff
+				//right child is higher, so we check the right subtree by starting at it's lowest node
+				else if (_node->right && _comp(ret->first, _node->data.first))
+				{
+					_node = _node->right;
+
+					Node* 	tmp = 0;
+					if ((tmp = lowestNode(_node)))
+						_node = tmp;
+				}
+				//no right child, try again from parent
+				else
+					_node = _node->parent;
+			}
+			return (ret);	
+		}
+
+		//-- pre-decrement operator goes from one key to the immediate inferior one
+		map_iterator&	operator--()
+		{
+			Node*	prevNode = _node;
+
+			// iterator is starting on last, go back to root
+			// if (_node == _last)
+			// {
+			// 	_node == _last->left;
+			// 	return (*this);
+			// }
+			
+			//until reaching last and while prev <= node, we -- (see ft::less in utils)
+			while (_node != _last && !_comp(_node->data.first, prevNode->data.first))
+			{
+//????
+				//left child is last
+				if (_node->left && _node->left == _last)
+				{
+					_node = _node->left;
+				}
+//cut some stuff
+				//left child is lower, so we check the left subtree by starting at it's highest node
+				else if (_node->left && _comp(_node->data.first, prevNode->data.first))
+				{
+					_node = _node->left;
+
+					Node* 	tmp = 0;
+					if ((tmp = highestNode(_node)))
+						_node = tmp;
+				}
+				//no right child, try again from parent
+				else
+					_node = _node->parent;
+			}
+			return (*this);
+		}
+
+		//-- post-decrement operator goes from one key to the immediate inferior one
+		map_iterator	operator--(int)
+		{
+			map_iterator	ret(*this);
+
+			// iterator is starting on last, go back to root
+			// if (_node == _last)
+			// {
+			// 	_node == _last->left;
+			// 	return (ret);
+			// }
+			
+			//until reaching last and while prev <= node, we -- (see ft::less in utils)
+			while (_node != _last && !_comp(_node->data.first, ret->first))
+			{
+//????
+				//left child is last
+				if (_node->left && _node->left == _last)
+				{
+					_node = _node->left;
+				}
+//cut some stuff
+				//left child is lower, so we check the left subtree by starting at it's highest node
+				else if (_node->left && _comp(_node->data.first, ret->first))
+				{
+					_node = _node->left;
+
+					Node* 	tmp = 0;
+					if ((tmp = highestNode(_node)))
+						_node = tmp;
+				}
+				//no right child, try again from parent
+				else
+					_node = _node->parent;
+			}
+			return (ret);
+		}
+
+		bool	operator==(const map_iterator& rhs) const
+		{
+			return (rhs._node == _node);
+		}
+
+		bool	operator!=(const map_iterator& rhs) const
+		{
+			return (rhs._node != _node);
+		}
+
+	/*	PRIVATE MEMBER FUNCTIONS	*/
+	
+	private :
+
+		//returns the lowest key node from the root after recursive search
+		Node*	lowestNode(Node* root)
+		{
+			if (root && root != _last && root->left && root->left != _last)
+				return (lowestNode(root->left));
+			return (root);
+		}
+	
+		//returns the highest key node from the root after recursive search
+		Node*	highestNode(Node* root)
+		{
+			if (root && root != _last && root->right && root->right != _last)
+				return (highestNode(root->left));
+			return (root);
+		}
 	
 };
 

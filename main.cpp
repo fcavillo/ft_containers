@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 01:24:09 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/08 14:56:16 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/09 17:01:22 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,22 @@
 int		main()
 {
 	ft::map<int, char>	map;
-	
-	std::list<int> lst;
-	unsigned int lst_size = 7;
-	for (unsigned int i = 0; i < lst_size; ++i)
-		lst.push_back('a' + i);
 
-	std::cout << *(lst.begin()) << std::endl;
-	ft::map<int, int> mp(lst.begin(), lst.end());
+	map[0] = 'c';
+	std::cout << map[0] << std::endl;
+
+	map[0] = 'd';
+	std::cout << map[0] << std::endl;
+
+	map_
+
+	// std::list<int> lst;
+	// unsigned int lst_size = 7;
+	// for (unsigned int i = 0; i < lst_size; ++i)
+	// 	lst.push_back('a' + i);
+
+	// std::cout << *(lst.begin()) << std::endl;
+	// ft::map<int, int> mp(lst.begin(), lst.end());
 
 /*	 ft::vector<std::string>	vect(5);
 	//  std::vector<int>	vect;

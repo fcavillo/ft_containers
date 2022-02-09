@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/29 18:56:46 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/08 16:52:17 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/09 16:58:26 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,12 +112,10 @@ class map
 			_last->left = _last;
 			_last->right = _last;
 	//++f or f++
-		std::cout << *first << std::endl;
-		iterator	it;
-		(void)it;
-			// for (; first != last; first++)
-			// 	insert(*first);
-			// insert(first, last);
+			std::cout << *first << std::endl;
+			for (; first != last; first++)
+		 		insert(*first);
+		// insert(first, last);
 			(void)last;
 			return ;
 		}
@@ -133,6 +131,20 @@ class map
 		
 	/*	ELEMENT ACCESS	*/
 
+		//access an element : if exists, returns the content
+		//if doesn't exist, inserts a node at this key and returns the available content space reference
+		mapped_type& operator[] (const key_type& k)
+		{
+			Node*	tmp = searchNode(_root, k);
+
+			if (tmp)
+				return (tmp->data.second);
+
+			value_type	newPair = make_pair<key_type, mapped_type>(k, mapped_type()); //type != fct
+			return (insertNode(_root, newPair)->data.second);
+		}
+
+
 
 	/*	MODIFIERS	*/
 
@@ -147,7 +159,7 @@ std::cout << "insert 1" << std::endl;
 				return (ft::pair<iterator, bool>(iterator(isKeyDouble, _last, _comp), false));
 	//look for key, if exists, return that iterator with false bool
 			_size++;
-return (ft::pair<iterator, bool>(iterator(isKeyDouble, _last, _comp), false));
+return (ft::pair<iterator, bool>(iterator(isKeyDouble, _last, _comp), false)); //badddd
 		}
 
 		//inserts val at position,
@@ -196,6 +208,7 @@ std::cout << "insert 3" << std::endl;
 		}
 
 		//recursive comparison of the key with every key in the tree nodes (key = node->data.first)
+		//returns the found node, or 0
 		Node*	searchNode(Node* root, key_type key)
 		{
 			//empty tree or leaf
@@ -207,14 +220,68 @@ std::cout << "insert 3" << std::endl;
 				return (root);
 
 			//recursive loop until key is found : if the node is higher, I go left
-			if (root->content.first > key && root->left && root->left != _last)
+			if (root->data.first > key && root->left && root->left != _last)
 				return (searchNode(root->left, key));
-			else if (root->content.first < key && root->right && root->right != _last)
+			else if (root->data.first < key && root->right && root->right != _last)
 				return (searchNode(root->right, key));
 
-//case ?			
+//case where it would reach the end ?			
 			return (0); 
-				
+		}
+	
+		//returns 0 if key exists already
+		Node*	insertNode(Node* position, const value_type& pair)
+		{
+//first node creation
+			if (_root == _last)
+			{
+				_root = createNode(pair);
+
+				_root->left = _last;
+				_root->right = _last;
+				// _last->left = _root;
+				// _last->right = _root;
+
+				return (_root);
+			}
+
+			//key already exists
+			if (position->data.first == pair.first)
+				return (0);
+
+			//recursion until reaching a leaf or a _last : if pair.key < node.key, go left
+			if (position->data.first > pair.first && position->left && position->left != _last)
+				return (insertNode(position->left, pair));
+			else if (position->data.first < pair.first && position->right && position->right != _last)
+				return (insertNode(position->right, pair));
+
+			/*reaching a leaf or max/min node wich are parents to _last*/
+			Node*	newNode = createNode(pair);
+			
+			//if reached a regular leaf with space on the needed side
+			if (position->data.first > newNode->data.first && !position->left)
+				position->left = newNode;
+			else if (position->data.first < newNode->data.first && !position->right)
+				position->right = newNode;
+			//if reached max/min, node has to be inserted between max/min and _last
+			else if (position->left && position->data.first > newNode->data.first)
+			{
+				newNode->left = _last;				//setting left child as last
+				_last->right = newNode;				//setting last's right child to new
+				position->left = newNode;			//putting new in position's left
+			}		
+			else if (position->right && position->data.first < newNode->data.first)
+			{
+				newNode->right = _last;				//setting right child as last
+				_last->left = newNode;				//setting last's left child to new
+				position->right = newNode;			//putting new in position's right
+			}
+
+			newNode->parent = position;
+			
+//equilibrage mdr
+
+			return (newNode);
 		}
 	
 };
