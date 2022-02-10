@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 15:23:19 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/09 16:16:37 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/10 11:21:37 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,33 +128,34 @@ class map_iterator
 		{
 			Node*	prevNode = _node;
 
-			// iterator is starting on last, go back to root
-			// if (_node == _last)
-			// {
-			// 	_node == _last->right;
-			// 	return (*this);
-			// }
+			//iterator is starting on _last (rend() or end()), go back to min
+			if (_node == _last)
+			{
+				_node == _last->right;
+				return (*this);
+			}
 			
 			//until reaching last and while prev >= node, we ++ (see ft::less in utils)
 			while (_node != _last && !_comp(prevNode->data.first, _node->data.first))
 			{
-//????
 				//right child is last
 				if (_node->right && _node->right == _last)
 				{
 					_node = _node->right;
 				}
 //cut some stuff
-				//right child is higher, so we check the right subtree by starting at it's lowest node
+				//there is a right child : immediate higher node is right subtree's min
 				else if (_node->right && _comp(prevNode->data.first, _node->data.first))
 				{
 					_node = _node->right;
 
 					Node* 	tmp = 0;
+//~~maybe _node can directly be set to lowest, no need for tmp
 					if ((tmp = lowestNode(_node)))
 						_node = tmp;
 				}
 				//no right child, try again from parent
+//or go up until I am a left child
 				else
 					_node = _node->parent;
 			}
@@ -166,24 +167,23 @@ class map_iterator
 		{
 			map_iterator	ret(*this);
 
-			// iterator is starting on last, go back to root
-			// if (_node == _last)
-			// {
-			// 	_node == _last->right;
-			// 	return (ret);
-			// }
+			//iterator is starting on last, go back to min
+			if (_node == _last)
+			{
+				_node == _last->right;
+				return (ret);
+			}
 			
 			//until reaching last and while prev >= node, we ++ (see ft::less in utils)
 			while (_node != _last && !_comp(ret->first, _node->data.first))
 			{
-//????
-				//right child is last
+				//right child is _last
 				if (_node->right && _node->right == _last)
 				{
 					_node = _node->right;
 				}
 //cut some stuff
-				//right child is higher, so we check the right subtree by starting at it's lowest node
+				//there is a right child : immediate higher node is right subtree's min
 				else if (_node->right && _comp(ret->first, _node->data.first))
 				{
 					_node = _node->right;
@@ -204,24 +204,23 @@ class map_iterator
 		{
 			Node*	prevNode = _node;
 
-			// iterator is starting on last, go back to root
-			// if (_node == _last)
-			// {
-			// 	_node == _last->left;
-			// 	return (*this);
-			// }
+			//iterator is starting on _last (rend() or end()), go back to max
+			if (_node == _last)
+			{
+				_node == _last->left;
+				return (*this);
+			}
 			
 			//until reaching last and while prev <= node, we -- (see ft::less in utils)
 			while (_node != _last && !_comp(_node->data.first, prevNode->data.first))
 			{
-//????
-				//left child is last
+				//left child is _last
 				if (_node->left && _node->left == _last)
 				{
 					_node = _node->left;
 				}
 //cut some stuff
-				//left child is lower, so we check the left subtree by starting at it's highest node
+				//there is a left child : immediate lower node is left subtree's max
 				else if (_node->left && _comp(_node->data.first, prevNode->data.first))
 				{
 					_node = _node->left;
@@ -231,6 +230,7 @@ class map_iterator
 						_node = tmp;
 				}
 				//no right child, try again from parent
+//or go up until I a; a right child
 				else
 					_node = _node->parent;
 			}
@@ -243,23 +243,22 @@ class map_iterator
 			map_iterator	ret(*this);
 
 			// iterator is starting on last, go back to root
-			// if (_node == _last)
-			// {
-			// 	_node == _last->left;
-			// 	return (ret);
-			// }
+			if (_node == _last)
+			{
+				_node == _last->left;
+				return (ret);
+			}
 			
 			//until reaching last and while prev <= node, we -- (see ft::less in utils)
 			while (_node != _last && !_comp(_node->data.first, ret->first))
 			{
-//????
-				//left child is last
+				//left child is _last
 				if (_node->left && _node->left == _last)
 				{
 					_node = _node->left;
 				}
 //cut some stuff
-				//left child is lower, so we check the left subtree by starting at it's highest node
+				//there is a left child : immediate lower node is left subtree's max
 				else if (_node->left && _comp(_node->data.first, ret->first))
 				{
 					_node = _node->left;
