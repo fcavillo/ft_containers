@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/29 18:56:46 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/09 17:11:35 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/10 17:24:33 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 
 //https://www.cplusplus.com/reference/map/map/
 
-//start doing empty, begin, end, size..
+//start doing empty, size..
 
 namespace   ft
 {
@@ -63,8 +63,8 @@ class map
 		typedef typename allocator_type::const_pointer			const_pointer;
 		typedef ft::map_iterator<Key, T, Compare, Node, false>	iterator;
 		typedef ft::map_iterator<Key, T, Compare, Node, true>	const_iterator;
-		typedef ft::reverse_iterator<iterator>					reverse_iterator;
-		typedef ft::reverse_iterator<const_iterator>			const_reverse_iterator;		
+		// typedef ft::reverse_iterator<iterator>					reverse_iterator;
+		// typedef ft::reverse_iterator<const_iterator>			const_reverse_iterator;		
 
 
 	private :
@@ -72,7 +72,7 @@ class map
 	/*	VARS	*/
 
 		Node*					_root;		//pointer to first tree element
-		Node*					_last;		//pointer to last tree element
+		Node*					_last;		//pointer to last tree element (before begin and rbegin)
 		size_type				_size;		//number of nodes
 		allocator_type			_allocPair;	//pair-size memory handling
 		std::allocator<Node>	_allocNode;	//pair + pointers to relatives -size memory handling
@@ -127,9 +127,52 @@ class map
 
 	/*	ITERATORS	*/
 
+		//sending node, last, comp function
+		iterator begin()
+		{
+			return (iterator(_last->right, _last, _comp));
+		}
 
+		const_iterator begin() const
+		{
+			return (const_iterator(_last->right, _last, _comp));
+		}
+
+		iterator end()
+		{
+			return (iterator(_last, _last, _comp));
+		}
+
+		const_iterator end() const
+		{
+			return (const_iterator(_last, _last, _comp));
+		}
+		
 	/*	CAPACITY	*/
 
+		bool empty() const
+		{
+			return (_size == 0);
+		}
+
+		size_type size() const
+		{
+			return (_size);
+		}
+		
+		size_type max_size() const throw()
+		{
+			size_type	max = 0;
+			try
+			{
+				max = _allocNode.max_size();
+			}
+			catch (std::exception &e)
+			{
+				std::cout << "Error :\t vector::max_size : " << e.what() << std::endl;
+			}
+			return (max);
+		}
 		
 	/*	ELEMENT ACCESS	*/
 
@@ -186,9 +229,38 @@ std::cout << "insert 3" << std::endl;
 
 	/*	OBSERVERS	*/
 
+		key_compare key_comp() const
+		{
+			return (_comp);
+		}
+		
+// value_compare value_comp() const
+// {
+// 	return (vau)
+// }
+
 
 	/*	OPERATIONS	*/
 
+	iterator find (const key_type& k)
+	{
+		Node*	target = searchNode(_root, k);
+
+		if (target)
+			return (iterator(target, _last, _comp));
+		
+		return (end());
+	}
+	
+	const_iterator find (const key_type& k) const
+	{
+		Node*	target = searchNode(_root, k);
+
+		if (target)
+			return (const_iterator(target, _last, _comp));
+		
+		return (end());		
+	}
 
 	/*	ALLOCATOR	*/
 
@@ -206,6 +278,7 @@ std::cout << "insert 3" << std::endl;
 			newNode->parent = 0;
 			newNode->left = 0;
 			newNode->right = 0;
+
 			return (newNode);
 		}
 
@@ -243,7 +316,8 @@ std::cout << "insert 3" << std::endl;
 				_root->right = _last;
 				_last->left = _root;
 				_last->right = _root;
-
+//temp ????
+				_size++;
 				return (_root);
 			}
 
@@ -280,9 +354,10 @@ std::cout << "insert 3" << std::endl;
 			}
 
 			newNode->parent = position;
-			
-//equilibrage mdr
 
+//equilibrage mdr
+//temp ????
+			_size++;
 			return (newNode);
 		}
 	

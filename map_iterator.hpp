@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 15:23:19 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/10 11:21:37 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/10 16:55:29 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,12 +86,13 @@ class map_iterator
 
 		map_iterator& operator=(const map_iterator& rhs)
 		{
-			if (this != rhs)
+			if (this != &rhs)
 			{
 				_node = rhs.getNode();
 				_last = rhs.getLast();
 				_comp = rhs.getComp();		
 			}
+			return (*this);
 		}
 	
 	/*	GETTERS	*/
@@ -127,26 +128,29 @@ class map_iterator
 		map_iterator&	operator++()
 		{
 			Node*	prevNode = _node;
-
+// std::cout << "preincrement boii" << std::endl;
 			//iterator is starting on _last (rend() or end()), go back to min
 			if (_node == _last)
 			{
-				_node == _last->right;
+				_node = _last->right;
 				return (*this);
 			}
-			
+// std::cout << "1" << std::endl;
 			//until reaching last and while prev >= node, we ++ (see ft::less in utils)
 			while (_node != _last && !_comp(prevNode->data.first, _node->data.first))
 			{
+// std::cout << "2" << std::endl;
 				//right child is last
 				if (_node->right && _node->right == _last)
 				{
+// std::cout << "3" << std::endl;
 					_node = _node->right;
 				}
 //cut some stuff
 				//there is a right child : immediate higher node is right subtree's min
-				else if (_node->right && _comp(prevNode->data.first, _node->data.first))
+				else if (_node->right && _comp(prevNode->data.first, _node->right->data.first))
 				{
+// std::cout << "4" << std::endl;
 					_node = _node->right;
 
 					Node* 	tmp = 0;
@@ -157,35 +161,44 @@ class map_iterator
 				//no right child, try again from parent
 //or go up until I am a left child
 				else
+				{
+// std::cout << "5" << std::endl;
 					_node = _node->parent;
+				}
 			}
+// std::cout << "9" << std::endl;
 			return (*this);
 		}
 
 		//++ post-increment operator goes from one key to the immediate superior one
 		map_iterator	operator++(int)
 		{
+// std::cout << "0" << std::endl;
 			map_iterator	ret(*this);
-
+// std::cout << "1" << std::endl;
 			//iterator is starting on last, go back to min
 			if (_node == _last)
 			{
-				_node == _last->right;
+				_node = _last->right;
 				return (ret);
 			}
+// std::cout << "2" << std::endl;
 			
 			//until reaching last and while prev >= node, we ++ (see ft::less in utils)
 			while (_node != _last && !_comp(ret->first, _node->data.first))
 			{
+// std::cout << "3" << std::endl;
 				//right child is _last
 				if (_node->right && _node->right == _last)
 				{
+// std::cout << "6" << std::endl;
 					_node = _node->right;
 				}
 //cut some stuff
 				//there is a right child : immediate higher node is right subtree's min
-				else if (_node->right && _comp(ret->first, _node->data.first))
+				else if (_node->right && _comp(ret->first, _node->right->data.first))
 				{
+// std::cout << "7" << std::endl;
 					_node = _node->right;
 
 					Node* 	tmp = 0;
@@ -194,8 +207,12 @@ class map_iterator
 				}
 				//no right child, try again from parent
 				else
+				{
+// std::cout << "8" << std::endl;
 					_node = _node->parent;
+				}
 			}
+// std::cout << "9" << std::endl;
 			return (ret);	
 		}
 
@@ -207,7 +224,7 @@ class map_iterator
 			//iterator is starting on _last (rend() or end()), go back to max
 			if (_node == _last)
 			{
-				_node == _last->left;
+				_node = _last->left;
 				return (*this);
 			}
 			
@@ -221,7 +238,7 @@ class map_iterator
 				}
 //cut some stuff
 				//there is a left child : immediate lower node is left subtree's max
-				else if (_node->left && _comp(_node->data.first, prevNode->data.first))
+				else if (_node->left && _comp(_node->left->data.first, prevNode->data.first))
 				{
 					_node = _node->left;
 
@@ -245,7 +262,7 @@ class map_iterator
 			// iterator is starting on last, go back to root
 			if (_node == _last)
 			{
-				_node == _last->left;
+				_node = _last->left;
 				return (ret);
 			}
 			
@@ -259,7 +276,7 @@ class map_iterator
 				}
 //cut some stuff
 				//there is a left child : immediate lower node is left subtree's max
-				else if (_node->left && _comp(_node->data.first, ret->first))
+				else if (_node->left && _comp(_node->left->data.first, ret->first))
 				{
 					_node = _node->left;
 
@@ -300,7 +317,7 @@ class map_iterator
 		Node*	highestNode(Node* root)
 		{
 			if (root && root != _last && root->right && root->right != _last)
-				return (highestNode(root->left));
+				return (highestNode(root->right));
 			return (root);
 		}
 	
