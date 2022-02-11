@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/29 18:56:46 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/11 16:45:56 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/11 17:38:21 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -204,15 +204,17 @@ class map
 			if (tmp)
 				return (ft::pair<iterator, bool>(iterator(tmp, _last, _comp), false));
 			tmp = insertNode(_root, val);
-			return (ft::pair<iterator, bool>(iterator(tmp, _last, _comp), true)); //badddd
+			return (ft::pair<iterator, bool>(iterator(tmp, _last, _comp), true));
 		}
 
 		//inserts val at position,
 		//returns iterator to new node or already existing similar one
 		iterator insert (iterator position, const value_type& val)
 		{
-std::cout << "insert 2" << std::endl;
-			(void)val;
+			Node*	tmp = searchNode(_root, val.first);
+			if (tmp)
+				return (iterator(tmp, _last, _comp));
+//allez
 			return (position);
 		}
 
@@ -255,11 +257,14 @@ std::cout << "insert 3" << std::endl;
 
 	/*	OBSERVERS	*/
 
+		//returns the used way of comparing keys (ft::less by default)
 		key_compare key_comp() const
 		{
 			return (_comp);
 		}
 		
+		//value compare is a nested class type map::value_compare 
+		//the () operator is overloaded in it to allow a comparison of the 
 // value_compare value_comp() const
 // {
 // 	return (vau)
@@ -268,91 +273,97 @@ std::cout << "insert 3" << std::endl;
 
 	/*	OPERATIONS	*/
 
-	iterator find (const key_type& k)
-	{
-		Node*	target = searchNode(_root, k);
+		iterator find (const key_type& k)
+		{
+			Node*	target = searchNode(_root, k);
 
-		if (target)
-			return (iterator(target, _last, _comp));
+			if (target)
+				return (iterator(target, _last, _comp));
+			
+			return (end());
+		}
 		
-		return (end());
-	}
-	
-	const_iterator find (const key_type& k) const
-	{
-		Node*	target = searchNode(_root, k);
+		const_iterator find (const key_type& k) const
+		{
+			Node*	target = searchNode(_root, k);
 
-		if (target)
-			return (const_iterator(target, _last, _comp));
+			if (target)
+				return (const_iterator(target, _last, _comp));
+			
+			return (end());		
+		}
+
+		size_type count (const key_type& k) const
+		{
+			iterator	it = this->find(k);
+			
+			if (it != this->end())
+				return (1);
+			return (0);
+		}
+
+		iterator lower_bound (const key_type& k)
+		{
+			iterator	it = this->begin();
+			iterator	ite = this->end();
+			
+			for (; it != ite && (key_comp())(it->first, k) == true && it != ite; it++);
+			return (it);
+		}
 		
-		return (end());		
-	}
+		const_iterator lower_bound (const key_type& k) const
+		{
+			const_iterator	it = this->begin();
+			const_iterator	ite = this->end();
+			
+			for (; it != ite && (key_comp())(it->first, k) == true; it++);
+			return (it);		
+		}
 
-	size_type count (const key_type& k) const
-	{
-		iterator	it = this->find(k);
+		iterator upper_bound (const key_type& k)
+		{
+			iterator	it = this->begin();
+			iterator	ite = this->end();
+			
+			for (; it != ite && (key_comp())(k, it->first) == false; it++);
+			return (it);
+		}
+
+		const_iterator upper_bound (const key_type& k) const
+		{
+			const_iterator	it = this->begin();
+			const_iterator	ite = this->end();
+			
+			for (; it != ite && (key_comp())(k, it->first) == false; it++);
+			return (it);		
+		}
+
+		pair<const_iterator,const_iterator> equal_range (const key_type& k) const
+		{
+			ft::pair<const_iterator, const_iterator>	pair(lower_bound(k), upper_bound(k));
+
+			return (pair);
+		}
 		
-		if (it != this->end())
-			return (1);
-		return (0);
-	}
+		pair<iterator,iterator>             equal_range (const key_type& k)
+		{
+			ft::pair<iterator, iterator>	pair(lower_bound(k), upper_bound(k));
 
-	iterator lower_bound (const key_type& k)
-	{
-		iterator	it = this->begin();
-		iterator	ite = this->end();
-		
-		for (; it != ite && (key_comp())(it->first, k) == true && it != ite; it++);
-		return (it);
-	}
-	  
-	const_iterator lower_bound (const key_type& k) const
-	{
-		const_iterator	it = this->begin();
-		const_iterator	ite = this->end();
-		
-		for (; it != ite && (key_comp())(it->first, k) == true; it++);
-		return (it);		
-	}
-
-	iterator upper_bound (const key_type& k)
-	{
-		iterator	it = this->begin();
-		iterator	ite = this->end();
-		
-		for (; it != ite && (key_comp())(k, it->first) == false; it++);
-		return (it);
-	}
-
-	const_iterator upper_bound (const key_type& k) const
-	{
-		const_iterator	it = this->begin();
-		const_iterator	ite = this->end();
-		
-		for (; it != ite && (key_comp())(k, it->first) == false; it++);
-		return (it);		
-	}
-
-	pair<const_iterator,const_iterator> equal_range (const key_type& k) const
-	{
-		ft::pair<const_iterator, const_iterator>	pair(lower_bound(k), upper_bound(k));
-
-		return (pair);
-	}
-	
-	pair<iterator,iterator>             equal_range (const key_type& k)
-	{
-		ft::pair<iterator, iterator>	pair(lower_bound(k), upper_bound(k));
-
-		return (pair);		
-	}
+			return (pair);		
+		}
 
 	/*	ALLOCATOR	*/
+
+		allocator_type get_allocator() const
+		{
+			return(_allocPair);
+		}
+
 
 	private :
 	
 	/*	PRIVATE MEMBER FUNCTIONS	*/
-		/*	AVL tree handling	*/
+		/*	BST tree handling	*/
 	
 		//create a new node, construct content, set relatives to 0
 		Node*	createNode(const value_type & pair)
@@ -389,7 +400,7 @@ std::cout << "insert 3" << std::endl;
 			return (0); 
 		}
 	
-		//returns 0 if key exists already
+		//returns 0 if key exists already, else inserts a node of value pair on first free space from position
 		Node*	insertNode(Node* position, const value_type& pair)
 		{
 			//first node creation
@@ -446,9 +457,23 @@ std::cout << "insert 3" << std::endl;
 			return (newNode);
 		}
 	
+		//returns 1	if key is not found, else deletes node and returns 0
+		bool	deleteNode(Node* position, const value_type& pair)
+		{
+			Node*	target = searchNode(position, pair.first);
+			
+			if (!target)
+				return (1);
+			
+			_size--;
+			return (0);
+		}
+
+		/*	AVL tree specifics	*/
+
+
 };
 
-	
 }; //namespace end
 
 #endif
