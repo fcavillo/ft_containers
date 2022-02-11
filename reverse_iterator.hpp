@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 17:24:33 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/08 17:18:51 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/11 14:33:22 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ class   reverse_iterator
 			return ;
 		}
 		
-		explicit reverse_iterator (iterator_type it) : _base(it.base())
+		explicit reverse_iterator (iterator_type it) : _base(it)
 		{
 			return ;
 		}

@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 01:24:09 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/10 17:15:58 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/11 15:11:03 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,9 @@ int		main()
 	--it;	
 	std::cout << "2[" << it->first << "] " << it->second << std::endl;
 	std::cout << "size = " << map.size() << "\tempty = " << map.empty() << "\tmax-size = " << map.max_size() << std::endl;
+
+	it = map.lower_bound(1);
+	std::cout << "end[" << it->first << "] " << it->second << std::endl;
 	
 	// ft::map_iterator<int, char, ft::less<int>, ft::map<int, char, ft::less<int>, std::__1::allocator<ft::pair<const int, char> > >::Node, false> it;
 	// std::list<int> lst;

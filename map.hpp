@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/29 18:56:46 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/10 17:24:33 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/11 15:22:39 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -261,6 +261,52 @@ std::cout << "insert 3" << std::endl;
 		
 		return (end());		
 	}
+
+	size_type count (const key_type& k) const
+	{
+		iterator	it = this->find(k);
+		
+		if (it != this->end())
+			return (1);
+		return (0);
+	}
+
+	iterator lower_bound (const key_type& k)
+	{
+		iterator	it = this->begin();
+		iterator	ite = this->end();
+		
+		for (; (key_comp())(it->first, k) == true && it != ite; it++);
+		return (it);
+	}
+	  
+	const_iterator lower_bound (const key_type& k) const
+	{
+		const_iterator	it = this->begin();
+		const_iterator	ite = this->end();
+		
+		for (; (key_comp())(it->first, k) == true && it != ite; it++);
+		return (it);		
+	}
+
+	iterator upper_bound (const key_type& k)
+	{
+		iterator	it = this->begin();
+		iterator	ite = this->end();
+		
+		for (; (key_comp())(k, it->first) == false && it != ite; it++);
+		return (it);
+	}
+
+	const_iterator upper_bound (const key_type& k) const
+	{
+		const_iterator	it = this->begin();
+		const_iterator	ite = this->end();
+		
+		for (; (key_comp())(k, it->first) == false && it != ite; it++);
+		return (it);		
+	}
+
 
 	/*	ALLOCATOR	*/
 

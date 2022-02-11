@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 15:23:19 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/10 16:55:29 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/11 14:22:49 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,8 +162,16 @@ class map_iterator
 //or go up until I am a left child
 				else
 				{
-// std::cout << "5" << std::endl;
-					_node = _node->parent;
+					Node*	parentNode = _node->parent;
+					while (_node != parentNode->left)
+					{
+						_node = parentNode;
+						parentNode = parentNode->parent;
+					}
+					_node = parentNode;
+					return (*this);
+					// std::cout << "5" << std::endl;
+					// _node = _node->parent : old way
 				}
 			}
 // std::cout << "9" << std::endl;
@@ -208,8 +216,16 @@ class map_iterator
 				//no right child, try again from parent
 				else
 				{
-// std::cout << "8" << std::endl;
-					_node = _node->parent;
+					Node*	parentNode = _node->parent;
+					while (_node != parentNode->left)
+					{
+						_node = parentNode;
+						parentNode = parentNode->parent;
+					}
+					_node = parentNode;
+					return (ret);
+// std::cout << "5" << std::endl;
+					// _node = _node->parent : old way
 				}
 			}
 // std::cout << "9" << std::endl;
@@ -249,7 +265,18 @@ class map_iterator
 				//no right child, try again from parent
 //or go up until I a; a right child
 				else
-					_node = _node->parent;
+				{
+					Node*	parentNode = _node->parent;
+					while (_node != parentNode->right)
+					{
+						_node = parentNode;
+						parentNode = parentNode->parent;
+					}
+					_node = parentNode;
+					return (*this);
+// std::cout << "5" << std::endl;
+					// _node = _node->parent : old way
+				}
 			}
 			return (*this);
 		}
@@ -286,7 +313,18 @@ class map_iterator
 				}
 				//no right child, try again from parent
 				else
-					_node = _node->parent;
+				{
+					Node*	parentNode = _node->parent;
+					while (_node != parentNode->right)
+					{
+						_node = parentNode;
+						parentNode = parentNode->parent;
+					}
+					_node = parentNode;
+					return (ret);
+// std::cout << "5" << std::endl;
+					// _node = _node->parent : old way
+				}
 			}
 			return (ret);
 		}
