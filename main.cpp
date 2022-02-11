@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 01:24:09 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/11 15:11:03 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/11 16:24:37 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,48 +22,65 @@ int		main()
 {
 	ft::map<int, char>	map;
 
-	map[4] = 'c';
-	std::cout << "test" << std::endl;
+	for (int i = 0; i < 10; i++)
+		map[i] = i + 97;
+	
+	ft::map<int, char>::iterator	it = map.begin();
+	ft::map<int, char>::iterator	ite = map.end();
+	
+	for (; it != ite; it++)
+		std::cout << "[" << it->first << "] " << it->second << std::endl;
 
-	map[1] = 'd';
-	// std::cout << map[0] << std::endl;
-	// std::cout << map[1] << std::endl;
+	ft::map<int, char>	map2(map.begin(), map.end());
 
-	map[2] = (map.begin())->second;
-	// std::cout << map[0] << std::endl;
-	map[1] = 'a';
+	ft::map<int, char>::iterator	it2 = map2.begin();
+	ft::map<int, char>::iterator	ite2 = map2.end();
+	
+	for (; it2 != ite2; it2++)
+		std::cout << "[" << it2->first << "] " << it2->second << std::endl;
 
-	ft::map<int, char, ft::less<int>, std::__1::allocator<ft::pair<const int, char> > >::iterator it;
-	it = map.begin();
-	std::cout << "1[" << it->first << "] " << it->second << std::endl;
-	++it;
-	std::cout << "2[" << it->first << "] " << it->second << std::endl;
-	++it;	
-	std::cout << "3[" << it->first << "] " << it->second << std::endl;
-	--it;
-	std::cout << "2[" << it->first << "] " << it->second << std::endl;
-	--it;	
-	std::cout << "1[" << it->first << "] " << it->second << std::endl;
-	it++;
-	std::cout << "2[" << it->first << "] " << it->second << std::endl;
-	it++;	
-	std::cout << "3[" << it->first << "] " << it->second << std::endl;
-	it--;
-	std::cout << "2[" << it->first << "] " << it->second << std::endl;
-	it--;	
-	std::cout << "1[" << it->first << "] " << it->second << std::endl;
+	// map[4] = 'd';
+	// std::cout << "test" << std::endl;
 
-	ft::map<int, char, ft::less<int>, std::__1::allocator<ft::pair<const int, char> > >::iterator ite;
-	it = map.end();
-	std::cout << "end[" << it->first << "] " << it->second << std::endl;
-	--it;
-	std::cout << "3[" << it->first << "] " << it->second << std::endl;
-	--it;	
-	std::cout << "2[" << it->first << "] " << it->second << std::endl;
-	std::cout << "size = " << map.size() << "\tempty = " << map.empty() << "\tmax-size = " << map.max_size() << std::endl;
+	// map[1] = 'b';
+	// // std::cout << map[0] << std::endl;
+	// // std::cout << map[1] << std::endl;
 
-	it = map.lower_bound(1);
-	std::cout << "end[" << it->first << "] " << it->second << std::endl;
+	// map[2] = (map.begin())->second;
+	// // std::cout << map[0] << std::endl;
+	// map[1] = 'a';
+
+	// ft::map<int, char>::iterator it;
+	// it = map.begin();
+	// std::cout << "1[" << it->first << "] " << it->second << std::endl;
+	// ++it;
+	// std::cout << "2[" << it->first << "] " << it->second << std::endl;
+	// ++it;	
+	// std::cout << "3[" << it->first << "] " << it->second << std::endl;
+	// --it;
+	// std::cout << "2[" << it->first << "] " << it->second << std::endl;
+	// --it;	
+	// std::cout << "1[" << it->first << "] " << it->second << std::endl;
+	// it++;
+	// std::cout << "2[" << it->first << "] " << it->second << std::endl;
+	// it++;	
+	// std::cout << "3[" << it->first << "] " << it->second << std::endl;
+	// it--;
+	// std::cout << "2[" << it->first << "] " << it->second << std::endl;
+	// it--;	
+	// std::cout << "1[" << it->first << "] " << it->second << std::endl;
+
+	// ft::map<int, char>::iterator ite;
+	// it = map.end();
+	// std::cout << "end[" << it->first << "] " << it->second << std::endl;
+	// --it;
+	// std::cout << "3[" << it->first << "] " << it->second << std::endl;
+	// --it;	
+	// std::cout << "2[" << it->first << "] " << it->second << std::endl;
+	// std::cout << "size = " << map.size() << "\tempty = " << map.empty() << "\tmax-size = " << map.max_size() << std::endl;
+
+	// it = map.upper_bound(2);
+	// std::cout << "[" << it->first << "] " << it->second << std::endl;
 	
 	// ft::map_iterator<int, char, ft::less<int>, ft::map<int, char, ft::less<int>, std::__1::allocator<ft::pair<const int, char> > >::Node, false> it;
 	// std::list<int> lst;

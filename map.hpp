@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/29 18:56:46 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/11 15:22:39 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/11 16:45:56 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ class map
 			_last->left = _last;
 			_last->right = _last;
 	//++f or f++
-			std::cout << *first << std::endl;
+			// std::cout << *first << std::endl;
 			for (; first != last; first++)
 		 		insert(*first);
 		// insert(first, last);
@@ -195,16 +195,16 @@ class map
 
 		//inserts val and returns a pair, 
 		//with p::first being an iterator to the node,
-		//pair::second is true if val inserted, false if already there
+		//p::second is true if val inserted, false if already there
 		ft::pair<iterator,bool>	insert(/*const*/ value_type& val)
 		{
-			Node*	isKeyDouble = searchNode(_root, val.first);
-std::cout << "insert 1" << std::endl;
-			if (isKeyDouble)
-				return (ft::pair<iterator, bool>(iterator(isKeyDouble, _last, _comp), false));
-	//look for key, if exists, return that iterator with false bool
-			_size++;
-return (ft::pair<iterator, bool>(iterator(isKeyDouble, _last, _comp), false)); //badddd
+			Node*	tmp = searchNode(_root, val.first);
+// std::cout << "insert 1" << std::endl;
+			//look for key, if exists, return that iterator with false bool
+			if (tmp)
+				return (ft::pair<iterator, bool>(iterator(tmp, _last, _comp), false));
+			tmp = insertNode(_root, val);
+			return (ft::pair<iterator, bool>(iterator(tmp, _last, _comp), true)); //badddd
 		}
 
 		//inserts val at position,
@@ -226,6 +226,32 @@ std::cout << "insert 3" << std::endl;
 			return ;
 		}
 
+		void swap (map& x)
+		{
+
+			Node*					tmp_root 		= x._root;		
+			Node*					tmp_last 		= x._last;
+			size_type				tmp_size 		= x._size;		
+			allocator_type			tmp_allocPair 	= x._allocPair;	
+			std::allocator<Node>	tmp_allocNode 	= x._allocNode;	
+			key_compare				tmp_comp 		= x._comp;	
+			
+			x._root 		= this->_root;		
+			x._last 		= this->_last;	
+			x._size 		= this->_size;			
+			x._allocPair	= this->_allocPair;		
+			x._allocNode 	= this->_allocNode;		
+			x._comp 		= this->_comp;		
+
+			this->_root 		= tmp_root;
+			this->_last 		= tmp_last;
+			this->_size 		= tmp_size;
+			this->_allocPair 	= tmp_allocPair;
+			this->_allocNode 	= tmp_allocNode;
+			this->_comp 		= tmp_comp;
+
+			return;		
+		}
 
 	/*	OBSERVERS	*/
 
@@ -276,7 +302,7 @@ std::cout << "insert 3" << std::endl;
 		iterator	it = this->begin();
 		iterator	ite = this->end();
 		
-		for (; (key_comp())(it->first, k) == true && it != ite; it++);
+		for (; it != ite && (key_comp())(it->first, k) == true && it != ite; it++);
 		return (it);
 	}
 	  
@@ -285,7 +311,7 @@ std::cout << "insert 3" << std::endl;
 		const_iterator	it = this->begin();
 		const_iterator	ite = this->end();
 		
-		for (; (key_comp())(it->first, k) == true && it != ite; it++);
+		for (; it != ite && (key_comp())(it->first, k) == true; it++);
 		return (it);		
 	}
 
@@ -294,7 +320,7 @@ std::cout << "insert 3" << std::endl;
 		iterator	it = this->begin();
 		iterator	ite = this->end();
 		
-		for (; (key_comp())(k, it->first) == false && it != ite; it++);
+		for (; it != ite && (key_comp())(k, it->first) == false; it++);
 		return (it);
 	}
 
@@ -303,10 +329,23 @@ std::cout << "insert 3" << std::endl;
 		const_iterator	it = this->begin();
 		const_iterator	ite = this->end();
 		
-		for (; (key_comp())(k, it->first) == false && it != ite; it++);
+		for (; it != ite && (key_comp())(k, it->first) == false; it++);
 		return (it);		
 	}
 
+	pair<const_iterator,const_iterator> equal_range (const key_type& k) const
+	{
+		ft::pair<const_iterator, const_iterator>	pair(lower_bound(k), upper_bound(k));
+
+		return (pair);
+	}
+	
+	pair<iterator,iterator>             equal_range (const key_type& k)
+	{
+		ft::pair<iterator, iterator>	pair(lower_bound(k), upper_bound(k));
+
+		return (pair);		
+	}
 
 	/*	ALLOCATOR	*/
 
