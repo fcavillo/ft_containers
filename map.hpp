@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/29 18:56:46 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/11 17:38:21 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/12 12:52:51 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,7 +199,6 @@ class map
 		ft::pair<iterator,bool>	insert(/*const*/ value_type& val)
 		{
 			Node*	tmp = searchNode(_root, val.first);
-// std::cout << "insert 1" << std::endl;
 			//look for key, if exists, return that iterator with false bool
 			if (tmp)
 				return (ft::pair<iterator, bool>(iterator(tmp, _last, _comp), false));
@@ -207,26 +206,62 @@ class map
 			return (ft::pair<iterator, bool>(iterator(tmp, _last, _comp), true));
 		}
 
-		//inserts val at position,
+		//inserts val by starting looking for a spot at position,
+		//optimizing insertion process
 		//returns iterator to new node or already existing similar one
 		iterator insert (iterator position, const value_type& val)
 		{
-			Node*	tmp = searchNode(_root, val.first);
-			if (tmp)
-				return (iterator(tmp, _last, _comp));
-//allez
-			return (position);
+			//if val.key < position.key, we decrease position until finding closest higher key
+			if (val.first < position->first)
+			{
+				iterator	tooHigh(position);
+				//tooHigh is always position - 1, so when we get to the first lower val, position is on the first higher one
+				--tooHigh;
+				while (tooHigh != end() && tooHigh->first >= val.first)
+				{
+					position--;
+					tooHigh--;
+				}
+			}
+			//if val.key > position.key, we increase position until finding closest lower key
+			else if (val.first > position->first)
+			{
+				iterator	tooLow(position);
+				//tooLow is always position + 1, so when we get to the first higher val, position is on the first lower one
+				++tooLow;
+				while (tooLow != end() && tooLow->first <= val.first)
+				{
+					position++;
+					tooLow++;
+				}
+			}
+			//if the key is aleady in the tree
+			if (position != end() && val.first == position->first)
+				return (position);
+
+			// _size++
+			return (iterator(insertNode(position.getNode(), val), _last, _comp));
+					
 		}
 
 		template <class InputIterator>
 		void insert (InputIterator first, InputIterator last,
 		typename ft::enable_if<!ft::is_integral<InputIterator>::value >::type* = 0)
 		{
-std::cout << "insert 3" << std::endl;
-			(void)first;
-			(void)last;
+			while (first != last)
+				insert(*first++);
 			return ;
 		}
+
+		void erase (iterator position)
+		{
+			deleteNode(position.getNode(), position->first);
+			return ;
+		}
+
+		size_type erase (const key_type& k);
+
+		void erase (iterator first, iterator last);
 
 		void swap (map& x)
 		{
@@ -464,6 +499,46 @@ std::cout << "insert 3" << std::endl;
 			
 			if (!target)
 				return (1);
+			
+			//confusedNode is the node to reattach to the rest of the tree once the target is deleted
+			//this is usually the parent, unless we delete _root then it is a child
+			Node*	confusedNode = 0;
+			
+			//deleting the root (wich has no parent)
+			if (!target->parent)
+			{
+				//case 1 : only node in the tree
+				if (target->right == _last && target->left == _last)
+				{
+					_root = _last;
+					_last->right = _last;
+					_last->left = _last;
+				}
+				//case 2 : root only has one left or right child
+				else if (target->left && target->right == _last)
+				{
+					// confusedNode = target->parent;
+//makes no sense
+					_root = target->left;		//root becomes left child
+					target->left->parent = 0;	//cuts the link between target and new root
+					_root->right = _last;
+					_last->left = _root;		//setting the right side of the one node tree _last elem
+				}
+				else if (target->right && target->left == _last)
+				{
+					// confusedNode = target->parent;
+//makes no sense
+					_root = target->right;		//root becomes right child
+					target->right->parent = 0;	//cuts the link between target and new root
+					_root->left = _last;
+					_last->right = _root;		//setting the left side of the one node tree _last elem
+				}
+				//case 3 : root has 2 children
+				else
+				{
+					Node*	leftSubtreeHighest = search
+				}
+			}
 			
 			_size--;
 			return (0);
