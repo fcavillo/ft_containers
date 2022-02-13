@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/29 18:56:46 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/12 12:52:51 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/12 13:32:58 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -434,8 +434,22 @@ class map
 //case where it would reach the end ?			
 			return (0); 
 		}
+
+		Node*	searchMaxNode(Node* root)
+		{
+			if (root->right && root->right != _last)
+				return (searchMaxNode(root->right));
+			return (root);
+		}
+
+		Node*	searchMinNode(Node* root)
+		{
+			if (root->left && root->left != _last)
+				return (searchMinNode(root->left));
+			return (root);
+		}
 	
-		//returns 0 if key exists already, else inserts a node of value pair on first free space from position
+		//returns 0 if key exists already, else inserts a node of value pair on best free space from position
 		Node*	insertNode(Node* position, const value_type& pair)
 		{
 			//first node creation
@@ -492,10 +506,10 @@ class map
 			return (newNode);
 		}
 	
-		//returns 1	if key is not found, else deletes node and returns 0
-		bool	deleteNode(Node* position, const value_type& pair)
+		//returns 1	if key is not found, else deletes node with a matching key found from position and returns 0
+		bool	deleteNode(Node* position, key_type key)
 		{
-			Node*	target = searchNode(position, pair.first);
+			Node*	target = searchNode(position, key);
 			
 			if (!target)
 				return (1);
@@ -504,7 +518,7 @@ class map
 			//this is usually the parent, unless we delete _root then it is a child
 			Node*	confusedNode = 0;
 			
-			//deleting the root (wich has no parent)
+			/* DELETING THE PARENTLESS ROOT	*/
 			if (!target->parent)
 			{
 				//case 1 : only node in the tree
@@ -533,11 +547,26 @@ class map
 					_root->left = _last;
 					_last->right = _root;		//setting the left side of the one node tree _last elem
 				}
-				//case 3 : root has 2 children
+				//case 3 : root has 2 children -> set the 'inorder predecessor' one as root
 				else
 				{
-					Node*	leftSubtreeHighest = search
+					Node*	leftSubtreeHighest = searchMaxNode(target->left);
+
+					_allocPair.destroy(&target->content);
+					_allocPair.construct(&target->content, leftSubtreeHighest->content);	//copy highestNode to root
+//make a graph
+					//in the left subtree, delete the highest that was moved to root
+					return (deleteNode(target->left, leftSubtreeHighest->content.first));	
 				}
+			}
+			/*	DELETING A NODE	*/
+			//case 1 : node is a leaf
+			else if ((!target->left || target->left = _last) && (!target->right || target->right = _last)
+			{
+				confusedNode = target->parent;
+//who r u 		/\
+				
+				
 			}
 			
 			_size--;
