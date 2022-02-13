@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/29 18:56:46 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/13 17:05:19 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/13 17:07:56 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -302,6 +302,11 @@ class map
 			this->_comp 		= tmp_comp;
 
 			return;		
+		}
+
+		void clear()
+		{
+			erase(begin(), end());
 		}
 
 	/*	OBSERVERS	*/
