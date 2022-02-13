@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 15:23:19 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/11 14:22:49 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/13 16:58:05 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,8 @@ class map_iterator
 		typedef value_type				*pointer;
 		typedef value_type				&reference;
 
-	private :
-
+//	private :
+//set back quick boiiiii
 		Node*		_node;		//curent node pointed by iterator
 		Node*		_last;		//pointer to NULL pointer Type Nil : non-existant leaves, past-the-end element
 		key_compare	_comp;		//used way of comparing keys to sort the map, needed to know wich way to iterate
@@ -188,6 +188,7 @@ class map_iterator
 			if (_node == _last)
 			{
 				_node = _last->right;
+// std::cout << "++ to key " << _node->data.first << " wich is after last : " << (_node == _last) << std::endl;
 				return (ret);
 			}
 // std::cout << "2" << std::endl;
@@ -228,7 +229,7 @@ class map_iterator
 					// _node = _node->parent : old way
 				}
 			}
-// std::cout << "9" << std::endl;
+// std::cout << "++ to key " << _node->data.first << " node is last : " << (_node == _last) << std::endl;
 			return (ret);	
 		}
 

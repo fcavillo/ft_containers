@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/29 18:56:46 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/13 15:52:13 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/13 17:05:19 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,7 +185,7 @@ class map
 			if (tmp)
 				return (tmp->data.second);
 
-			value_type	newPair = make_pair<key_type, mapped_type>(k, mapped_type()); //type != fct
+			value_type	newPair = ft::make_pair<key_type, mapped_type>(k, mapped_type()); //type != fct
 			return (insertNode(_root, newPair)->data.second);
 		}
 
@@ -259,16 +259,21 @@ class map
 			return ;
 		}
 
-		size_type erase (const key_type& k)
+		size_type erase (const key_type& k)	//returns number of elem deleted (1 or 0)
 		{
-			size_type	ret = deleteNode(_root, k);	//returns 1 if success, 0 if not found
-			return (ret);
+			if (deleteNode(_root, k))		//returns 1 if key not found
+				return (0);
+			return (1);
 		}
 
 		void erase (iterator first, iterator last)
 		{
 			while (first != last)
+// 			{
+// std::cout << "erasing [" << first->first << "] with parent " << first._node->parent->data.first << std::endl;
 				erase(first++);
+// std::cout << "_last left and right keys = " << _last->right->data.first << " / " << _last->left->data.first << std::endl;
+// 			}
 			return ;
 		}
 
@@ -609,6 +614,7 @@ class map
 					target->parent->left = target->left;
 				else														//target is a right child
 					target->parent->right = target->left;
+				target->left->parent = target->parent;
 				
 				if (target->right == _last)									//target is max node
 				{
@@ -624,6 +630,7 @@ class map
 					target->parent->left = target->right;
 				else														//target is a right child
 					target->parent->right = target->right;
+				target->right->parent = target->parent;
 				
 				if (target->left == _last)									//target is max node
 				{

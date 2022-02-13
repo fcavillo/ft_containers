@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 01:24:09 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/13 15:40:20 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/13 16:58:40 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,18 +28,35 @@ int		main()
 	ft::map<int, char>::iterator	it = map.begin();
 	ft::map<int, char>::iterator	ite = map.end();
 	
-	for (; it != ite; it++)
-		std::cout << "[" << it->first << "] " << it->second << std::endl;
-
-	ft::map<int, char>	map2(map.begin(), map.end());
-
-	ft::map<int, char>::iterator	it2 = map2.begin();
-	ft::map<int, char>::iterator	ite2 = map2.end();
+	// for (; it != ite; it++)
+	// 	std::cout << "[" << it->first << "] " << it->second << std::endl;
 	
-	map2.erase(map2.begin());
-	it2 = map2.begin();
-	for (; it2 != ite2; it2++)
+	it = map.begin();
+	map.erase(--(--(--map.end())), --map.end());
+
+	ft::map<int, char>::iterator	it2 = map.begin();
+	ft::map<int, char>::iterator	ite2 = map.end();
+
+	map.erase(--(--(--map.end())), --map.end());
+	
+	for (int i = 0; i < 15; i++)
+	{
 		std::cout << "[" << it2->first << "] " << it2->second << std::endl;
+		it2++;
+	}
+
+	// for (; it != ite; it++)
+	// 	std::cout << "[" << it->first << "] " << it->second << std::endl;
+
+	// ft::map<int, char>	map2(map.begin(), map.end());
+
+	// ft::map<int, char>::iterator	it2 = map2.begin();
+	// ft::map<int, char>::iterator	ite2 = map2.end();
+	
+	// map2.erase(map2.begin());
+	// it2 = map2.begin();
+	// for (; it2 != ite2; it2++)
+	// 	std::cout << "[" << it2->first << "] " << it2->second << std::endl;
 
 	// map[4] = 'd';
 	// std::cout << "test" << std::endl;
