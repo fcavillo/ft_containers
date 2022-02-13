@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 01:24:09 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/11 16:24:37 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/13 15:40:20 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ int		main()
 	ft::map<int, char>::iterator	it2 = map2.begin();
 	ft::map<int, char>::iterator	ite2 = map2.end();
 	
+	map2.erase(map2.begin());
+	it2 = map2.begin();
 	for (; it2 != ite2; it2++)
 		std::cout << "[" << it2->first << "] " << it2->second << std::endl;
 

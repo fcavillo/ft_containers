@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/29 18:56:46 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/12 13:32:58 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/13 15:52:13 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -259,9 +259,18 @@ class map
 			return ;
 		}
 
-		size_type erase (const key_type& k);
+		size_type erase (const key_type& k)
+		{
+			size_type	ret = deleteNode(_root, k);	//returns 1 if success, 0 if not found
+			return (ret);
+		}
 
-		void erase (iterator first, iterator last);
+		void erase (iterator first, iterator last)
+		{
+			while (first != last)
+				erase(first++);
+			return ;
+		}
 
 		void swap (map& x)
 		{
@@ -413,11 +422,17 @@ class map
 			return (newNode);
 		}
 
+		void	deallocNode(Node* target)
+		{
+			_allocPair.destroy(&target->data);
+			_allocNode.deallocate(target, 1);
+		}
+
 		//recursive comparison of the key with every key in the tree nodes (key = node->data.first)
 		//returns the found node, or 0
 		Node*	searchNode(Node* root, key_type key)
 		{
-			//empty tree or leaf
+			//empty tree or leaf's child
 			if (!root || root == _last)
 				return (0);
 			
@@ -514,7 +529,7 @@ class map
 			if (!target)
 				return (1);
 			
-			//confusedNode is the node to reattach to the rest of the tree once the target is deleted
+			//confusedNode is the node to balance from once the target is deleted
 			//this is usually the parent, unless we delete _root then it is a child
 			Node*	confusedNode = 0;
 			
@@ -552,23 +567,87 @@ class map
 				{
 					Node*	leftSubtreeHighest = searchMaxNode(target->left);
 
-					_allocPair.destroy(&target->content);
-					_allocPair.construct(&target->content, leftSubtreeHighest->content);	//copy highestNode to root
+					_allocPair.destroy(&target->data);
+					_allocPair.construct(&target->data, leftSubtreeHighest->data);	//copy highestNode to root
 //make a graph
 					//in the left subtree, delete the highest that was moved to root
-					return (deleteNode(target->left, leftSubtreeHighest->content.first));	
+					return (deleteNode(target->left, leftSubtreeHighest->data.first));	
 				}
 			}
 			/*	DELETING A NODE	*/
-			//case 1 : node is a leaf
-			else if ((!target->left || target->left = _last) && (!target->right || target->right = _last)
+			//case 1 : target is a leaf
+			else if ((!target->left || target->left == _last) && (!target->right || target->right == _last))
 			{
 				confusedNode = target->parent;
-//who r u 		/\
+//who r u 		
+
+				if (target->left == _last)									//min leaf node (left)
+				{
+					_last->right = target->parent;
+					target->parent->left = _last;
+				}
+				else if (target->right == _last)							//max leaf node (right)
+				{
+					_last->left = target->parent;
+					target->parent->right = _last;
+				}
+				else if (target->data.first <= target->parent->data.first)	//regular leaf	(left)
+				{
+					target->parent->left = 0;
+				}
+				else														//regular leaf	(right)
+				{
+					target->parent->right = 0;
+				}
+			}
+			//case 2 : target has a child
+			else if ((target->left && target->left != _last) && (!target->right || target->right == _last))	//has a left child
+			{
+				confusedNode = target->parent;
+	
+				if (target->data.first <= target->parent->data.first)		//target is a left child
+					target->parent->left = target->left;
+				else														//target is a right child
+					target->parent->right = target->left;
 				
+				if (target->right == _last)									//target is max node
+				{
+					target->left->right = _last;
+					_last->left = target->left;
+				}
+			}
+			else if ((target->right && target->right != _last) && (!target->left || target->left == _last))	//has a right child
+			{
+				confusedNode = target->parent;
+
+				if (target->data.first <= target->parent->data.first)		//target is a left child
+					target->parent->left = target->right;
+				else														//target is a right child
+					target->parent->right = target->right;
 				
+				if (target->left == _last)									//target is max node
+				{
+					target->right->left = _last;
+					_last->right = target->right;
+				}
+			}
+			//case 3 : target has 2 children : same logic as root -> set the 'inorder predecessor' one as root
+			else
+			{
+				Node*	leftSubtreeHighest = searchMaxNode(target->left);
+
+				_allocPair.destroy(&target->data);
+				_allocPair.construct(&target->data, leftSubtreeHighest->data);	//copy highestNode to root
+//make a graph
+				//in the left subtree, delete the highest that was moved to root
+				return (deleteNode(target->left, leftSubtreeHighest->data.first));					
 			}
 			
+//balance tree
+			(void)confusedNode;
+
+			deallocNode(target);
+
 			_size--;
 			return (0);
 		}
