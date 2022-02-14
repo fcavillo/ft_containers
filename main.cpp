@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 01:24:09 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/13 16:58:40 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/14 14:48:11 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,13 @@
 #include "stack.hpp"
 #include <vector>
 #include <list>
+#include <map>
 #include "map.hpp"
 
-// when inserting then deleting, double free
+
+
+
+
 
 int		main()
 {
@@ -44,7 +48,27 @@ int		main()
 		std::cout << "[" << it2->first << "] " << it2->second << std::endl;
 		it2++;
 	}
+	// map.debug_print_btree_structure_(map.begin()._node, 1);
+	// ft::map<int, char>::const_iterator	const_ite;
+	// const_ite  = map.begin();
+	
+	std::map<int, char>	map2;
 
+	for (int i = 0; i < 10; i++)
+		map[i] = i + 97;
+	std::map<int, char>::const_iterator	it3(map2.begin());
+	it3 = map2.begin();
+
+	ft::map<int, char>	map3;
+
+	for (int i = 0; i < 10; i++)
+		map[i] = i + 97;
+
+	std::cout << "hey" << std::endl;
+	ft::map<int, char>::const_iterator	it3a(map3.begin());
+	it3a = map3.begin();
+	std::cout << "hoy" << std::endl;
+	
 	// for (; it != ite; it++)
 	// 	std::cout << "[" << it->first << "] " << it->second << std::endl;
 

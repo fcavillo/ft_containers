@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/29 18:56:46 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/13 17:07:56 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/14 14:44:31 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ class map
 {
 
 	private :
-
+//privatize it again bitch
 	/*	NODE	*/
 
 		struct	Node
@@ -56,13 +56,14 @@ class map
 		typedef Alloc				allocator_type;
 		typedef size_t				size_type;
 		typedef std::ptrdiff_t		difference_type;
-		typedef ft::pair<const key_type, mapped_type>			value_type;
-		typedef typename allocator_type::reference				reference;
-		typedef typename allocator_type::const_reference		const_reference;
-		typedef typename allocator_type::pointer				pointer;
-		typedef typename allocator_type::const_pointer			const_pointer;
-		typedef ft::map_iterator<Key, T, Compare, Node, false>	iterator;
-		typedef ft::map_iterator<Key, T, Compare, Node, true>	const_iterator;
+		typedef typename allocator_type::template rebind<Node>::other 	node_allocator;		//rebind is a class in wich member "other" can be used to allocate other types
+		typedef ft::pair<const key_type, mapped_type>					value_type;
+		typedef typename allocator_type::reference						reference;
+		typedef typename allocator_type::const_reference				const_reference;
+		typedef typename allocator_type::pointer						pointer;
+		typedef typename allocator_type::const_pointer					const_pointer;
+		typedef ft::map_iterator<Key, T, Compare, Node>					iterator;
+		typedef ft::map_const_iterator<Key, T, Compare, Node>			const_iterator;
 		// typedef ft::reverse_iterator<iterator>					reverse_iterator;
 		// typedef ft::reverse_iterator<const_iterator>			const_reverse_iterator;		
 
@@ -75,7 +76,7 @@ class map
 		Node*					_last;		//pointer to last tree element (before begin and rbegin)
 		size_type				_size;		//number of nodes
 		allocator_type			_allocPair;	//pair-size memory handling
-		std::allocator<Node>	_allocNode;	//pair + pointers to relatives -size memory handling
+		node_allocator			_allocNode;	//pair + pointers to relatives -size memory handling
 		key_compare				_comp;		//used way of comparing keys to sort the map
 		
 
@@ -130,23 +131,28 @@ class map
 		//sending node, last, comp function
 		iterator begin()
 		{
-			return (iterator(_last->right, _last, _comp));
+			iterator		beg = iterator(_last->right, _last, _comp);
+std::cout << "wsh maggle t pa un const" << std::endl;
+			return (beg);
 		}
 
 		const_iterator begin() const
 		{
-			return (const_iterator(_last->right, _last, _comp));
+			const_iterator	beg = const_iterator(_last->right, _last, _comp);
+std::cout << "wsh maggle t un const" << std::endl;
+			return (beg);
 		}
 
 		iterator end()
 		{
-			return (iterator(_last, _last, _comp));
+			iterator		end = iterator(_last, _last, _comp);
+			return (end);
 		}
 
 		const_iterator end() const
 		{
-			return (const_iterator(_last, _last, _comp));
-		}
+			const_iterator		end = const_iterator(_last, _last, _comp);
+			return (end);		}
 		
 	/*	CAPACITY	*/
 
@@ -169,7 +175,7 @@ class map
 			}
 			catch (std::exception &e)
 			{
-				std::cout << "Error :\t vector::max_size : " << e.what() << std::endl;
+				std::cout << "Error :\t map::max_size : " << e.what() << std::endl;
 			}
 			return (max);
 		}
@@ -665,6 +671,8 @@ class map
 		}
 
 		/*	AVL tree specifics	*/
+
+
 
 
 };
