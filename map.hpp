@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/29 18:56:46 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/14 14:44:31 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/15 17:16:55 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ class map
 		typedef typename allocator_type::pointer						pointer;
 		typedef typename allocator_type::const_pointer					const_pointer;
 		typedef ft::map_iterator<Key, T, Compare, Node>					iterator;
-		typedef ft::map_const_iterator<Key, T, Compare, Node>			const_iterator;
+		typedef ft::map_iterator<Key, T, Compare, Node>			const_iterator;
 		// typedef ft::reverse_iterator<iterator>					reverse_iterator;
 		// typedef ft::reverse_iterator<const_iterator>			const_reverse_iterator;		
 
@@ -119,12 +119,30 @@ class map
 			for (; first != last; first++)
 		 		insert(*first);
 		// insert(first, last);
-			(void)last;
 			return ;
 		}
 
-	map (const map& x);
+		map (const map& x) :
+		_size(0),
+		_allocPair(x._allocPair),
+		_allocNode(x._allocNode),
+		_comp(x._comp)
+		{
+			_last = createNode(ft::pair<const key_type, mapped_type>());
+			_root = _last;
+			_last->left = _last;
+			_last->right = _last;
+			insert(x.begin(), x.end());
+		}
 
+		map& operator= (const map& x)
+		{
+			map	tmp(x);
+			
+			this->swap(tmp);
+			
+			return *this;		
+		}
 
 	/*	ITERATORS	*/
 
@@ -132,14 +150,14 @@ class map
 		iterator begin()
 		{
 			iterator		beg = iterator(_last->right, _last, _comp);
-std::cout << "wsh maggle t pa un const" << std::endl;
+// std::cout << "wsh maggle t pa un const" << std::endl;
 			return (beg);
 		}
 
 		const_iterator begin() const
 		{
 			const_iterator	beg = const_iterator(_last->right, _last, _comp);
-std::cout << "wsh maggle t un const" << std::endl;
+// std::cout << "wsh maggle t un const" << std::endl;
 			return (beg);
 		}
 
@@ -446,7 +464,7 @@ std::cout << "wsh maggle t un const" << std::endl;
 
 		//recursive comparison of the key with every key in the tree nodes (key = node->data.first)
 		//returns the found node, or 0
-		Node*	searchNode(Node* root, key_type key)
+		Node*	searchNode(Node* root, key_type key) const
 		{
 			//empty tree or leaf's child
 			if (!root || root == _last)
@@ -466,14 +484,14 @@ std::cout << "wsh maggle t un const" << std::endl;
 			return (0); 
 		}
 
-		Node*	searchMaxNode(Node* root)
+		Node*	searchMaxNode(Node* root) const
 		{
 			if (root->right && root->right != _last)
 				return (searchMaxNode(root->right));
 			return (root);
 		}
 
-		Node*	searchMinNode(Node* root)
+		Node*	searchMinNode(Node* root) const
 		{
 			if (root->left && root->left != _last)
 				return (searchMinNode(root->left));
