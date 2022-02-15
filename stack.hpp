@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/29 17:53:20 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/08 10:33:02 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/15 17:58:34 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,11 @@ class stack
 		{
 			return ;
 		}
+
+stack( const stack& other );
+~stack();
+stack& operator=( const stack& other );
+//cppreference exclusive 
 
 	/*	MEMBER FUNCTIONS	*/
 

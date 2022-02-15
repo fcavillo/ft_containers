@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/29 18:56:46 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/15 17:16:55 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/15 17:54:43 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -341,13 +341,39 @@ class map
 			return (_comp);
 		}
 		
-		//value compare is a nested class type map::value_compare 
-		//the () operator is overloaded in it to allow a comparison of the 
-// value_compare value_comp() const
-// {
-// 	return (vau)
-// }
+		//value compare is a nested class type (function object) map::value_compare 
+		//the () operator is overloaded in it to allow a comparison of the keys of 2 pairs
+		class	value_compare
+		{
+			//friend class can access private and protected members of class in which it is declared as friend
+			friend class map;
 
+			public :
+
+				typedef bool		result_type;
+				typedef value_type	first_argument_type;
+				typedef value_type	second_argument_type;
+				
+				bool operator()( const value_type& lhs, const value_type& rhs ) const
+				{
+					return (_val_comp(lhs.first, rhs.first));
+				}
+
+			protected :
+			
+				value_compare(Compare c) : _val_comp(c)
+				{
+					return;
+				}
+				
+				Compare	_val_comp;
+				
+		};
+
+		value_compare	value_comp() const
+		{
+			return (value_compare(_comp));
+		}
 
 	/*	OPERATIONS	*/
 
