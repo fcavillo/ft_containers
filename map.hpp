@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/29 18:56:46 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/15 18:28:25 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/16 12:45:24 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -730,38 +730,70 @@ class map
 		ft::map<Key,T,Compare,Alloc>::iterator	itl = lhs.begin();
 		ft::map<Key,T,Compare,Alloc>::iterator	itr = rhs.begin();
 		
-		while (itl != lhs.end() && itr != rhs.end())
+		while (itl != lhs.end())
 		{
-			if ()
+			if (itl != itr)
+				return (false);
 			itl++;
 			itr++;
 		}
-
-		for (map:: i = 0; i < lhs.size(); i++)
-			if (lhs[i] != rhs[i])
-				return (false);
 		return (true);		
 	}
 
 	template< class Key, class T, class Compare, class Alloc >
 	bool operator!=( const ft::map<Key,T,Compare,Alloc>& lhs,
-					const ft::map<Key,T,Compare,Alloc>& rhs );
+					const ft::map<Key,T,Compare,Alloc>& rhs )
+	{
+		return (!(lhs == rhs));
+	}
 
 	template< class Key, class T, class Compare, class Alloc >
 	bool operator<( const ft::map<Key,T,Compare,Alloc>& lhs,
-					const ft::map<Key,T,Compare,Alloc>& rhs );
+					const ft::map<Key,T,Compare,Alloc>& rhs )
+	{
+		ft::map<Key,T,Compare,Alloc>::iterator	itl = lhs.begin();
+		ft::map<Key,T,Compare,Alloc>::iterator	itr = rhs.begin();
+
+		while (itl != lhs.end() && itr != rhs.end())
+		{
+			if (itl->first < itr->first)
+				return (true);
+			else if (itl->first > itr->first)
+				return (false);
+			else
+			{
+				if (itl->second < itr->second)
+					return (true);
+				else (itl->second > itr->second)
+					return (false);
+			}
+			itl++;
+			itr++;
+		}
+//	to finish
+				
+	}
 
 	template< class Key, class T, class Compare, class Alloc >
 	bool operator<=( const ft::map<Key,T,Compare,Alloc>& lhs,
-					const ft::map<Key,T,Compare,Alloc>& rhs );
+					const ft::map<Key,T,Compare,Alloc>& rhs )
+	{
+		return (!(rhs < lhs));
+	}
 
 	template< class Key, class T, class Compare, class Alloc >
 	bool operator>( const ft::map<Key,T,Compare,Alloc>& lhs,
-					const ft::map<Key,T,Compare,Alloc>& rhs );
+					const ft::map<Key,T,Compare,Alloc>& rhs )
+	{
+		return (!(lhs <= rhs));
+	}
 
 	template< class Key, class T, class Compare, class Alloc >
 	bool operator>=( const ft::map<Key,T,Compare,Alloc>& lhs,
-					const ft::map<Key,T,Compare,Alloc>& rhs );
+					const ft::map<Key,T,Compare,Alloc>& rhs )
+	{
+		return (!(lhs < rhs));
+	}
   
 
 
