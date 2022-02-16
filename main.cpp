@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 01:24:09 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/16 14:44:07 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/16 17:59:27 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int		main()
 		std::cout << "equal" << std::endl;
 	else
 		std::cout << "not equal" << std::endl;
-	
+	// 
 	// ft::map<int, char>	map;
 
 	// for (int i = 0; i < 10; i++)

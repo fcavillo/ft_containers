@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 15:23:19 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/16 15:02:20 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/16 17:05:42 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -263,7 +263,7 @@ class map_iterator
 						_node = tmp;
 				}
 				//no right child, try again from parent
-//or go up until I a; a right child
+//or go up until I am a right child
 				else
 				{
 					Node*	parentNode = _node->parent;
