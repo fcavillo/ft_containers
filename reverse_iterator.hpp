@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 17:24:33 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/11 14:33:22 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/16 15:07:47 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ class   reverse_iterator
 		reverse_iterator& operator=( const reverse_iterator<U>& other )
 		{
 			_base = other.base();
-			return ;
+			return *this;
 		}
 		
 	/*	MEMBER FUNCTIONS	*/

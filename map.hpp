@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/29 18:56:46 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/16 12:45:24 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/16 14:49:51 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -725,18 +725,23 @@ class map
 	bool operator==( const ft::map<Key,T,Compare,Alloc>& lhs,
 					const ft::map<Key,T,Compare,Alloc>& rhs )
 	{
+// std::cout << "1" << std::endl;
 		if (lhs.size() != rhs.size())
 			return (false);
-		ft::map<Key,T,Compare,Alloc>::iterator	itl = lhs.begin();
-		ft::map<Key,T,Compare,Alloc>::iterator	itr = rhs.begin();
-		
+// std::cout << "2" << std::endl;
+
+		typename ft::map<Key,T>::const_iterator	itl = lhs.begin();
+		typename ft::map<Key,T>::const_iterator	itr = rhs.begin();
+// int i = 0;		
 		while (itl != lhs.end())
 		{
-			if (itl != itr)
+// std::cout << i++ << std::endl;	
+			if (*itl != *itr)
 				return (false);
 			itl++;
 			itr++;
 		}
+// std::cout << "3" << std::endl;
 		return (true);		
 	}
 
@@ -751,27 +756,25 @@ class map
 	bool operator<( const ft::map<Key,T,Compare,Alloc>& lhs,
 					const ft::map<Key,T,Compare,Alloc>& rhs )
 	{
-		ft::map<Key,T,Compare,Alloc>::iterator	itl = lhs.begin();
-		ft::map<Key,T,Compare,Alloc>::iterator	itr = rhs.begin();
+		typename ft::map<Key,T>::const_iterator	itl = lhs.begin();
+		typename ft::map<Key,T>::const_iterator	itr = rhs.begin();		
+		typename ft::map<Key,T>::const_iterator	itle = lhs.end();
+		typename ft::map<Key,T>::const_iterator	itre = rhs.end();
 
-		while (itl != lhs.end() && itr != rhs.end())
+		while (itl != itle)
 		{
-			if (itl->first < itr->first)
+			if (*itl < *itr)				//left is lesser
 				return (true);
-			else if (itl->first > itr->first)
+			else if (*itl > *itr)			//right is lesser
 				return (false);
-			else
-			{
-				if (itl->second < itr->second)
-					return (true);
-				else (itl->second > itr->second)
-					return (false);
-			}
+			else if (itr == itre)		//right is shorter -> lesser
+				return (false);
 			itl++;
 			itr++;
 		}
-//	to finish
-				
+		if (itr == itre && itl == itle)	//both sides are equal
+			return (false);
+		return (true);					//left is shorter -> lesser				
 	}
 
 	template< class Key, class T, class Compare, class Alloc >

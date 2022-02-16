@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 15:23:19 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/15 15:31:10 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/16 15:02:20 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 *	-	pointer and reference
 *	-	operator++ pre and post-increment
 *	-	operator-- pre and post-decrement
-*	-	operator== amd operator !=
+*	-	operator== and operator !=
 */
 
 

@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 01:24:09 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/14 14:48:11 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/16 14:44:07 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,50 +24,62 @@
 
 int		main()
 {
-	ft::map<int, char>	map;
+	ft::map<int, char>	mp1;
+	ft::map<int, char>	mp2;
 
-	for (int i = 0; i < 10; i++)
-		map[i] = i + 97;
+
+	mp1['a'] = 2; mp1['b'] = 3; mp1['c'] = 4; mp1['d'] = 5;
+	mp2['a'] = 2; mp2['b'] = 3; mp2['c'] = 4; mp2['d'] = 5;
 	
-	ft::map<int, char>::iterator	it = map.begin();
-	ft::map<int, char>::iterator	ite = map.end();
+	if (mp1 == mp2)
+		std::cout << "equal" << std::endl;
+	else
+		std::cout << "not equal" << std::endl;
 	
-	// for (; it != ite; it++)
-	// 	std::cout << "[" << it->first << "] " << it->second << std::endl;
+	// ft::map<int, char>	map;
+
+	// for (int i = 0; i < 10; i++)
+	// 	map[i] = i + 97;
 	
-	it = map.begin();
-	map.erase(--(--(--map.end())), --map.end());
-
-	ft::map<int, char>::iterator	it2 = map.begin();
-	ft::map<int, char>::iterator	ite2 = map.end();
-
-	map.erase(--(--(--map.end())), --map.end());
+	// ft::map<int, char>::iterator	it = map.begin();
+	// ft::map<int, char>::iterator	ite = map.end();
 	
-	for (int i = 0; i < 15; i++)
-	{
-		std::cout << "[" << it2->first << "] " << it2->second << std::endl;
-		it2++;
-	}
-	// map.debug_print_btree_structure_(map.begin()._node, 1);
-	// ft::map<int, char>::const_iterator	const_ite;
-	// const_ite  = map.begin();
+	// // for (; it != ite; it++)
+	// // 	std::cout << "[" << it->first << "] " << it->second << std::endl;
 	
-	std::map<int, char>	map2;
+	// it = map.begin();
+	// map.erase(--(--(--map.end())), --map.end());
 
-	for (int i = 0; i < 10; i++)
-		map[i] = i + 97;
-	std::map<int, char>::const_iterator	it3(map2.begin());
-	it3 = map2.begin();
+	// ft::map<int, char>::iterator	it2 = map.begin();
+	// ft::map<int, char>::iterator	ite2 = map.end();
 
-	ft::map<int, char>	map3;
+	// map.erase(--(--(--map.end())), --map.end());
+	
+	// for (int i = 0; i < 15; i++)
+	// {
+	// 	std::cout << "[" << it2->first << "] " << it2->second << std::endl;
+	// 	it2++;
+	// }
+	// // map.debug_print_btree_structure_(map.begin()._node, 1);
+	// // ft::map<int, char>::const_iterator	const_ite;
+	// // const_ite  = map.begin();
+	
+	// std::map<int, char>	map2;
 
-	for (int i = 0; i < 10; i++)
-		map[i] = i + 97;
+	// for (int i = 0; i < 10; i++)
+	// 	map[i] = i + 97;
+	// std::map<int, char>::const_iterator	it3(map2.begin());
+	// it3 = map2.begin();
 
-	std::cout << "hey" << std::endl;
-	ft::map<int, char>::const_iterator	it3a(map3.begin());
-	it3a = map3.begin();
-	std::cout << "hoy" << std::endl;
+	// ft::map<int, char>	map3;
+
+	// for (int i = 0; i < 10; i++)
+	// 	map[i] = i + 97;
+
+	// std::cout << "hey" << std::endl;
+	// ft::map<int, char>::const_iterator	it3a(map3.begin());
+	// it3a = map3.begin();
+	// std::cout << "hoy" << std::endl;
 	
 	// for (; it != ite; it++)
 	// 	std::cout << "[" << it->first << "] " << it->second << std::endl;
