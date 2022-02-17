@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 15:23:19 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/17 14:27:14 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/17 16:10:54 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,8 @@ class map_iterator
 		// typedef value_type				&reference;
             typedef typename chooseConst<Con, value_type&, const value_type&>::type       reference;
             typedef typename chooseConst<Con, value_type*, const value_type*>::type       pointer;
+			
+			
 //	private :
 //set back quick boiiiii
 		Node*		_node;		//curent node pointed by iterator
