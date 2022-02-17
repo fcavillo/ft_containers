@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/29 18:56:46 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/17 15:09:55 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/17 16:29:48 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -402,7 +402,7 @@ class map
 
 		size_type count (const key_type& k) const
 		{
-			iterator	it = this->find(k);
+			const_iterator	it = this->find(k);
 			
 			if (it != this->end())
 				return (1);
