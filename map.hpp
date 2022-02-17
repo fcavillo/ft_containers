@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/29 18:56:46 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/17 12:16:39 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/17 13:58:56 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@
 
 //https://www.cplusplus.com/reference/map/map/
 
-//start doing empty, size..
 
 namespace   ft
 {
@@ -28,8 +27,7 @@ namespace   ft
 template < class Key,											// map::key_type
 		   class T,												// map::mapped_type
 		   class Compare = ft::less<Key>,						// map::key_compare
-		   class Alloc = std::allocator<pair<const Key,T> >		// map::allocator_type
-		   > 
+		   class Alloc = std::allocator<pair<const Key,T> > >	// map::allocator_type
 class map
 {
 
@@ -56,17 +54,19 @@ class map
 		typedef Alloc				allocator_type;
 		typedef size_t				size_type;
 		typedef std::ptrdiff_t		difference_type;
-		typedef typename allocator_type::template rebind<Node>::other 	node_allocator;		//rebind is a class in wich member "other" can be used to allocate other types
-		typedef ft::pair<const key_type, mapped_type>					value_type;
-		typedef typename allocator_type::reference						reference;
-		typedef typename allocator_type::const_reference				const_reference;
-		typedef typename allocator_type::pointer						pointer;
-		typedef typename allocator_type::const_pointer					const_pointer;
-		typedef ft::map_iterator<Key, T, Compare, Node>					iterator;
-		typedef ft::map_const_iterator<Key, T, Compare, Node>			const_iterator;
-		// typedef ft::reverse_iterator<iterator>					reverse_iterator;
-		// typedef ft::reverse_iterator<const_iterator>			const_reverse_iterator;		
-
+		typedef typename allocator_type::template rebind<Node>::other 		node_allocator;		//rebind is a class in wich member "other" can be used to allocate other types
+		typedef ft::pair<const key_type, mapped_type>						value_type;
+		typedef typename allocator_type::reference							reference;
+		typedef typename allocator_type::const_reference					const_reference;
+		typedef typename allocator_type::pointer							pointer;
+		typedef typename allocator_type::const_pointer						const_pointer;
+		// typedef ft::map_iterator<Key, T, Compare, Node, Con>				iterator;
+		// typedef const ft::map_iterator<Key, T, Compare, Node>			const_iterator;
+		// typedef ft::map_iterator<Key, T, Compare, Node, Con>				const_iterator;
+		// typedef ft::reverse_iterator<iterator>							reverse_iterator;
+		// typedef ft::reverse_iterator<const_iterator>						const_reverse_iterator;		
+            typedef typename ft::map_iterator<Key, T, Compare, Node, false>     iterator;
+            typedef typename ft::map_iterator<Key, T, Compare, Node, true>      const_iterator;
 
 	private :
 	
@@ -220,7 +220,7 @@ std::cout << "wsh maggle t un const" << std::endl;
 		//inserts val and returns a pair, 
 		//with p::first being an iterator to the node,
 		//p::second is true if val inserted, false if already there
-		ft::pair<iterator,bool>	insert(/*const*/ value_type& val)
+		ft::pair<iterator,bool>	insert(const value_type& val)
 		{
 			Node*	tmp = searchNode(_root, val.first);
 			//look for key, if exists, return that iterator with false bool
