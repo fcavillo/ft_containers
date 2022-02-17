@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 01:24:09 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/16 17:59:27 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/17 12:18:37 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,28 +24,30 @@
 
 int		main()
 {
-	ft::map<int, char>	mp1;
-	ft::map<int, char>	mp2;
+	// ft::map<int, char>	mp1;
+	// ft::map<int, char>	mp2;
 
 
-	mp1['a'] = 2; mp1['b'] = 3; mp1['c'] = 4; mp1['d'] = 5;
-	mp2['a'] = 2; mp2['b'] = 3; mp2['c'] = 4; mp2['d'] = 5;
+	// mp1['a'] = 2; mp1['b'] = 3; mp1['c'] = 4; mp1['d'] = 5;
+	// mp2['a'] = 2; mp2['b'] = 3; mp2['c'] = 4; mp2['d'] = 5;
 	
-	if (mp1 == mp2)
-		std::cout << "equal" << std::endl;
-	else
-		std::cout << "not equal" << std::endl;
+	// if (mp1 == mp2)
+	// 	std::cout << "equal" << std::endl;
+	// else
+	// 	std::cout << "not equal" << std::endl;
 	// 
-	// ft::map<int, char>	map;
+//	ft::map<int, char>	map;
+
+	// ft::map<int, char> const map;
 
 	// for (int i = 0; i < 10; i++)
 	// 	map[i] = i + 97;
 	
-	// ft::map<int, char>::iterator	it = map.begin();
+	// ft::map<int, char>::const_iterator	it = map.begin();
 	// ft::map<int, char>::iterator	ite = map.end();
 	
-	// // for (; it != ite; it++)
-	// // 	std::cout << "[" << it->first << "] " << it->second << std::endl;
+	// for (; it != ite; it++)
+	// 	std::cout << "[" << it->first << "] " << it->second << std::endl;
 	
 	// it = map.begin();
 	// map.erase(--(--(--map.end())), --map.end());

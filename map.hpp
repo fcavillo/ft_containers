@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/29 18:56:46 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/16 14:49:51 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/17 12:16:39 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ class map
 		typedef typename allocator_type::pointer						pointer;
 		typedef typename allocator_type::const_pointer					const_pointer;
 		typedef ft::map_iterator<Key, T, Compare, Node>					iterator;
-		typedef ft::map_iterator<Key, T, Compare, Node>			const_iterator;
+		typedef ft::map_const_iterator<Key, T, Compare, Node>			const_iterator;
 		// typedef ft::reverse_iterator<iterator>					reverse_iterator;
 		// typedef ft::reverse_iterator<const_iterator>			const_reverse_iterator;		
 
@@ -147,17 +147,17 @@ class map
 	/*	ITERATORS	*/
 
 		//sending node, last, comp function
-		iterator begin()
+		iterator begin(/*typename ft::enable_if<!ft::is_integral<InputIterator>::value >::type* = 0)*/)
 		{
 			iterator		beg = iterator(_last->right, _last, _comp);
-// std::cout << "wsh maggle t pa un const" << std::endl;
+std::cout << "wsh maggle t pa un const" << std::endl;
 			return (beg);
 		}
 
 		const_iterator begin() const
 		{
 			const_iterator	beg = const_iterator(_last->right, _last, _comp);
-// std::cout << "wsh maggle t un const" << std::endl;
+std::cout << "wsh maggle t un const" << std::endl;
 			return (beg);
 		}
 
