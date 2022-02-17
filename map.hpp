@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/29 18:56:46 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/17 13:58:56 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/17 15:09:55 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,8 +65,8 @@ class map
 		// typedef ft::map_iterator<Key, T, Compare, Node, Con>				const_iterator;
 		// typedef ft::reverse_iterator<iterator>							reverse_iterator;
 		// typedef ft::reverse_iterator<const_iterator>						const_reverse_iterator;		
-            typedef typename ft::map_iterator<Key, T, Compare, Node, false>     iterator;
-            typedef typename ft::map_iterator<Key, T, Compare, Node, true>      const_iterator;
+		typedef typename ft::map_iterator<Key, T, Compare, Node, false>     iterator;
+		typedef typename ft::map_iterator<Key, T, Compare, Node, true>      const_iterator;
 
 	private :
 	
@@ -150,14 +150,16 @@ class map
 		iterator begin(/*typename ft::enable_if<!ft::is_integral<InputIterator>::value >::type* = 0)*/)
 		{
 			iterator		beg = iterator(_last->right, _last, _comp);
-std::cout << "wsh maggle t pa un const" << std::endl;
+// std::cout << "beg = " << beg->first << std::endl;
+// std::cout << "wsh maggle t pa un const" << std::endl;
 			return (beg);
 		}
 
 		const_iterator begin() const
 		{
 			const_iterator	beg = const_iterator(_last->right, _last, _comp);
-std::cout << "wsh maggle t un const" << std::endl;
+// std::cout << "cbeg = " << beg->first << std::endl;
+// std::cout << "wsh maggle t un const" << std::endl;
 			return (beg);
 		}
 
@@ -236,7 +238,8 @@ std::cout << "wsh maggle t un const" << std::endl;
 		iterator insert (iterator position, const value_type& val)
 		{
 			//if val.key < position.key, we decrease position until finding closest higher key
-			if (val.first < position->first)
+//comptest	if (val.first < position->first)
+			if (_comp(val.first, position->first))
 			{
 				iterator	tooHigh(position);
 				//tooHigh is always position - 1, so when we get to the first lower val, position is on the first higher one
@@ -248,7 +251,7 @@ std::cout << "wsh maggle t un const" << std::endl;
 				}
 			}
 			//if val.key > position.key, we increase position until finding closest lower key
-			else if (val.first > position->first)
+			else if (/*comptest val.first > position->first*/ _comp(position->first, val.first))
 			{
 				iterator	tooLow(position);
 				//tooLow is always position + 1, so when we get to the first higher val, position is on the first lower one
@@ -501,9 +504,9 @@ std::cout << "wsh maggle t un const" << std::endl;
 				return (root);
 
 			//recursive loop until key is found : if the node is higher, I go left
-			if (root->data.first > key && root->left && root->left != _last)
+			if (/*comptest root->data.first > key */ _comp(key, root->data.first) && root->left && root->left != _last)
 				return (searchNode(root->left, key));
-			else if (root->data.first < key && root->right && root->right != _last)
+			else if (/*comptest root->data.first < key*/ _comp(root->data.first, key) && root->right && root->right != _last)
 				return (searchNode(root->right, key));
 
 //case where it would reach the end ?			
@@ -546,27 +549,27 @@ std::cout << "wsh maggle t un const" << std::endl;
 				return (0);
 
 			//recursion until reaching a leaf or a _last : if pair.key < node.key, go left
-			if (position->data.first > pair.first && position->left && position->left != _last)
+			if (/*comptest position->data.first > pair.first*/ _comp(pair.first, position->data.first) && position->left && position->left != _last)
 				return (insertNode(position->left, pair));
-			else if (position->data.first < pair.first && position->right && position->right != _last)
+			else if (/*comptest position->data.first < pair.first*/ _comp(position->data.first, pair.first) && position->right && position->right != _last)
 				return (insertNode(position->right, pair));
 
 			/*reaching a leaf or max/min node wich are parents to _last*/
 			Node*	newNode = createNode(pair);
 			
 			//if reached a regular leaf with space on the needed side
-			if (position->data.first > newNode->data.first && !position->left)
+			if (/*comptest position->data.first > newNode->data.first */ _comp(newNode->data.first, position->data.first) && !position->left)
 				position->left = newNode;
-			else if (position->data.first < newNode->data.first && !position->right)
+			else if (/*comptest position->data.first < newNode->data.first */ _comp(position->data.first, newNode->data.first) && !position->right)
 				position->right = newNode;
 			//if reached max/min, node has to be inserted between max/min and _last
-			else if (position->left && position->data.first > newNode->data.first)
+			else if (position->left && /*comptest position->data.first > newNode->data.first*/ _comp(newNode->data.first, position->data.first))
 			{
 				newNode->left = _last;				//setting left child as last
 				_last->right = newNode;				//setting last's right child to new
 				position->left = newNode;			//putting new in position's left
 			}		
-			else if (position->right && position->data.first < newNode->data.first)
+			else if (position->right && /*comptest position->data.first < newNode->data.first*/ _comp(position->data.first, newNode->data.first))
 			{
 				newNode->right = _last;				//setting right child as last
 				_last->left = newNode;				//setting last's left child to new

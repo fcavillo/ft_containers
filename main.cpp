@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 01:24:09 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/17 13:59:16 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/17 14:30:35 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,11 +47,17 @@ int		main()
 
 	ft::map<int, char>::const_iterator	it = map.begin();
 	ft::map<int, char>::const_iterator	ite = map.end();
+	ft::map<int, char>::iterator	it2 = map.begin();
+	ft::map<int, char>::iterator	ite2 = map.end();
+
+	ft::pair<int, char> pair = ft::make_pair<int, char>(2, 'u');
 	
+	map.insert(it2, pair);
 	for (; it != ite; it++)
 		std::cout << "[" << it->first << "] " << it->second << std::endl;
 	
 	it = map.begin();
+	map.erase(it2);
 	// map.erase(--(--(--map.end())), --map.end());
 
 	// ft::map<int, char>::iterator	it2 = map.begin();
