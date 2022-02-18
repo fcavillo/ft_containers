@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/29 18:56:46 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/18 16:32:55 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/18 16:53:57 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ class map
 {
 
 	private :
-//privatize it again bitch
+
 	/*	NODE	*/
 
 		struct	Node
@@ -116,7 +116,7 @@ class map
 			_root = _last;
 			_last->left = _last;
 			_last->right = _last;
-	//++f or f++
+
 			// std::cout << *first << std::endl;
 			for (; first != last; first++)
 		 		insert(*first);
@@ -741,16 +741,19 @@ class map
 
 		/*	AVL tree specifics	*/
 
-		unsigned int	treeHeight(Node* root, unsigned int height)
+		int	treeHeight(Node* root, int height)
 		{
+			//reached leaf + 1
 			if (!root || root == _last)
 				return (height - 1);
-			if (root->right && root->right != _last)
-				return (treeHeight(root->right, height + 1));
-			else if (root->left && root->left != _last)
-				return (treeHeight(root->left, height + 1));
+
+			int	leftHeight = treeHeight(root->left, height + 1);
+			int rightHeight = treeHeight(root->right, height + 1);
+
+			if (leftHeight > rightHeight)
+				return (leftHeight);
 			else
-				return (height);
+				return (rightHeight);
 		}
 
 		void	balanceTree()
