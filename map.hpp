@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/29 18:56:46 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/18 19:26:54 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/18 20:10:24 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -762,6 +762,7 @@ class map
 		}
 
 		//checks from node to root if each one is balanced (bf should be -1, 0 or 1)
+		//https://www.programiz.com/dsa/avl-tree
 		void	balanceTree(Node* root, Node* node)
 		{
 			while (node)
@@ -787,18 +788,49 @@ class map
 				}
 				else
 				{
-					if (node != root)
+//					if (node != root)
 						node = node->parent;
-					else
-						break;
+//					else
+//						break;
 				}
 			}
 			return ;
 		}
 
-		void	rotateLeft(Node* root, Node* node)
+		void	rotateLeft(Node* root, Node* nodeDown)
 		{
-			(void)position;
+			Node*	nodeUp = nodeDown->right;
+
+			nodeDown->right = nodeUp->left;
+
+			if (nodeUp->left)
+				nodeUp->left->parent = nodeDown;
+
+			if (!(nodeDown->parent))
+				_root = nodeUp;
+			else if (nodeDown->parent->left == nodeDown)
+				nodeDown->parent->left = nodeUp;
+			else
+				nodeDown->parent->right = nodeUp;
+
+			nodeDown->parent = nodeUp;
+			
+			//
+			nodeUp->left = nodeDown;
+
+			nodeUp->parent = nodeDown->parent;
+
+			if (nodeDown->parent && nodeDown->parent->left == nodeDown)
+				nodeDown->parent->left = nodeUp;
+			else if (nodeDown->parent)
+				nodeDown->parent->right = nodeUp;
+			
+			nodeDown->parent->right = nodeUp;
+			
+			if (!nodeUp->parent)
+				_root = nodeUp;
+			
+			(void)root;
 			return ;
 		}
 
