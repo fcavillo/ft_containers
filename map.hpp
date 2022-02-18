@@ -6,12 +6,13 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/29 18:56:46 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/18 20:10:24 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/18 21:03:18 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MAP_HPP
 #define MAP_HPP
+#include <unistd.h> //for sleep
 
 #include <memory>
 #include "pair.hpp"
@@ -71,7 +72,7 @@ class map
 
 
 	private :
-	
+
 	/*	VARS	*/
 
 		Node*					_root;		//pointer to first tree element
@@ -794,6 +795,7 @@ class map
 //						break;
 				}
 			}
+			(void)root;
 			return ;
 		}
 
@@ -808,34 +810,62 @@ class map
 
 			if (!(nodeDown->parent))
 				_root = nodeUp;
-			else if (nodeDown->parent->left == nodeDown)
+			else if (nodeDown->parent->left == nodeDown)	//down is a left child
 				nodeDown->parent->left = nodeUp;
-			else
+			else											//down is a right child
 				nodeDown->parent->right = nodeUp;
 
 			nodeDown->parent = nodeUp;
 			
 			//
-			nodeUp->left = nodeDown;
+			// nodeUp->left = nodeDown;
 
-			nodeUp->parent = nodeDown->parent;
+			// nodeUp->parent = nodeDown->parent;
 
-			if (nodeDown->parent && nodeDown->parent->left == nodeDown)
-				nodeDown->parent->left = nodeUp;
-			else if (nodeDown->parent)
-				nodeDown->parent->right = nodeUp;
+			// if (nodeDown->parent && nodeDown->parent->left == nodeDown)
+			// 	nodeDown->parent->left = nodeUp;
+			// else if (nodeDown->parent)
+			// 	nodeDown->parent->right = nodeUp;
 			
-			nodeDown->parent->right = nodeUp;
+			// nodeDown->parent->right = nodeUp;
 			
-			if (!nodeUp->parent)
-				_root = nodeUp;
+			// if (!nodeUp->parent)
+			// 	_root = nodeUp;
 			
 			(void)root;
 			return ;
 		}
+/*	testos	*/
+public :
+void printBT(const std::string& prefix, const Node* node, bool isLeft)
+{
+    if( node && node != _last )
+    {
+		sleep(1);
+        std::cout << prefix;
 
-		
+        std::cout << (isLeft ? "├──" : "└──" );
 
+        // print the value of the node
+        std::cout << node->data.first << std::endl;
+
+        // enter the next tree level - left and right branch
+        printBT( prefix + (isLeft ? "│   " : "    "), node->left, true);
+        printBT( prefix + (isLeft ? "│   " : "    "), node->right, false);
+    }
+}
+
+void printBT()
+{
+    printBT("", _root, false);    
+}
+
+// void printBT(const Node* node)
+// {
+//     printBT("", node, false);    
+// }
+//printBT(root)		
+/*	testos fin	*/
 
 };
 
