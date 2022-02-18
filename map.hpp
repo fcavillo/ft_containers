@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/29 18:56:46 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/18 16:53:57 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/18 19:26:54 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -756,12 +756,47 @@ class map
 				return (rightHeight);
 		}
 
-		void	balanceTree()
+		int		balanceFactor(Node* node)
 		{
+			return (treeHeight(node->left, 1) - treeHeight(node->right, 1));
+		}
+
+		//checks from node to root if each one is balanced (bf should be -1, 0 or 1)
+		void	balanceTree(Node* root, Node* node)
+		{
+			while (node)
+			{
+				int	bf;
+				
+				bf = balanceFactor(node);
+				if (bf > 1 && balanceFactor(node->left) >= 0)		//ll
+				{
+					//ll on node->left
+				}
+				else if (bf > 1 && balanceFactor(node->left) < 0)	//lr
+				{
+					//lr on node
+				}
+				else if (bf < -1 && balanceFactor(node->right) > 0)	//rl
+				{
+					//rl 
+				}
+				else if (bf < -1 && balanceFactor(node->right) <= 0)	//rr
+				{
+					//rr on node->right	
+				}
+				else
+				{
+					if (node != root)
+						node = node->parent;
+					else
+						break;
+				}
+			}
 			return ;
 		}
 
-		void	rotateLeft(Node* position)
+		void	rotateLeft(Node* root, Node* node)
 		{
 			(void)position;
 			return ;
@@ -818,14 +853,14 @@ class map
 				return (true);
 			else if (*itl > *itr)			//right is lesser
 				return (false);
-			else if (itr == itre)		//right is shorter -> lesser
+			else if (itr == itre)			//right is shorter == lesser
 				return (false);
 			itl++;
 			itr++;
 		}
 		if (itr == itre && itl == itle)	//both sides are equal
 			return (false);
-		return (true);					//left is shorter -> lesser				
+		return (true);					//left is shorter == lesser				
 	}
 
 	template< class Key, class T, class Compare, class Alloc >
