@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/29 18:56:46 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/18 14:43:12 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/18 16:32:55 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include "pair.hpp"
 #include "utils.hpp"
 #include "map_iterator.hpp"
+#include "reverse_iterator.hpp"
 
 //https://www.cplusplus.com/reference/map/map/
 
@@ -177,26 +178,22 @@ class map
 
 		reverse_iterator rbegin()
 		{
-			reverse_iterator	beg = reverse_iterator(_last, _last, _comp);
-			return (beg);
+			return (reverse_iterator(this->end()));
 		}
 
 		const_reverse_iterator rbegin() const
 		{
-			const_reverse_iterator	beg = const_reverse_iterator(_last, _last, _comp);
-			return (beg);
+			return (reverse_iterator(this->end()));
 		}
 
 		reverse_iterator rend()
 		{
-			reverse_iterator	end = reverse_iterator(_last->left, _last, _comp);
-			return (end);
+			return (reverse_iterator(this->begin()));
 		}
 
 		const_reverse_iterator rend() const
 		{
-			const_reverse_iterator	end = const_reverse_iterator(_last->left, _last, _comp);
-			return (end);
+			return (reverse_iterator(this->begin()));
 		}
 
 	/*	CAPACITY	*/
