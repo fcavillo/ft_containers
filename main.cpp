@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 01:24:09 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/17 16:24:22 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/18 14:45:39 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,9 @@ int		main()
 	ft::map<int, char>::const_iterator	ite = map.end();
 	ft::map<int, char>::iterator	it2 = map2.begin();
 	ft::map<int, char>::iterator	ite2 = map2.end();
+	ft::map<int, char>::reverse_iterator	rit2 = map2.rbegin();
+	ft::map<int, char>::reverse_iterator	rite2 = map2.rend();
+
 	// ft::map<int, char>::iterator	it2 = map.begin();
 	// ft::map<int, char>::iterator	ite2 = map.end();
 

@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 15:23:19 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/17 16:10:54 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/18 11:41:56 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,28 +31,28 @@ namespace   ft
 {
 
     //boolean is true is const
-    template <bool isConst, typename isFalse, typename isTrue>
+    template <bool isConst, typename falseConst, typename trueConst>
     struct chooseConst {};
 
     //sets 2nd parameter as ref and pointer
-    template <typename isFalse, typename isTrue>
-    struct chooseConst<false, isFalse, isTrue>
+    template <typename falseConst, typename trueConst>
+    struct chooseConst<false, falseConst, trueConst>
     {
-        typedef isFalse type;
+        typedef falseConst type;
     };
 
     //sets 3rd parameter as (const) ref and pointer
-    template <typename isFalse, typename isTrue>
-    struct chooseConst<true, isFalse, isTrue>
+    template <typename falseConst, typename trueConst>
+    struct chooseConst<true, falseConst, trueConst>
     {
-        typedef isTrue type;
+        typedef trueConst type;
     };
 
 template < class Key,											// map::key_type
 		   class T,												// map::mapped_type
 		   class Compare,										// map::key_compare
 		   typename Node, 										// node struct
-		   bool Con>
+		   bool Con>											//1 if const
 class map_iterator
 {
 	public :

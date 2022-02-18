@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/29 18:56:46 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/17 16:29:48 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/18 14:43:12 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,10 +63,11 @@ class map
 		// typedef ft::map_iterator<Key, T, Compare, Node, Con>				iterator;
 		// typedef const ft::map_iterator<Key, T, Compare, Node>			const_iterator;
 		// typedef ft::map_iterator<Key, T, Compare, Node, Con>				const_iterator;
-		// typedef ft::reverse_iterator<iterator>							reverse_iterator;
-		// typedef ft::reverse_iterator<const_iterator>						const_reverse_iterator;		
 		typedef typename ft::map_iterator<Key, T, Compare, Node, false>     iterator;
 		typedef typename ft::map_iterator<Key, T, Compare, Node, true>      const_iterator;
+		typedef ft::reverse_iterator<iterator>								reverse_iterator;
+		typedef ft::reverse_iterator<const_iterator>						const_reverse_iterator;		
+
 
 	private :
 	
@@ -173,7 +174,31 @@ class map
 		{
 			const_iterator		end = const_iterator(_last, _last, _comp);
 			return (end);		}
-		
+
+		reverse_iterator rbegin()
+		{
+			reverse_iterator	beg = reverse_iterator(_last, _last, _comp);
+			return (beg);
+		}
+
+		const_reverse_iterator rbegin() const
+		{
+			const_reverse_iterator	beg = const_reverse_iterator(_last, _last, _comp);
+			return (beg);
+		}
+
+		reverse_iterator rend()
+		{
+			reverse_iterator	end = reverse_iterator(_last->left, _last, _comp);
+			return (end);
+		}
+
+		const_reverse_iterator rend() const
+		{
+			const_reverse_iterator	end = const_reverse_iterator(_last->left, _last, _comp);
+			return (end);
+		}
+
 	/*	CAPACITY	*/
 
 		bool empty() const
@@ -539,7 +564,7 @@ class map
 				_root->right = _last;
 				_last->left = _root;
 				_last->right = _root;
-//temp ????
+//temp size or leave it????
 				_size++;
 				return (_root);
 			}
@@ -579,7 +604,7 @@ class map
 			newNode->parent = position;
 
 //equilibrage mdr
-//temp ????
+//temp size or leave it????
 			_size++;
 			return (newNode);
 		}
@@ -719,7 +744,30 @@ class map
 
 		/*	AVL tree specifics	*/
 
+		unsigned int	treeHeight(Node* root, unsigned int height)
+		{
+			if (!root || root == _last)
+				return (height - 1);
+			if (root->right && root->right != _last)
+				return (treeHeight(root->right, height + 1));
+			else if (root->left && root->left != _last)
+				return (treeHeight(root->left, height + 1));
+			else
+				return (height);
+		}
 
+		void	balanceTree()
+		{
+			return ;
+		}
+
+		void	rotateLeft(Node* position)
+		{
+			(void)position;
+			return ;
+		}
+
+		
 
 
 };
