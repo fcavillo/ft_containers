@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/29 18:56:46 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/19 16:22:37 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/19 16:45:38 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -900,12 +900,12 @@ class map
 		}
 
 /*	testos	*/
-public :
+public : //3, 15, 63, 255
 void printBT(const std::string& prefix, const Node* node, bool isLeft)
 {
 	if( node && node != _last )
 	{
-		usleep(250000);
+		usleep(125000);
 		std::cout << prefix;
 
 		std::cout << (isLeft ? "├──" : "└──" );
