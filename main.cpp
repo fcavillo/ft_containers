@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 01:24:09 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/18 21:05:05 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/19 16:10:39 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int		main()
 //	ft::map<int, char>	map;
 
 	ft::map<int, char>  map2;
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < 10000; i++)
 		map2[i] = i + 97;
 	// map2[8] = 'i';
 	// map2[5] = 'i';
@@ -70,10 +70,10 @@ int		main()
 	// ft::pair<int, char> pair = ft::make_pair<int, char>(2, 'u');
 	
 	// map.insert(it2, pair);
-	for (; it2 != ite2; it2++)
-		std::cout << "[" << it2->first << "] " << it2->second << std::endl;
+		// for (; it2 != ite2; it2++)
+		// 	std::cout << "[" << it2->first << "] " << it2->second << std::endl;
 
-	map2.printBT();
+		// map2.printBT();
 	// for (; rit2 != rite2; rit2++)
 	// 	std::cout << "[" << rit2->first << "] " << rit2->second << std::endl;	
 	// it = map.begin();

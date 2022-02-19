@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/29 18:56:46 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/18 21:03:18 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/19 16:22:37 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -600,8 +600,11 @@ class map
 			}
 
 			newNode->parent = position;
+			
+// std::cout << "in insert" << std::endl;				
 
 //equilibrage mdr
+			balanceTree(&_root, newNode);
 //temp size or leave it????
 			_size++;
 			return (newNode);
@@ -632,8 +635,8 @@ class map
 				//case 2 : root only has one left or right child
 				else if (target->left && target->right == _last)
 				{
-					// confusedNode = target->parent;
-//makes no sense
+					confusedNode = target->parent;
+//setting the confusedNode at 0 so balancethetree has nothing to do
 					_root = target->left;		//root becomes left child
 					target->left->parent = 0;	//cuts the link between target and new root
 					_root->right = _last;
@@ -641,8 +644,8 @@ class map
 				}
 				else if (target->right && target->left == _last)
 				{
-					// confusedNode = target->parent;
-//makes no sense
+					confusedNode = target->parent;
+//setting the confusedNode at 0 so balancethetree has nothing to do
 					_root = target->right;		//root becomes right child
 					target->right->parent = 0;	//cuts the link between target and new root
 					_root->left = _last;
@@ -732,6 +735,7 @@ class map
 			}
 			
 //balance tree
+			balanceTree(&_root, confusedNode);
 			(void)confusedNode;
 
 			deallocNode(target);
@@ -764,100 +768,160 @@ class map
 
 		//checks from node to root if each one is balanced (bf should be -1, 0 or 1)
 		//https://www.programiz.com/dsa/avl-tree
-		void	balanceTree(Node* root, Node* node)
+		void	balanceTree(Node** root, Node* node)
 		{
+			// return ;
 			while (node)
 			{
 				int	bf;
-				
+// std::cout << "wb" << std::endl;				
 				bf = balanceFactor(node);
-				if (bf > 1 && balanceFactor(node->left) >= 0)		//ll
+				if (bf > 1 && balanceFactor(node->left) > 0)		//ll
 				{
-					//ll on node->left
+// std::cout << "ll" << std::endl;				
+					rotateRight(root, node);
 				}
-				else if (bf > 1 && balanceFactor(node->left) < 0)	//lr
+				else if (bf > 1 && balanceFactor(node->left) <= 0)	//lr
 				{
-					//lr on node
+// std::cout << "lr" << std::endl;				
+					rotateLeft(root, node->left);
+					rotateRight(root, node);
 				}
-				else if (bf < -1 && balanceFactor(node->right) > 0)	//rl
+				else if (bf < -1 && balanceFactor(node->right) >= 0)	//rl
 				{
-					//rl 
+// std::cout << "rl" << std::endl;				
+					rotateRight(root, node->right);
+					rotateLeft(root, node);
 				}
-				else if (bf < -1 && balanceFactor(node->right) <= 0)	//rr
+				else if (bf < -1 && balanceFactor(node->right) < 0)	//rr
 				{
-					//rr on node->right	
+// std::cout << "rr" << std::endl;				
+					rotateLeft(root, node);
 				}
-				else
-				{
+
 //					if (node != root)
+// std::cout << "else" << std::endl;				
 						node = node->parent;
 //					else
 //						break;
-				}
+// std::cout << "we" << std::endl;				
+
 			}
-			(void)root;
 			return ;
 		}
 
-		void	rotateLeft(Node* root, Node* nodeDown)
+		void	rotateLeft(Node** root, Node* nodeDown)
 		{
 			Node*	nodeUp = nodeDown->right;
+// std::cout << "rotate left" << std::endl;				
 
-			nodeDown->right = nodeUp->left;
+			// nodeDown->right = nodeUp->left;
 
-			if (nodeUp->left)
-				nodeUp->left->parent = nodeDown;
+			// if (nodeUp->left)
+			// 	nodeUp->left->parent = nodeDown;
 
-			if (!(nodeDown->parent))
-				_root = nodeUp;
-			else if (nodeDown->parent->left == nodeDown)	//down is a left child
-				nodeDown->parent->left = nodeUp;
-			else											//down is a right child
-				nodeDown->parent->right = nodeUp;
-
-			nodeDown->parent = nodeUp;
-			
-			//
-			// nodeUp->left = nodeDown;
-
-			// nodeUp->parent = nodeDown->parent;
-
-			// if (nodeDown->parent && nodeDown->parent->left == nodeDown)
+			// if (!(nodeDown->parent))
+			// {
+			// 	_root = nodeUp;
+			// 	nodeUp->parent = 0;
+			// }
+			// else if (nodeDown->parent->left == nodeDown)	//down is a left child
 			// 	nodeDown->parent->left = nodeUp;
-			// else if (nodeDown->parent)
+			// else											//down is a right child
 			// 	nodeDown->parent->right = nodeUp;
 			
-			// nodeDown->parent->right = nodeUp;
+			// nodeDown->parent = nodeUp;
 			
-			// if (!nodeUp->parent)
-			// 	_root = nodeUp;
-			
-			(void)root;
+			  nodeDown->right = nodeUp->left;
+
+				if (nodeUp->left)
+					nodeUp->left->parent = nodeDown;
+				
+				nodeUp->left = nodeDown;
+				
+				nodeUp->parent = nodeDown->parent;
+
+				if (nodeDown->parent && nodeDown->parent->left == nodeDown)
+					nodeDown->parent->left = nodeUp;
+				else if (nodeDown->parent)
+					nodeDown->parent->right = nodeUp;
+
+				nodeDown->parent = nodeUp;
+
+				if (!nodeUp->parent)
+				   *root = nodeUp;
+				   
 			return ;
 		}
+
+		void	rotateRight(Node** root, Node* nodeDown)
+		{
+			Node*	nodeUp = nodeDown->left;
+// std::cout << "rotate right" << std::endl;				
+
+			// nodeDown->left = nodeUp->right;
+
+			// if (nodeUp->right)
+			// 	nodeUp->right->parent = nodeDown;
+
+			// if (!(nodeDown->parent))
+			// {
+			// 	_root = nodeUp;
+			// 	nodeUp->parent = 0;
+			// }
+			// else if (nodeDown->parent->right == nodeDown)	//down is a right child
+			// 	nodeDown->parent->right = nodeUp;
+			// else											//down is a left child
+			// 	nodeDown->parent->left = nodeUp;
+
+			// nodeDown->parent = nodeUp;
+			
+			//
+			  nodeDown->left = nodeUp->right;
+
+				if (nodeUp->right)
+					nodeUp->right->parent = nodeDown;
+				
+				nodeUp->right = nodeDown;
+				
+				nodeUp->parent = nodeDown->parent;
+
+				if (nodeDown->parent && nodeDown->parent->left == nodeDown)
+					nodeDown->parent->left = nodeUp;
+				else if (nodeDown->parent)
+					nodeDown->parent->right = nodeUp;
+
+				nodeDown->parent = nodeUp;
+
+				if (!nodeUp->parent)
+				   *root = nodeUp;
+			
+			return ;
+		}
+
 /*	testos	*/
 public :
 void printBT(const std::string& prefix, const Node* node, bool isLeft)
 {
-    if( node && node != _last )
-    {
-		sleep(1);
-        std::cout << prefix;
+	if( node && node != _last )
+	{
+		usleep(250000);
+		std::cout << prefix;
 
-        std::cout << (isLeft ? "├──" : "└──" );
+		std::cout << (isLeft ? "├──" : "└──" );
 
-        // print the value of the node
-        std::cout << node->data.first << std::endl;
+		// print the value of the node
+		std::cout << node->data.first << std::endl;
 
-        // enter the next tree level - left and right branch
-        printBT( prefix + (isLeft ? "│   " : "    "), node->left, true);
-        printBT( prefix + (isLeft ? "│   " : "    "), node->right, false);
-    }
+		// enter the next tree level - left and right branch
+		printBT( prefix + (isLeft ? "│   " : "    "), node->left, true);
+		printBT( prefix + (isLeft ? "│   " : "    "), node->right, false);
+	}
 }
 
 void printBT()
 {
-    printBT("", _root, false);    
+	printBT("", _root, false);    
 }
 
 // void printBT(const Node* node)
