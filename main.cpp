@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 01:24:09 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/19 16:48:37 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/21 12:06:36 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int		main()
 //	ft::map<int, char>	map;
 
 	ft::map<int, char>  map2;
-	for (int i = 0; i < 255; i++)
+	for (int i = 0; i < 63; i++)
 		map2[i] = i + 97;
 	// map2[8] = 'i';
 	// map2[5] = 'i';
@@ -65,7 +65,7 @@ int		main()
 		it2++;
 		ite2--;
 	}
-	map2.erase(it2, ite2);
+	// map2.erase(it2, ite2);
 	// rite2--;
 	// std::cout << rit2->first << rite2->first << std::endl;
 	// map3.insert(map2.begin(), map2.end());

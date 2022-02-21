@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/29 18:56:46 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/19 16:45:38 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/21 12:13:59 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,44 @@
 #include "reverse_iterator.hpp"
 
 //https://www.cplusplus.com/reference/map/map/
+//https://en.cppreference.com/w/cpp/container/map
+
+/*
+*	std::map is a sorted associative container that contains key-value pairs with unique keys. 
+*	Keys are sorted by using the comparison function Compare.
+*	List of implementations :
+		-	Member classes :
+			*	value_compare
+		-	Member functions :
+			*	constructors
+			*	destructor
+			*	operator=
+			*	get_allocator
+			*	at
+			*	operator[]
+			*	begin
+			*	end
+			*	rbegin
+			*	rend
+			*	empty
+			*	size
+			*	max_size
+			*	clear
+			*	insert
+			*	erase
+			*	swap
+			*	count
+			*	find
+			*	equal_range
+			*	lower_bound
+			*	upper_bound
+			*	key_comp
+			*	value_comp
+		-	Non-member functions :
+			*	comparison operators9
+			*	std::swap
+*
+*/
 
 
 namespace   ft
@@ -37,6 +75,16 @@ class map
 
 	/*	NODE	*/
 
+		/*	This is one the stored element
+		*	data is of type value_type,
+		*	pointers are directed to relatives
+		*
+		*				Parent
+		*				  |
+		*				data
+		*				/	\
+		*			left	right
+		*										*/
 		struct	Node
 		{
 			ft::pair<const Key, T>	data;
@@ -50,21 +98,37 @@ class map
 	
 	/*	ALIASES	*/
 	
+		/*	The map is composed of several nodes, each node has pointers to it's relatives
+		*	and a data made of a pair of <const Key, T>
+		*	Key being the key at which the node is spatially,
+		*	T being the type of data actually stored in the map	
+		*	value_type represents a pair	*/
 		typedef Key					key_type;
 		typedef T					mapped_type;
+		typedef ft::pair<const key_type, mapped_type>						value_type;
+
+		/*	key_compare is the used way of comparing keys, which sets the order of the nodes in the map */
 		typedef	Compare				key_compare;
-		typedef Alloc				allocator_type;
+
+		/*	By default, std::allocator is used, here for a pair-sized allocation
+		*	to alloc for nodes, I am using rebind, a class in std::allocator 
+		*	in wich member "other" can be used to allocate other types	*/
+		typedef Alloc														allocator_type;
+		typedef typename allocator_type::template rebind<Node>::other 		node_allocator;		
+
+		/*	To respect the naming norms, size_t and std::ptrdiff_t are renamed	*/
 		typedef size_t				size_type;
 		typedef std::ptrdiff_t		difference_type;
-		typedef typename allocator_type::template rebind<Node>::other 		node_allocator;		//rebind is a class in wich member "other" can be used to allocate other types
-		typedef ft::pair<const key_type, mapped_type>						value_type;
+
+		/*	Pointers and references are based on the std::allocator pointers and references	*/
 		typedef typename allocator_type::reference							reference;
 		typedef typename allocator_type::const_reference					const_reference;
 		typedef typename allocator_type::pointer							pointer;
 		typedef typename allocator_type::const_pointer						const_pointer;
-		// typedef ft::map_iterator<Key, T, Compare, Node, Con>				iterator;
-		// typedef const ft::map_iterator<Key, T, Compare, Node>			const_iterator;
-		// typedef ft::map_iterator<Key, T, Compare, Node, Con>				const_iterator;
+
+		/*	iterators and const_iterators work similarly, but
+		*	the references and pointers are constant for const iterators	
+		*	reverse_iterators are based on those but have the same functions no matter the container	*/
 		typedef typename ft::map_iterator<Key, T, Compare, Node, false>     iterator;
 		typedef typename ft::map_iterator<Key, T, Compare, Node, true>      const_iterator;
 		typedef ft::reverse_iterator<iterator>								reverse_iterator;
@@ -75,40 +139,42 @@ class map
 
 	/*	VARS	*/
 
-		Node*					_root;		//pointer to first tree element
-		Node*					_last;		//pointer to last tree element (before begin and rbegin)
-		size_type				_size;		//number of nodes
-		allocator_type			_allocPair;	//pair-size memory handling
-		node_allocator			_allocNode;	//pair + pointers to relatives -size memory handling
-		key_compare				_comp;		//used way of comparing keys to sort the map
+		Node*					_root;			//pointer to first tree element
+		Node*					_last;			//pointer to link tree element (before begin and rbegin)
+		size_type				_size;			//number of nodes
+		allocator_type			_allocPair;		//pair-size memory handling
+		node_allocator			_allocNode;		//pair + pointers to relatives -size memory handling
+		key_compare				_comp;			//used way of comparing keys to sort the map
 		
 
 
 	public :
 	
-		/*	CONSTRUCTORS, DESTRUCTOR, OPERATOR=	*/
+	/*	CONSTRUCTORS, DESTRUCTOR, OPERATOR=	*/
 
+
+		/*	Default constructor, constructs an empty container.
+		*	An empty node is allocated for _last, _last is set as the root in a self-centered loop	*/
 		explicit map (const key_compare& comp = key_compare(),
 					const allocator_type& alloc = allocator_type()) :
 		_size(0),
 		_allocPair(alloc),
 		_comp(comp)
 		{
-			_last = createNode(ft::pair<const key_type, mapped_type>());	//the only node is empty, but allocated
+			_last = createNode(ft::pair<const key_type, mapped_type>());
 			_root = _last;													
 			_last->left = _last;
 			_last->right = _last;
-	//or null ?		
+
 			return ;
 		}
 
-		//enable_if only lets the last parameter exist as long as it is not an int
-		//it checks if the type of the value InputIterator is an int
+		/*	Constructs the container with the value_type contents of the range [first, last)
+		*	_last is allocated as an empty node, each value_type is then inserted one by one */
 		template <class InputIterator>
 		map (InputIterator first, InputIterator last,
 			const key_compare& comp = key_compare(),
-			const allocator_type& alloc = allocator_type(),
-			typename ft::enable_if<!ft::is_integral<InputIterator>::value >::type* = 0) :
+			const allocator_type& alloc = allocator_type()) :
 		_size(0),
 		_allocPair(alloc),
 		_comp(comp)
@@ -118,10 +184,8 @@ class map
 			_last->left = _last;
 			_last->right = _last;
 
-			// std::cout << *first << std::endl;
 			for (; first != last; first++)
 		 		insert(*first);
-		// insert(first, last);
 			return ;
 		}
 
@@ -294,6 +358,11 @@ class map
 					
 		}
 
+		/*	enable_if is an additional function argument : (Substitution Failure Is Not An Error)
+		*	this constructor takes 2 parameters but it has to be differentiated from the default one at compilation
+		*	To do this, we check that the parameters sent is not an integral_type :
+		*	is_integral<InputIterator> has to be false
+		*	*/
 		template <class InputIterator>
 		void insert (InputIterator first, InputIterator last,
 		typename ft::enable_if<!ft::is_integral<InputIterator>::value >::type* = 0)
@@ -898,9 +967,16 @@ class map
 			
 			return ;
 		}
+/* 	This is a public member function, created for the correction.
+	It is based on the answer from @Adrian Schneider :
+	https://stackoverflow.com/questions/36802354/print-binary-tree-in-a-pretty-way-using-c
+	This has to be a public member function since it needs access to the private _root
+	
+	It is a great way to visualize the tree and it's balanced structure.
+	It works best for perfectly balanced trees, 
+	with a node total number of 3, 15, 63, 255, 511... ((powers of 2) - 1) */
 
-/*	testos	*/
-public : //3, 15, 63, 255
+public :
 void printBT(const std::string& prefix, const Node* node, bool isLeft)
 {
 	if( node && node != _last )
@@ -924,11 +1000,6 @@ void printBT()
 	printBT("", _root, false);    
 }
 
-// void printBT(const Node* node)
-// {
-//     printBT("", node, false);    
-// }
-//printBT(root)		
 /*	testos fin	*/
 
 };
