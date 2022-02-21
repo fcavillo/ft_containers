@@ -356,7 +356,7 @@ class map
 		*	(search and insertion optimization).
 		*	Returns an iterator to the new node (or same-key node if existant) 	*/
 		iterator insert (iterator position, const value_type& val)
-		{
+		{ 
 			//if val.key < position.key, we decrease position until finding closest higher key
 			if (_comp(val.first, position->first))
 			{
