@@ -189,6 +189,7 @@ class map
 			return ;
 		}
 
+		/*	Copy constructor : constructs the container with the copy of the contents of other	*/
 		map (const map& x) :
 		_size(0),
 		_allocPair(x._allocPair),
@@ -200,42 +201,55 @@ class map
 			_last->left = _last;
 			_last->right = _last;
 			insert(x.begin(), x.end());
+			return ;
 		}
 
+		/*	Destructors of the elements are called and the used storage is deallocated	*/
+		~map ()
+		{
+			clear();
+			deallocNode(_root);
+			return ;
+		}
+
+		/*	Replaces the contents with a copy of the contents of other
+		*	by creating a copy of x, then swaping with current instance	 */
 		map& operator= (const map& x)
 		{
 			map	tmp(x);
 			
 			this->swap(tmp);
-			
+//leaks ?			
 			return *this;		
 		}
 
 	/*	ITERATORS	*/
 
-		//sending node, last, comp function
-		iterator begin(/*typename ft::enable_if<!ft::is_integral<InputIterator>::value >::type* = 0)*/)
+		/*	Returns an iterator to the first element,
+		*	here to the right of _last : sending node, _last and _comp to the iterator constructor	*/
+		iterator begin()
 		{
 			iterator		beg = iterator(_last->right, _last, _comp);
-// std::cout << "beg = " << beg->first << std::endl;
-// std::cout << "wsh maggle t pa un const" << std::endl;
 			return (beg);
 		}
 
-		const_iterator begin() const
+		/*	Returns a const iterator to the first element,
+		*	here to the right of _last : sending node, _last and _comp to the const_iterator constructor	*/		const_iterator begin() const
 		{
 			const_iterator	beg = const_iterator(_last->right, _last, _comp);
-// std::cout << "cbeg = " << beg->first << std::endl;
-// std::cout << "wsh maggle t un const" << std::endl;
 			return (beg);
 		}
 
+		/*	Returns an iterator to the _last element :
+		*	sending node (here _last), _last and _comp to the iterator constructor	*/
 		iterator end()
 		{
 			iterator		end = iterator(_last, _last, _comp);
 			return (end);
 		}
 
+		/*	Returns a const_iterator to the _last element :
+		*	sending node (here _last), _last and _comp to the const_iterator constructor	*/		
 		const_iterator end() const
 		{
 			const_iterator		end = const_iterator(_last, _last, _comp);
