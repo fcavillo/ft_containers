@@ -34,7 +34,6 @@
 			*	destructor
 			*	operator=
 			*	get_allocator
-			*	at
 			*	operator[]
 			*	begin
 			*	end
@@ -311,7 +310,10 @@ class map
 	/*	ELEMENT ACCESS	*/
 
 		/*	Returns a reference to the value that is mapped to a key equivalent to k, 
-		*	performing an insertion if such key does not already exist.	*/
+		*	performing an insertion if such key does not already exist :
+		*	creating a pair from k and empty mapped_type(),
+		*	inserting node with data = newPair,
+		*	returning reference to mapped_type value	*/
 		mapped_type& operator[] (const key_type& k)
 		{
 			Node*	tmp = searchNode(_root, k);
@@ -320,8 +322,10 @@ class map
 				return (tmp->data.second);
 
 
-			value_type	newPair = ft::make_pair<key_type, mapped_type>(k, mapped_type()); //type != fct
-			return (insertNode(_root, newPair)->data.second);
+			value_type	newPair = ft::make_pair<key_type, mapped_type>(k, mapped_type());
+			tmp = insertNode(_root, newPair);
+
+			return (tmp->data.second);
 		}
 
 		// https://www.cplusplus.com/reference/map/map/at/ (at) was not implemented in c++98
@@ -329,31 +333,36 @@ class map
 
 	/*	MODIFIERS	*/
 
-		//inserts val and returns a pair, 
-		//with p::first being an iterator to the node,
-		//p::second is true if val inserted, false if already there
+		/*	Inserts a value_type val in the map. 
+		*	A pair is returned, with p->first being an iterator to the new node (or same-key node if existant),
+		*	and p->second being a bool : true if inserted, false if key already exists	*/
 		ft::pair<iterator,bool>	insert(const value_type& val)
 		{
-			Node*	tmp = searchNode(_root, val.first);
-			//look for key, if exists, return that iterator with false bool
+			//look for key, if exists, return the iterator to the node with false bool
+			Node*		tmp = searchNode(_root, val.first);
 			if (tmp)
-				return (ft::pair<iterator, bool>(iterator(tmp, _last, _comp), false));
+			{
+				iterator it = iterator(tmp, _last, _comp);
+				return (ft::pair<iterator, bool>(it, false));
+			}
+
+			//else, insert new value into map by creating a new node and return the iterator to the node with true bool 
 			tmp = insertNode(_root, val);
-			return (ft::pair<iterator, bool>(iterator(tmp, _last, _comp), true));
+			iterator it = iterator(tmp, _last, _comp);
+			return (ft::pair<iterator, bool>(it, true));
 		}
 
-		//inserts val by starting looking for a spot at position,
-		//optimizing insertion process
-		//returns iterator to new node or already existing similar one
+		/*	Inserts a value_type val in the map, starting to look for the closest spot from position 
+		*	(search and insertion optimization).
+		*	Returns an iterator to the new node (or same-key node if existant) 	*/
 		iterator insert (iterator position, const value_type& val)
 		{
 			//if val.key < position.key, we decrease position until finding closest higher key
-//comptest	if (val.first < position->first)
 			if (_comp(val.first, position->first))
 			{
 				iterator	tooHigh(position);
 				//tooHigh is always position - 1, so when we get to the first lower val, position is on the first higher one
-				--tooHigh;
+				--tooHigh;  
 				while (tooHigh != end() && tooHigh->first >= val.first)
 				{
 					position--;
@@ -446,6 +455,7 @@ class map
 			return;		
 		}
 
+		/*	Erases all elements from the container.	*/
 		void clear()
 		{
 			erase(begin(), end());
@@ -654,7 +664,7 @@ class map
 				_root->right = _last;
 				_last->left = _root;
 				_last->right = _root;
-//temp size or leave it????
+
 				_size++;
 				return (_root);
 			}
@@ -694,10 +704,8 @@ class map
 			newNode->parent = position;
 			
 // std::cout << "in insert" << std::endl;				
-
-//equilibrage mdr
 			balanceTree(&_root, newNode);
-//temp size or leave it????
+
 			_size++;
 			return (newNode);
 		}

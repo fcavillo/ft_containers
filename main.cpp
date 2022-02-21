@@ -39,7 +39,7 @@ int		main()
 //	ft::map<int, char>	map;
 
 	ft::map<int, char>  map2;
-	for (int i = 0; i < 63; i++)
+	for (int i = 0; i < 15; i++)
 		map2[i] = i + 97;
 	// map2[8] = 'i';
 	// map2[5] = 'i';
@@ -80,6 +80,10 @@ int		main()
 		// 	std::cout << "[" << it2->first << "] " << it2->second << std::endl;
 
 	map2.printBT();
+	std::cout << map2.size() << std::endl;
+	map2.clear();
+	std::cout << map2.size() << std::endl;
+
 	// for (; rit2 != rite2; rit2++)
 	// 	std::cout << "[" << rit2->first << "] " << rit2->second << std::endl;	
 	// it = map.begin();
