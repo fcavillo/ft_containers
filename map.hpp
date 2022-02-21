@@ -103,9 +103,9 @@ class map
 		*	Key being the key at which the node is spatially,
 		*	T being the type of data actually stored in the map	
 		*	value_type represents a pair	*/
-		typedef Key					key_type;
-		typedef T					mapped_type;
-		typedef ft::pair<const key_type, mapped_type>						value_type;
+		typedef Key										key_type;
+		typedef T										mapped_type;
+		typedef ft::pair<const key_type, mapped_type>	value_type;
 
 		/*	key_compare is the used way of comparing keys, which sets the order of the nodes in the map */
 		typedef	Compare				key_compare;
@@ -139,12 +139,12 @@ class map
 
 	/*	VARS	*/
 
-		Node*					_root;			//pointer to first tree element
-		Node*					_last;			//pointer to link tree element (before begin and rbegin)
-		size_type				_size;			//number of nodes
-		allocator_type			_allocPair;		//pair-size memory handling
-		node_allocator			_allocNode;		//pair + pointers to relatives -size memory handling
-		key_compare				_comp;			//used way of comparing keys to sort the map
+		Node*				_root;			//pointer to first tree element
+		Node*				_last;			//pointer to link tree element (before begin and rbegin)
+		size_type			_size;			//number of nodes
+		allocator_type		_allocPair;		//pair-size memory handling
+		node_allocator		_allocNode;		//pair + pointers to relatives -size memory handling
+		key_compare			_comp;			//used way of comparing keys to sort the map
 		
 
 
@@ -154,7 +154,8 @@ class map
 
 
 		/*	Default constructor, constructs an empty container.
-		*	An empty node is allocated for _last, _last is set as the root in a self-centered loop	*/
+		*	An empty node is allocated for _last, _last is set as the root in a self-centered loop.
+		*	Node is initialised with an empty type of data	*/
 		explicit map (const key_compare& comp = key_compare(),
 					const allocator_type& alloc = allocator_type()) :
 		_size(0),
@@ -253,26 +254,34 @@ class map
 		const_iterator end() const
 		{
 			const_iterator		end = const_iterator(_last, _last, _comp);
-			return (end);		}
+			return (end);		
+		}
 
+		/*	Returns a reverse_iterator to rbegin = end() - 1
+		*	here to the left of _last : sending node, _last and _comp to the rev_iterator constructor	*/
 		reverse_iterator rbegin()
 		{
-			return (reverse_iterator(this->end()));
+			return (reverse_iterator(_last->left, _last, _comp));
 		}
-
+		/*	Returns a const_reverse_iterator to rbegin = end() - 1
+		*	here to the left of _last : sending node, _last and _comp to the const_rev_iterator constructor	*/
 		const_reverse_iterator rbegin() const
 		{
-			return (reverse_iterator(this->end()));
+			return (const_reverse_iterator(_last->left, _last, _comp));
 		}
 
+		/*	Returns a rev_iterator to rend = _last or begin() - 1:
+		*	sending node (here _last), _last and _comp to the rev_iterator constructor	*/
 		reverse_iterator rend()
 		{
-			return (reverse_iterator(this->begin()));
+			return (reverse_iterator(_last, _last, _comp));
 		}
 
+		/*	Returns an const_rev_iterator to rend = _last or begin() - 1:
+		*	sending node (here _last), _last and _comp to the const_rev_iterator constructor	*/
 		const_reverse_iterator rend() const
 		{
-			return (reverse_iterator(this->begin()));
+			return (const_reverse_iterator(_last, _last, _comp));
 		}
 
 	/*	CAPACITY	*/
@@ -287,24 +296,22 @@ class map
 			return (_size);
 		}
 		
-		size_type max_size() const throw()
+		/*	Returns the maximum number of elements the container is able to hold,
+		*	calculated from the max_size function from std::allocator, for a size of Node
+		*	https://www.cplusplus.com/reference/memory/allocator/max_size/	*/
+		size_type max_size() const
 		{
 			size_type	max = 0;
-			try
-			{
-				max = _allocNode.max_size();
-			}
-			catch (std::exception &e)
-			{
-				std::cout << "Error :\t map::max_size : " << e.what() << std::endl;
-			}
+
+			max = _allocNode.max_size();
+			
 			return (max);
 		}
 		
 	/*	ELEMENT ACCESS	*/
 
-		//access an element : if exists, returns the content
-		//if doesn't exist, inserts a node at this key and returns the available content space reference
+		/*	Returns a reference to the value that is mapped to a key equivalent to k, 
+		*	performing an insertion if such key does not already exist.	*/
 		mapped_type& operator[] (const key_type& k)
 		{
 			Node*	tmp = searchNode(_root, k);
@@ -312,10 +319,12 @@ class map
 			if (tmp)
 				return (tmp->data.second);
 
+
 			value_type	newPair = ft::make_pair<key_type, mapped_type>(k, mapped_type()); //type != fct
 			return (insertNode(_root, newPair)->data.second);
 		}
 
+		// https://www.cplusplus.com/reference/map/map/at/ (at) was not implemented in c++98
 
 
 	/*	MODIFIERS	*/
