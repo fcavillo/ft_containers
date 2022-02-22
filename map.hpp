@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/29 18:56:46 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/21 12:13:59 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/22 11:55:58 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -357,35 +357,43 @@ class map
 		*	Returns an iterator to the new node (or same-key node if existant) 	*/
 		iterator insert (iterator position, const value_type& val)
 		{ 
+			//if the key is aleady in the tree
+			if (count(val.first))
+				return (position);
 			//if val.key < position.key, we decrease position until finding closest higher key
-			if (_comp(val.first, position->first))
+			else if (_comp(val.first, position->first))
 			{
-				iterator	tooHigh(position);
-				//tooHigh is always position - 1, so when we get to the first lower val, position is on the first higher one
-				--tooHigh;  
-				while (tooHigh != end() && tooHigh->first >= val.first)
-				{
+				// iterator	tooHigh(position);
+				// //tooHigh is always position - 1, so when we get to the first lower val, position is on the first higher one
+				// --tooHigh;  
+				// while (tooHigh != end() && tooHigh->first >= val.first)
+				// {
+				// 	position--;
+				// 	tooHigh--;
+				// }
+				while (position != end() && _comp(val.first, position->first))
 					position--;
-					tooHigh--;
-				}
+				position++;
+					
 			}
 			//if val.key > position.key, we increase position until finding closest lower key
-			else if (/*comptest val.first > position->first*/ _comp(position->first, val.first))
+			else if (_comp(position->first, val.first))
 			{
-				iterator	tooLow(position);
-				//tooLow is always position + 1, so when we get to the first higher val, position is on the first lower one
-				++tooLow;
-				while (tooLow != end() && tooLow->first <= val.first)
-				{
+				// iterator	tooLow(position);
+				// //tooLow is always position + 1, so when we get to the first higher val, position is on the first lower one
+				// ++tooLow;
+				// while (tooLow != end() && tooLow->first <= val.first)
+				// {
+				// 	position++;
+				// 	tooLow++;
+				// }
+				while (position != end() && _comp(position->first, val.first))
 					position++;
-					tooLow++;
-				}
+				position--;
 			}
-			//if the key is aleady in the tree
 			if (position != end() && val.first == position->first)
 				return (position);
 
-			// _size++
 			return (iterator(insertNode(position.getNode(), val), _last, _comp));
 					
 		}
