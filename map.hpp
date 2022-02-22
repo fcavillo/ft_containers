@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/29 18:56:46 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/22 11:55:58 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/22 15:21:00 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -260,27 +260,27 @@ class map
 		*	here to the left of _last : sending node, _last and _comp to the rev_iterator constructor	*/
 		reverse_iterator rbegin()
 		{
-			return (reverse_iterator(_last->left, _last, _comp));
+			return (reverse_iterator(iterator(_last->left, _last, _comp)));
 		}
 		/*	Returns a const_reverse_iterator to rbegin = end() - 1
 		*	here to the left of _last : sending node, _last and _comp to the const_rev_iterator constructor	*/
 		const_reverse_iterator rbegin() const
 		{
-			return (const_reverse_iterator(_last->left, _last, _comp));
+			return (const_reverse_iterator(const_iterator(_last->left, _last, _comp)));
 		}
 
 		/*	Returns a rev_iterator to rend = _last or begin() - 1:
 		*	sending node (here _last), _last and _comp to the rev_iterator constructor	*/
 		reverse_iterator rend()
 		{
-			return (reverse_iterator(_last, _last, _comp));
+			return (reverse_iterator(iterator(_last, _last, _comp)));
 		}
 
 		/*	Returns an const_rev_iterator to rend = _last or begin() - 1:
 		*	sending node (here _last), _last and _comp to the const_rev_iterator constructor	*/
 		const_reverse_iterator rend() const
 		{
-			return (const_reverse_iterator(_last, _last, _comp));
+			return (const_reverse_iterator(const_iterator(_last, _last, _comp)));
 		}
 
 	/*	CAPACITY	*/
