@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 01:24:09 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/21 12:06:36 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/22 18:05:09 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,14 +57,16 @@ int		main()
 	// ft::map<int, char>::const_iterator	ite = map.end();
 	ft::map<int, char>::iterator	it2 = map2.begin();
 	ft::map<int, char>::iterator	ite2 = map2.end();
+	ft::map<int, char>::reverse_iterator	rit = map2.rbegin();
+	ft::map<int, char>::reverse_iterator	rite = map2.rend();
+
+	ite2--;
 	// ft::map<int, char>::reverse_iterator	rit2 = map2.rbegin();
 	// ft::map<int, char>::reverse_iterator	rite2 = map2.rend();
-	int i = 0;
-	while (i++ < 100)
-	{
-		it2++;
-		ite2--;
-	}
+	std::cout << rit->first << std::endl;
+	std::cout << rite->first << std::endl;
+	std::cout << it2->first << std::endl;
+	std::cout << ite2->first << std::endl;
 	// map2.erase(it2, ite2);
 	// rite2--;
 	// std::cout << rit2->first << rite2->first << std::endl;
@@ -76,13 +78,13 @@ int		main()
 	// ft::pair<int, char> pair = ft::make_pair<int, char>(2, 'u');
 	
 	// map.insert(it2, pair);
-		// for (; it2 != ite2; it2++)
-		// 	std::cout << "[" << it2->first << "] " << it2->second << std::endl;
+		for (; it2 != ite2; it2++)
+			std::cout << "[" << it2->first << "] " << it2->second << std::endl;
 
-	map2.printBT();
-	std::cout << map2.size() << std::endl;
-	map2.clear();
-	std::cout << map2.size() << std::endl;
+	// map2.printBT();
+	// std::cout << map2.size() << std::endl;
+	// map2.clear();
+	// std::cout << map2.size() << std::endl;
 
 	// for (; rit2 != rite2; rit2++)
 	// 	std::cout << "[" << rit2->first << "] " << rit2->second << std::endl;	

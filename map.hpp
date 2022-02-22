@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/29 18:56:46 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/22 15:21:00 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/22 17:58:47 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -260,6 +260,7 @@ class map
 		*	here to the left of _last : sending node, _last and _comp to the rev_iterator constructor	*/
 		reverse_iterator rbegin()
 		{
+			std::cout << "rbeg = " << _last->left->data.first << std::endl;
 			return (reverse_iterator(iterator(_last->left, _last, _comp)));
 		}
 		/*	Returns a const_reverse_iterator to rbegin = end() - 1
@@ -273,6 +274,7 @@ class map
 		*	sending node (here _last), _last and _comp to the rev_iterator constructor	*/
 		reverse_iterator rend()
 		{
+			std::cout << "rend + 1 = " << _last->right->data.first << std::endl;
 			return (reverse_iterator(iterator(_last, _last, _comp)));
 		}
 
