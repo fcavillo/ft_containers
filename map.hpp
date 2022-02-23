@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/29 18:56:46 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/23 19:16:19 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/23 19:31:44 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,8 @@
 			*	key_comp
 			*	value_comp
 		-	Non-member functions :
-			*	comparison operators9
-			*	std::swap
+			*	comparison operators
+			*	std::swap	********************************<---------
 *
 */
 
@@ -756,7 +756,6 @@ class map
 
 					_allocPair.destroy(&target->data);
 					_allocPair.construct(&target->data, leftSubtreeHighest->data);	//copy highestNode to root
-//make a graph
 					//in the left subtree, delete the highest that was moved to root
 					return (deleteNode(target->left, leftSubtreeHighest->data.first));	
 				}
@@ -826,7 +825,6 @@ class map
 
 				_allocPair.destroy(&target->data);
 				_allocPair.construct(&target->data, leftSubtreeHighest->data);	//copy highestNode to root
-//make a graph
 				//in the left subtree, delete the highest that was moved to root
 				return (deleteNode(target->left, leftSubtreeHighest->data.first));					
 			}
@@ -841,6 +839,7 @@ class map
 
 		/*	AVL tree specifics	*/
 
+		/*	Calucaltes the height from root, longest way to a leaf	*/
 		int	treeHeight(Node* root, int height)
 		{
 			//reached leaf + 1
@@ -856,6 +855,7 @@ class map
 				return (rightHeight);
 		}
 
+		/* The balance factor is calculated from left height - right height	*/
 		int		balanceFactor(Node* node)
 		{
 			return (treeHeight(node->left, 1) - treeHeight(node->right, 1));
@@ -865,16 +865,16 @@ class map
 		//https://www.programiz.com/dsa/avl-tree
 		void	balanceTree(Node** root, Node* node)
 		{
-			// return ;
+			// return ; remove to test without balance
 			while (node)
 			{
 				int	bf;
 				bf = balanceFactor(node);
-				if (bf > 1 && balanceFactor(node->left) > 0)		//ll
+				if (bf > 1 && balanceFactor(node->left) > 0)			//ll
 				{
 					rotateRight(root, node);
 				}
-				else if (bf > 1 && balanceFactor(node->left) <= 0)	//lr
+				else if (bf > 1 && balanceFactor(node->left) <= 0)		//lr
 				{
 					rotateLeft(root, node->left);
 					rotateRight(root, node);
@@ -884,7 +884,7 @@ class map
 					rotateRight(root, node->right);
 					rotateLeft(root, node);
 				}
-				else if (bf < -1 && balanceFactor(node->right) < 0)	//rr
+				else if (bf < -1 && balanceFactor(node->right) < 0)		//rr
 				{
 					rotateLeft(root, node);
 				}
@@ -896,43 +896,25 @@ class map
 		void	rotateLeft(Node** root, Node* nodeDown)
 		{
 			Node*	nodeUp = nodeDown->right;
-// std::cout << "rotate left" << std::endl;				
-
-			// nodeDown->right = nodeUp->left;
-
-			// if (nodeUp->left)
-			// 	nodeUp->left->parent = nodeDown;
-
-			// if (!(nodeDown->parent))
-			// {
-			// 	_root = nodeUp;
-			// 	nodeUp->parent = 0;
-			// }
-			// else if (nodeDown->parent->left == nodeDown)	//down is a left child
-			// 	nodeDown->parent->left = nodeUp;
-			// else											//down is a right child
-			// 	nodeDown->parent->right = nodeUp;
 			
-			// nodeDown->parent = nodeUp;
+			nodeDown->right = nodeUp->left;
+
+			if (nodeUp->left)
+				nodeUp->left->parent = nodeDown;
 			
-			  nodeDown->right = nodeUp->left;
+			nodeUp->left = nodeDown;
+			
+			nodeUp->parent = nodeDown->parent;
 
-				if (nodeUp->left)
-					nodeUp->left->parent = nodeDown;
-				
-				nodeUp->left = nodeDown;
-				
-				nodeUp->parent = nodeDown->parent;
+			if (nodeDown->parent && nodeDown->parent->left == nodeDown)
+				nodeDown->parent->left = nodeUp;
+			else if (nodeDown->parent)
+				nodeDown->parent->right = nodeUp;
 
-				if (nodeDown->parent && nodeDown->parent->left == nodeDown)
-					nodeDown->parent->left = nodeUp;
-				else if (nodeDown->parent)
-					nodeDown->parent->right = nodeUp;
+			nodeDown->parent = nodeUp;
 
-				nodeDown->parent = nodeUp;
-
-				if (!nodeUp->parent)
-				   *root = nodeUp;
+			if (!nodeUp->parent)
+				*root = nodeUp;
 				   
 			return ;
 		}
@@ -940,81 +922,30 @@ class map
 		void	rotateRight(Node** root, Node* nodeDown)
 		{
 			Node*	nodeUp = nodeDown->left;
-// std::cout << "rotate right" << std::endl;				
 
-			// nodeDown->left = nodeUp->right;
+			nodeDown->left = nodeUp->right;
 
-			// if (nodeUp->right)
-			// 	nodeUp->right->parent = nodeDown;
-
-			// if (!(nodeDown->parent))
-			// {
-			// 	_root = nodeUp;
-			// 	nodeUp->parent = 0;
-			// }
-			// else if (nodeDown->parent->right == nodeDown)	//down is a right child
-			// 	nodeDown->parent->right = nodeUp;
-			// else											//down is a left child
-			// 	nodeDown->parent->left = nodeUp;
-
-			// nodeDown->parent = nodeUp;
+			if (nodeUp->right)
+				nodeUp->right->parent = nodeDown;
 			
-			//
-			  nodeDown->left = nodeUp->right;
+			nodeUp->right = nodeDown;
+			
+			nodeUp->parent = nodeDown->parent;
 
-				if (nodeUp->right)
-					nodeUp->right->parent = nodeDown;
-				
-				nodeUp->right = nodeDown;
-				
-				nodeUp->parent = nodeDown->parent;
+			if (nodeDown->parent && nodeDown->parent->left == nodeDown)
+				nodeDown->parent->left = nodeUp;
+			else if (nodeDown->parent)
+				nodeDown->parent->right = nodeUp;
 
-				if (nodeDown->parent && nodeDown->parent->left == nodeDown)
-					nodeDown->parent->left = nodeUp;
-				else if (nodeDown->parent)
-					nodeDown->parent->right = nodeUp;
+			nodeDown->parent = nodeUp;
 
-				nodeDown->parent = nodeUp;
-
-				if (!nodeUp->parent)
-				   *root = nodeUp;
+			if (!nodeUp->parent)
+				*root = nodeUp;
 			
 			return ;
 		}
-/* 	This is a public member function, created for the correction.
-	It is based on the answer from @Adrian Schneider :
-	https://stackoverflow.com/questions/36802354/print-binary-tree-in-a-pretty-way-using-c
-	This has to be a public member function since it needs access to the private _root
-	
-	It is a great way to visualize the tree and it's balanced structure.
-	It works best for perfectly balanced trees, 
-	with a node total number of 3, 15, 63, 255, 511... ((powers of 2) - 1) */
+		
 
-public :
-void printBT(const std::string& prefix, const Node* node, bool isLeft)
-{
-	if( node && node != _last )
-	{
-		usleep(125000);
-		std::cout << prefix;
-
-		std::cout << (isLeft ? "├──" : "└──" );
-
-		// print the value of the node
-		std::cout << node->data.first << std::endl;
-
-		// enter the next tree level - left and right branch
-		printBT( prefix + (isLeft ? "│   " : "    "), node->left, true);
-		printBT( prefix + (isLeft ? "│   " : "    "), node->right, false);
-	}
-}
-
-void printBT()
-{
-	printBT("", _root, false);    
-}
-
-/*	testos fin	*/
 
 };
 
@@ -1022,23 +953,19 @@ void printBT()
 	bool operator==( const ft::map<Key,T,Compare,Alloc>& lhs,
 					const ft::map<Key,T,Compare,Alloc>& rhs )
 	{
-// std::cout << "1" << std::endl;
 		if (lhs.size() != rhs.size())
 			return (false);
-// std::cout << "2" << std::endl;
 
 		typename ft::map<Key,T>::const_iterator	itl = lhs.begin();
 		typename ft::map<Key,T>::const_iterator	itr = rhs.begin();
-// int i = 0;		
+		
 		while (itl != lhs.end())
 		{
-// std::cout << i++ << std::endl;	
 			if (*itl != *itr)
 				return (false);
 			itl++;
 			itr++;
 		}
-// std::cout << "3" << std::endl;
 		return (true);		
 	}
 
@@ -1069,9 +996,9 @@ void printBT()
 			itl++;
 			itr++;
 		}
-		if (itr == itre && itl == itle)	//both sides are equal
+		if (itr == itre && itl == itle)		//both sides are equal
 			return (false);
-		return (true);					//left is shorter == lesser				
+		return (true);						//left is shorter == lesser				
 	}
 
 	template< class Key, class T, class Compare, class Alloc >
