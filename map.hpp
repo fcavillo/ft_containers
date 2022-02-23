@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/29 18:56:46 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/22 17:58:47 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/23 14:16:44 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -260,29 +260,27 @@ class map
 		*	here to the left of _last : sending node, _last and _comp to the rev_iterator constructor	*/
 		reverse_iterator rbegin()
 		{
-			std::cout << "rbeg = " << _last->left->data.first << std::endl;
-			return (reverse_iterator(iterator(_last->left, _last, _comp)));
+			return (reverse_iterator(end()));
 		}
 		/*	Returns a const_reverse_iterator to rbegin = end() - 1
 		*	here to the left of _last : sending node, _last and _comp to the const_rev_iterator constructor	*/
 		const_reverse_iterator rbegin() const
 		{
-			return (const_reverse_iterator(const_iterator(_last->left, _last, _comp)));
+			return (const_reverse_iterator(end()));
 		}
 
 		/*	Returns a rev_iterator to rend = _last or begin() - 1:
 		*	sending node (here _last), _last and _comp to the rev_iterator constructor	*/
 		reverse_iterator rend()
 		{
-			std::cout << "rend + 1 = " << _last->right->data.first << std::endl;
-			return (reverse_iterator(iterator(_last, _last, _comp)));
+			return (reverse_iterator(begin()));
 		}
 
 		/*	Returns an const_rev_iterator to rend = _last or begin() - 1:
 		*	sending node (here _last), _last and _comp to the const_rev_iterator constructor	*/
 		const_reverse_iterator rend() const
 		{
-			return (const_reverse_iterator(const_iterator(_last, _last, _comp)));
+			return (const_reverse_iterator(begin()));
 		}
 
 	/*	CAPACITY	*/
@@ -735,7 +733,7 @@ class map
 			/* DELETING THE PARENTLESS ROOT	*/
 			if (!target->parent)
 			{
-				//case 1 : only node in the tree
+				//case 1 : node in the tree
 				if (target->right == _last && target->left == _last)
 				{
 					_root = _last;

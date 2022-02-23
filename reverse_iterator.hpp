@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 17:24:33 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/16 15:07:47 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/23 14:11:09 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ class   reverse_iterator
 		
 		explicit reverse_iterator (iterator_type it) : _base(it)
 		{
+			// std::cout << _base->_last->data.first << std::endl;
 			return ;
 		}
 		
