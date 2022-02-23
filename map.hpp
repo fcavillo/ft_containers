@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/29 18:56:46 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/23 14:16:44 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/23 19:16:19 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -353,7 +353,10 @@ class map
 		}
 
 		/*	Inserts a value_type val in the map, starting to look for the closest spot from position 
-		*	(search and insertion optimization).
+		*	(search and insertion optimization). 
+		*	This is done by going down until we find the closest existant higher key (for low keys)
+		*	or closest existant lower key (for high keys),
+		*	since this is a good point where to start looking for the correct node spot with insert.
 		*	Returns an iterator to the new node (or same-key node if existant) 	*/
 		iterator insert (iterator position, const value_type& val)
 		{ 
@@ -363,14 +366,6 @@ class map
 			//if val.key < position.key, we decrease position until finding closest higher key
 			else if (_comp(val.first, position->first))
 			{
-				// iterator	tooHigh(position);
-				// //tooHigh is always position - 1, so when we get to the first lower val, position is on the first higher one
-				// --tooHigh;  
-				// while (tooHigh != end() && tooHigh->first >= val.first)
-				// {
-				// 	position--;
-				// 	tooHigh--;
-				// }
 				while (position != end() && _comp(val.first, position->first))
 					position--;
 				position++;
@@ -379,30 +374,24 @@ class map
 			//if val.key > position.key, we increase position until finding closest lower key
 			else if (_comp(position->first, val.first))
 			{
-				// iterator	tooLow(position);
-				// //tooLow is always position + 1, so when we get to the first higher val, position is on the first lower one
-				// ++tooLow;
-				// while (tooLow != end() && tooLow->first <= val.first)
-				// {
-				// 	position++;
-				// 	tooLow++;
-				// }
 				while (position != end() && _comp(position->first, val.first))
 					position++;
 				position--;
 			}
+			//if key is already in the tree
 			if (position != end() && val.first == position->first)
 				return (position);
 
-			return (iterator(insertNode(position.getNode(), val), _last, _comp));
+			Node*	newNode = insertNode(position.getNode(), val);
+			return (iterator(newNode, _last, _comp));
 					
 		}
 
-		/*	enable_if is an additional function argument : (Substitution Failure Is Not An Error)
-		*	this constructor takes 2 parameters but it has to be differentiated from the default one at compilation
+		/*	Inserts elements from range [first, last[.		
+		*	enable_if is an additional function argument : (Substitution Failure Is Not An Error)
+		*	this insert takes 2 parameters but it has to be differentiated from the previous insert at compilation
 		*	To do this, we check that the parameters sent is not an integral_type :
-		*	is_integral<InputIterator> has to be false
-		*	*/
+		*	is_integral<InputIterator> has to be false */
 		template <class InputIterator>
 		void insert (InputIterator first, InputIterator last,
 		typename ft::enable_if<!ft::is_integral<InputIterator>::value >::type* = 0)
@@ -412,27 +401,27 @@ class map
 			return ;
 		}
 
+		/*	Erases a specific node at position	*/
 		void erase (iterator position)
 		{
 			deleteNode(position.getNode(), position->first);
 			return ;
 		}
 
-		size_type erase (const key_type& k)	//returns number of elem deleted (1 or 0)
+		/*	Erases a specific node with key k,
+		*	returns the number of deleted nodes (0 or 1)	*/
+		size_type erase (const key_type& k)
 		{
-			if (deleteNode(_root, k))		//returns 1 if key not found
+			if (deleteNode(_root, k))			//returns 1 if key not found
 				return (0);
 			return (1);
 		}
 
+		/*	Erases every node from [first to last[	*/
 		void erase (iterator first, iterator last)
 		{
 			while (first != last)
-// 			{
-// std::cout << "erasing [" << first->first << "] with parent " << first._node->parent->data.first << std::endl;
 				erase(first++);
-// std::cout << "_last left and right keys = " << _last->right->data.first << " / " << _last->left->data.first << std::endl;
-// 			}
 			return ;
 		}
 
@@ -463,7 +452,7 @@ class map
 			return;		
 		}
 
-		/*	Erases all elements from the container.	*/
+		/*	Erases all elements from the container	*/
 		void clear()
 		{
 			erase(begin(), end());
@@ -471,14 +460,14 @@ class map
 
 	/*	OBSERVERS	*/
 
-		//returns the used way of comparing keys (ft::less by default)
+		/* Returns the used way of comparing keys (ft::less by default)	*/
 		key_compare key_comp() const
 		{
 			return (_comp);
 		}
 		
-		//value compare is a nested class type (function object) map::value_compare 
-		//the () operator is overloaded in it to allow a comparison of the keys of 2 pairs
+		/*	Value compare is a nested class type (function object) map::value_compare 
+		*	the () operator is overloaded in it to allow a comparison of the keys of 2 pairs	*/
 		class	value_compare
 		{
 			//friend class can access private and protected members of class in which it is declared as friend
@@ -542,6 +531,7 @@ class map
 			return (0);
 		}
 
+		/* Returns an iterator pointing to the first element that is not less than (i.e. greater or equal to) key */
 		iterator lower_bound (const key_type& k)
 		{
 			iterator	it = this->begin();
@@ -560,6 +550,7 @@ class map
 			return (it);		
 		}
 
+		/* Returns an iterator pointing to the first element that is greater than key */
 		iterator upper_bound (const key_type& k)
 		{
 			iterator	it = this->begin();
@@ -605,7 +596,8 @@ class map
 	/*	PRIVATE MEMBER FUNCTIONS	*/
 		/*	BST tree handling	*/
 	
-		//create a new node, construct content, set relatives to 0
+		/*	Creates a new node, allocates for it, 
+		*	constructs a pair, sets relatives to 0	*/
 		Node*	createNode(const value_type & pair)
 		{
 			Node*	newNode = _allocNode.allocate(1); 
@@ -624,25 +616,25 @@ class map
 			_allocNode.deallocate(target, 1);
 		}
 
-		//recursive comparison of the key with every key in the tree nodes (key = node->data.first)
-		//returns the found node, or 0
+		/*	lisa <3	*/
+		/*	Recursive comparison of the wanted key with every key in the tree (node->data.first).
+		*	Returns the found node or 0 if not found	*/
 		Node*	searchNode(Node* root, key_type key) const
 		{
-			//empty tree or leaf's child
+			//reached _last or leaf child : no key found
 			if (!root || root == _last)
 				return (0);
-			
+
 			//found key : key !< root.key and key !> root.key
 			if (_comp(root->data.first, key) == 0 && _comp(key, root->data.first) == 0)
 				return (root);
 
-			//recursive loop until key is found : if the node is higher, I go left
-			if (/*comptest root->data.first > key */ _comp(key, root->data.first) && root->left && root->left != _last)
+			//recursive loop until key is found : if the node key is higher, I go left
+			if (_comp(key, root->data.first) && root->left && root->left != _last)
 				return (searchNode(root->left, key));
-			else if (/*comptest root->data.first < key*/ _comp(root->data.first, key) && root->right && root->right != _last)
+			else if (_comp(root->data.first, key) && root->right && root->right != _last)
 				return (searchNode(root->right, key));
 
-//case where it would reach the end ?			
 			return (0); 
 		}
 
@@ -660,7 +652,8 @@ class map
 			return (root);
 		}
 	
-		//returns 0 if key exists already, else inserts a node of value pair on best free space from position
+		/*	Makes a new node with data = pair, searching recursively for it's spot from position.
+		*	Returns 0 if key already exists, 	*/
 		Node*	insertNode(Node* position, const value_type& pair)
 		{
 			//first node creation
@@ -682,43 +675,42 @@ class map
 				return (0);
 
 			//recursion until reaching a leaf or a _last : if pair.key < node.key, go left
-			if (/*comptest position->data.first > pair.first*/ _comp(pair.first, position->data.first) && position->left && position->left != _last)
+			if (_comp(pair.first, position->data.first) && position->left && position->left != _last)
 				return (insertNode(position->left, pair));
-			else if (/*comptest position->data.first < pair.first*/ _comp(position->data.first, pair.first) && position->right && position->right != _last)
+			else if (_comp(position->data.first, pair.first) && position->right && position->right != _last)
 				return (insertNode(position->right, pair));
 
-			/*reaching a leaf or max/min node wich are parents to _last*/
+			//reaching a leaf or max/min node wich are parents to _last
 			Node*	newNode = createNode(pair);
 			
 			//if reached a regular leaf with space on the needed side
-			if (/*comptest position->data.first > newNode->data.first */ _comp(newNode->data.first, position->data.first) && !position->left)
+			if (_comp(newNode->data.first, position->data.first) && !position->left)
 				position->left = newNode;
-			else if (/*comptest position->data.first < newNode->data.first */ _comp(position->data.first, newNode->data.first) && !position->right)
+			else if (_comp(position->data.first, newNode->data.first) && !position->right)
 				position->right = newNode;
 			//if reached max/min, node has to be inserted between max/min and _last
-			else if (position->left && /*comptest position->data.first > newNode->data.first*/ _comp(newNode->data.first, position->data.first))
+			else if (position->left && _comp(newNode->data.first, position->data.first))
 			{
 				newNode->left = _last;				//setting left child as last
-				_last->right = newNode;				//setting last's right child to new
+				_last->right = newNode;				//setting last's right child to new as the new min
 				position->left = newNode;			//putting new in position's left
 			}		
-			else if (position->right && /*comptest position->data.first < newNode->data.first*/ _comp(position->data.first, newNode->data.first))
+			else if (position->right && _comp(position->data.first, newNode->data.first))
 			{
 				newNode->right = _last;				//setting right child as last
-				_last->left = newNode;				//setting last's left child to new
+				_last->left = newNode;				//setting last's left child to new as the new max
 				position->right = newNode;			//putting new in position's right
 			}
 
 			newNode->parent = position;
 			
-// std::cout << "in insert" << std::endl;				
 			balanceTree(&_root, newNode);
 
 			_size++;
 			return (newNode);
 		}
 	
-		//returns 1	if key is not found, else deletes node with a matching key found from position and returns 0
+		/*	Deletes the node with the matching key, returns 0 if done, 1 if not found	*/
 		bool	deleteNode(Node* position, key_type key)
 		{
 			Node*	target = searchNode(position, key);
@@ -727,13 +719,13 @@ class map
 				return (1);
 			
 			//confusedNode is the node to balance from once the target is deleted
-			//this is usually the parent, unless we delete _root then it is a child
+			//this is usually the parent, unless we delete _root then it is 0 to make balanceTree useless
 			Node*	confusedNode = 0;
 			
 			/* DELETING THE PARENTLESS ROOT	*/
 			if (!target->parent)
 			{
-				//case 1 : node in the tree
+				//case 1 : only one node in the tree
 				if (target->right == _last && target->left == _last)
 				{
 					_root = _last;
@@ -743,21 +735,19 @@ class map
 				//case 2 : root only has one left or right child
 				else if (target->left && target->right == _last)
 				{
-					confusedNode = target->parent;
-//setting the confusedNode at 0 so balancethetree has nothing to do
-					_root = target->left;		//root becomes left child
-					target->left->parent = 0;	//cuts the link between target and new root
+					confusedNode = target->parent;	//set as 0
+					_root = target->left;			//root becomes left child
+					target->left->parent = 0;		//cuts the link between target and new root
 					_root->right = _last;
-					_last->left = _root;		//setting the right side of the one node tree _last elem
+					_last->left = _root;			//setting the right side of the one node tree _last elem
 				}
 				else if (target->right && target->left == _last)
 				{
-					confusedNode = target->parent;
-//setting the confusedNode at 0 so balancethetree has nothing to do
-					_root = target->right;		//root becomes right child
-					target->right->parent = 0;	//cuts the link between target and new root
+					confusedNode = target->parent;	//set as 0
+					_root = target->right;			//root becomes right child
+					target->right->parent = 0;		//cuts the link between target and new root
 					_root->left = _last;
-					_last->right = _root;		//setting the left side of the one node tree _last elem
+					_last->right = _root;			//setting the left side of the one node tree _last elem
 				}
 				//case 3 : root has 2 children -> set the 'inorder predecessor' one as root
 				else
@@ -776,7 +766,6 @@ class map
 			else if ((!target->left || target->left == _last) && (!target->right || target->right == _last))
 			{
 				confusedNode = target->parent;
-//who r u 		
 
 				if (target->left == _last)									//min leaf node (left)
 				{
@@ -842,9 +831,7 @@ class map
 				return (deleteNode(target->left, leftSubtreeHighest->data.first));					
 			}
 			
-//balance tree
 			balanceTree(&_root, confusedNode);
-			(void)confusedNode;
 
 			deallocNode(target);
 
@@ -882,38 +869,26 @@ class map
 			while (node)
 			{
 				int	bf;
-// std::cout << "wb" << std::endl;				
 				bf = balanceFactor(node);
 				if (bf > 1 && balanceFactor(node->left) > 0)		//ll
 				{
-// std::cout << "ll" << std::endl;				
 					rotateRight(root, node);
 				}
 				else if (bf > 1 && balanceFactor(node->left) <= 0)	//lr
 				{
-// std::cout << "lr" << std::endl;				
 					rotateLeft(root, node->left);
 					rotateRight(root, node);
 				}
 				else if (bf < -1 && balanceFactor(node->right) >= 0)	//rl
 				{
-// std::cout << "rl" << std::endl;				
 					rotateRight(root, node->right);
 					rotateLeft(root, node);
 				}
 				else if (bf < -1 && balanceFactor(node->right) < 0)	//rr
 				{
-// std::cout << "rr" << std::endl;				
 					rotateLeft(root, node);
 				}
-
-//					if (node != root)
-// std::cout << "else" << std::endl;				
-						node = node->parent;
-//					else
-//						break;
-// std::cout << "we" << std::endl;				
-
+				node = node->parent;
 			}
 			return ;
 		}
