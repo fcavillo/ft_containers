@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 01:24:09 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/24 13:40:02 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/24 17:49:56 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,9 @@ int		main()
 /*test enable_if*/
 	ft::vector<int>	vect(10, 5);
 	ft::vector<int>	copy(vect.begin(), vect.end());
+/*test enable_if end*/
 
+	ft::swap(vect, copy);
 
 	ft::map<int, char>  map2;
 	for (int i = 0; i < 15; i++)

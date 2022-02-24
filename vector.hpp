@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 00:42:45 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/24 15:13:55 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/24 17:49:27 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,45 @@
 #include "utils.hpp"
 
 /*
-**  vectors allocate the size for a multi-element array.
-**  when the number of elements equalizes the number of allocated elements,
-**  vector reallocate a  bigger array elsewhere
+*	std::vector is a sequence container that encapsulates dynamic size arrays.
+*	The elements are stored contiguously, which means that elements can be accessed not only through iterators, 
+*	but also using offsets to regular pointers to elements. 
+*	This means that a pointer to an element of a vector may be passed to any function 
+*	that expects a pointer to an element of an array.
+*	The storage of the vector is handled automatically, being expanded and contracted as needed. 
+*	Vectors usually occupy more space than static arrays, because more memory is allocated to handle future growth. 
+*	This way a vector does not need to reallocate each time an element is inserted, 
+*	but only when the additional memory is exhausted.
+*	List of implementations :
+		-	Member functions :
+			*	constructors
+			*	destructor
+			*	operator=
+			*	begin
+			*	end
+			*	rbegin
+			*	rend
+			*	empty
+			*	size
+			*	max_size
+			*	resize
+			*	capacity
+			*	operator[]
+			*	at
+			*	front
+			*	back
+			*	assign
+			*	push_back
+			*	pop_back
+			*	clear
+			*	insert
+			*	erase
+			*	swap
+			*	get_allocator
+		-	Non-member functions :
+			*	relational operators
+			*	std::swap
+*
 */
 
 namespace ft 
@@ -185,7 +221,7 @@ class vector
 		}	
 
 	/*	CAPACITY	*/
-    
+	
 		size_type size() const 
 		{
 			return (_size);
@@ -245,12 +281,12 @@ class vector
 					new_capacity = n;
 				if ((n > _capacity))
 				{
-					if (_capacity == 0) //first allocation
+					if (_capacity == 0) 	//first allocation
 					{
 						_array = _alloc.allocate(new_capacity);
 						_capacity = new_capacity;
 					}
-					else				//reallocation when n > _capacity
+					else					//reallocation when n > _capacity
 					{
 						value_type	*new_array;
 						
@@ -286,7 +322,7 @@ class vector
 			return (*(_array + n));
 		}
 
-		//same as [] but with out_of_range exception
+		/*	Same as [] but with out_of_range exception	*/
 		reference at (size_type n)
 		{
 			if (n >= _size || n < 0)
@@ -301,7 +337,7 @@ class vector
 			return (_array[n]);			
 		}
 
-		//first element in container
+		/*	First element in container	*/
 		reference front()
 		{
 			return (*_array);
@@ -312,7 +348,7 @@ class vector
 			return (*_array);
 		}
 
-		//last element in container
+		/*	Last element in container	*/
 		reference back()
 		{
 			return (*(_array + size() - 1));
@@ -339,27 +375,24 @@ class vector
 			resize(n, val);			
 		}
 
-		//add a value to the vector, realloc x2 if already full
+		/*	Appends a value at the end of the vector, reallocates x2 if vector is already full 	*/
 		void push_back (const value_type& val)
 		{
-//  std::cout << "pushing_back " << val << " size = " << size() << "/" << capacity() << std::endl;
 			if (_size == _capacity)
 			{
 				size_t	new_cap;
 				
 				if (size() > 0)
 					new_cap = size() * 2;
-				else
+				else						//first allocation			
 					new_cap = 1;
 				reserve(new_cap);
 			}
-			//no need to allocate, done in reserve
 			_alloc.construct(_array + _size, val);
 			_size++;
-// std::cout << "pushed_back " << val << " size = " << size() << "/" << capacity() << "[i] = " << _array[_size-1] <<std::endl;
 		}
 
-		//remove last vector value
+		/*	Removes the last element of the vector	*/
 		void pop_back ()
 		{
 			if (size() == 0)
@@ -368,7 +401,7 @@ class vector
 			_size--;
 		}
 
-		//inserts val at position, returning iterator to the position
+		/*	Inserts val at position, returning iterator to the position	*/
 		iterator insert (iterator position, const value_type& val)
 		{
 			size_t	pos = position - begin();	//convert position to a size_t
@@ -378,15 +411,14 @@ class vector
 			return (&_array[pos]);
 		}
 
-		//inserts n * val from position
+		/*	Inserts n times val from position	*/
 		void insert (iterator position, size_type n, const value_type& val)
 		{
 			vector		tmp;
 			iterator	it = begin();
-// std::cout << "inserts n * val from position" << std::endl;
+
 			if (n <= 0)
 				return ;
-			//reserve might change the overall capacity
 			tmp.reserve(_size + n); 
 			for (; it != position; it++)
 				tmp.push_back(*it);
@@ -394,81 +426,64 @@ class vector
 				tmp.push_back(val);
 			for (; it != end(); it++)
 				tmp.push_back(*it);
-				
+
 			swap(tmp);
+//leaks : clear tmp ?
 		}
 
-		//insert an array from first to last from position
-		//only use this insert if the InputIterators sent are indeed pointers
+
+		/*	Inserts an array of values from first to last, from position in the vector
+		*	enable_if makes sure the sent parameters are not int to differentiate from previous insert	*/
 		template <class InputIterator>
 		void insert (iterator position, InputIterator first, InputIterator last,
 		typename ft::enable_if<!ft::is_integral<InputIterator>::value >::type* = 0)
 		{
 			vector		tmp;
 			iterator	it = begin();
-// std::cout << "insert an array from first to last from position" << std::endl;
-// std::cout << "1 size = " << size() << "/" << capacity() <<std::endl;
-
-			// if (it != NULL)
-			// {
-				for (; it != position; it++)
-				{
-					tmp.push_back(*it);
-// std::cout << "pb old" << std::endl;				
-				}
-			// }
-			for (; first != last; first++)
-			{
-				tmp.push_back(*first);
-// std::cout << "pb new" << std::endl;				
-			}
-			for (; it != end(); it++)
-			{
+		
+			for (; it != position; it++)
 				tmp.push_back(*it);
-// std::cout << "pb end old" << std::endl;				
-			}
-
-// std::cout << " size = " << size() << "/" << capacity() <<std::endl;
-// std::cout << "tmp.[0] = " << tmp._array[0] <<std::endl;			
+			for (; first != last; first++)
+				tmp.push_back(*first);
+			for (; it != end(); it++)
+				tmp.push_back(*it);
+		
 			swap(tmp);
-// std::cout << "[0] = " << _array[0] <<std::endl;			
-// std::cout << "finished insert" << std::endl;				
-
+//leaks : clear tmp ?
 		}		
 
-		//erase val from position
+		/*	Erases the array value located at position.
+		*	Returns an iterator to the following element	*/
 		iterator erase (iterator position)
 		{
 			iterator	it = position;
-// std::cout << "in erase" << std::endl;
+
 			_alloc.destroy(position);
-// std::cout << "destroyed" << std::endl;
 			for (iterator tmp = position; tmp != end() - 1; tmp++)
 			{
-// std::cout << "constructin'" << std::endl;
 				_alloc.construct(tmp, *(tmp + 1));
-//necessary ?	// if (tmp + 1 != end())
-				// 	_alloc.destroy(tmp + 1);
-// std::cout << "constructed'" << std::endl;
+				if (tmp + 1 != end())
+					_alloc.destroy(tmp + 1);
 			}
 			_size--;
-// std::cout << "erase done" << std::endl;
+
 			return (it);
 		}
 				
-		//erase vals from first to last
+		/*	Erases the array values from first to last.
+		*	Returns an iterator to the following element	*/
 		iterator erase (iterator first, iterator last)
 		{
 			for (; first != last; --last)
 				first = erase(first);
 			return (last);
-		}		
-		//exchange this' content with x's
+		}
+		
 		void swap (vector& x)
 		{
-// 			if (x == *this)
-// 				return;
-//temp			
+			if (x == *this)
+				return;
+			
 			allocator_type	tmp_alloc 	= x._alloc;
 			size_type		tmp_size 	= x._size;
 			size_type		tmp_capacity = x._capacity;
@@ -486,7 +501,7 @@ class vector
 			return;
 		}
 
-		//empty vector
+		/*	Empty the vector	*/
 		void clear()
 		{
 			for (size_type i = 0; i < _size; i++)
@@ -505,7 +520,7 @@ class vector
 			return (_alloc);
 		}
 
-//	private:
+	private:
 
 		allocator_type	_alloc;
 		size_type		_size;
@@ -560,24 +575,13 @@ class vector
 		return !(lhs > rhs);
 	}
 
+	template< class T, class Alloc >
+	void swap( ft::vector<T,Alloc>& lhs, ft::vector<T,Alloc>& rhs )
+	{
+		lhs.swap(rhs);
+	}
+		   
+
 }	//namespace end
-
-
-//to delete
-template<typename T>
-std::ostream & operator<<(std::ostream &o, ft::vector<T> const & rhs)
-{
-	for (size_t i = 0; i < rhs.size(); i++)
-	{
-		o << rhs._array[i] << " ";
-	}
-	o << " || ";
-	for (size_t i = rhs.size(); i < rhs.capacity(); i++)
-	{
-		o << rhs._array[i] << " ";
-	}
-	o << std::endl;
-	return (o);
-}
 
 #endif

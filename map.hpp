@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/29 18:56:46 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/24 12:04:49 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/24 16:07:00 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,8 @@
 			*	key_comp
 			*	value_comp
 		-	Non-member functions :
-			*	comparison operators
-			*	std::swap	********************************<---------
+			*	relational operators
+			*	std::swap
 *
 */
 
