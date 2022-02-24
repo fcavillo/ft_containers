@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 12:02:46 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/18 16:31:00 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/24 19:37:19 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,10 @@
 #define ITERATOR_TRAITS_HPP
 
 //https://www.cplusplus.com/reference/iterator/iterator/
+
+/*
+*	Give an alias to std::iterator types : T, T*, const T*.  
+*/
 
 namespace   ft
 {
