@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 00:42:45 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/18 16:45:16 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/24 15:13:55 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@
 
 #include "reverse_iterator.hpp"
 #include "utils.hpp"
-//#include <vector>
 
 /*
 **  vectors allocate the size for a multi-element array.
@@ -36,9 +35,9 @@ class vector
 {
 	public:
 
-		typedef T					value_type;
-		typedef Alloc				allocator_type;
-		typedef size_t				size_type;
+		typedef T						value_type;
+		typedef Alloc					allocator_type;
+		typedef size_t					size_type;
 		typedef std::ptrdiff_t			difference_type;
 		typedef typename allocator_type::reference			reference;
 		typedef typename allocator_type::const_reference	const_reference;
@@ -51,7 +50,7 @@ class vector
 
 	/*	CONSTRUCTORS, DESTRUCTOR, OPERATOR=	*/
 
-		//default constructor
+		/*	Default constructor. Constructs an empty container with a default-constructed allocator	*/
 		explicit vector (const allocator_type& alloc = allocator_type()) : 
 		_alloc(alloc),
 		_size(0),
@@ -61,7 +60,7 @@ class vector
 			return ;
 		}
 
-		//constructs a container with n elements = val
+		/*	Constructs the container with n copies of elements with value val	*/
 		explicit vector (size_type n, const value_type& val = value_type(), 
 							const allocator_type& alloc = allocator_type()) :
 		_alloc(alloc),
@@ -71,15 +70,20 @@ class vector
 		{
 			_array = _alloc.allocate(n);
 			_capacity = n;
-			while (n--)
+			while (n)
 			{
 				_alloc.construct(_array + _size, val);
 				_size++;
+				n--;
 			}
 		}
 
 
-		//enable_if only lets the last parameter exist as long as it is not an int, to counter the previous constructor
+		/*	Constructs the container with the contents of the range [first, last[.
+		*	enable_if is an additional function argument : (Substitution Failure Is Not An Error)
+		*	this constructor takes 2 parameters but it has to be differentiated from the previous one at compilation
+		*	To do this, we check that the parameters sent is not an integral_type :
+		*	is_integral<InputIterator> has to be false */		
 		template <class InputIterator>
 		vector (InputIterator first, InputIterator last, const allocator_type &alloc = allocator_type(),
 		typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = 0) :
@@ -87,19 +91,22 @@ class vector
 		_size(0)
 		{
 			size_t	s = 0;
-			
+
 			for (InputIterator tmp = first; tmp != last; tmp++)
 				s++;
 			_array = _alloc.allocate(s);
 			_capacity = s;
 
-			while (s--)
+			while (s)
 			{
 				_alloc.construct(_array + _size, *first++);
 				_size++;
+				s--;
 			}
 		}
-	
+
+		/*	Copy constructor. Constructs the container with the copy of the contents of other.
+		*	Nothing to clear as the new vector is empty at start	*/
 		vector(const vector& x) :
 		_alloc(x._alloc),
 		_size(0),
@@ -113,16 +120,14 @@ class vector
 		{
 			if (_array)
 			{
-				// std::cout << "destroy bitch1" << std::endl;
 				for (iterator it = begin(); it != end(); it++)
 					_alloc.destroy(it);
-				// std::cout << "destroy bitch2 : going to dealloc" << std::endl;
 				_alloc.deallocate(_array, _capacity);
-				// std::cout << "destroy bitch3" << std::endl;
 			}
 			return ;
 		}
 
+		/*	Copy assignment operator. Replaces the contents with a copy of the contents of other.	*/
 		vector & operator= (const vector & x)
 		{
 			if (x == *this)
@@ -171,12 +176,12 @@ class vector
 
 		reverse_iterator rend()
 		{
-			return ((reverse_iterator(this->begin())));
+			return (reverse_iterator(this->begin()));
 		}
 		
 		const_reverse_iterator rend() const
 		{
-			return ((reverse_iterator(this->begin())));
+			return (reverse_iterator(this->begin()));
 		}	
 
 	/*	CAPACITY	*/
@@ -200,7 +205,8 @@ class vector
 			return (max);
 		}
 
-		//resizes the container so that it contains n elements
+		/*	Resizes the container so that it contains n elements. 
+		*	Copies of val are appended if somme room if new size > _size	*/
 		void resize (size_type n, value_type val = value_type())
 		{
 			while (n > _size)
@@ -220,43 +226,50 @@ class vector
 			return (_size == 0);
 		}
 
-		//requests that the vector capacity be at least enough to contain n elements
+		/*	Increase the capacity of the vector to a value that's greater or equal to n. 
+		*	If n is greater than the current capacity, new storage is allocated :
+		*	_capacity = _size * 2 minimum
+		*	_capacity = n maximum
+		*	otherwise the function does nothing. */
 		void reserve(size_type n)
 		{
 			size_t	new_capacity;
 
 			if (n > max_size())
 				throw std::length_error("Error:\t vector::reserve : n > max_size");
-			//make sure the new_cap is at least 2x > than actual size
-			if (n <= _size * 2)
-				new_capacity = _size * 2;
-			else
-				new_capacity = n;
-			if ((n > _capacity))
+			try
 			{
-				if (_capacity == 0) //first alloc
+				if (n <= _size * 2)
+					new_capacity = _size * 2;
+				else
+					new_capacity = n;
+				if ((n > _capacity))
 				{
-					_array = _alloc.allocate(new_capacity);
-// std::cout << "first alloc" << std::endl;
-					_capacity = new_capacity;
+					if (_capacity == 0) //first allocation
+					{
+						_array = _alloc.allocate(new_capacity);
+						_capacity = new_capacity;
+					}
+					else				//reallocation when n > _capacity
+					{
+						value_type	*new_array;
+						
+						new_array = _alloc.allocate(new_capacity);
+						//copies array into new_array by constructing on newly allocated slot
+						for (size_t i = 0; i < _size; i++)
+							_alloc.construct(new_array + i, _array[i]);
+//test leaks 
+						for (iterator it = begin(); it != end(); it++)
+							_alloc.destroy(it);
+						_alloc.deallocate(_array, _capacity);				
+						_array = new_array;
+						_capacity = new_capacity;
+					}
 				}
-				else				//realloc 
-				{
-	// std::cout << "realloc, meaning the size to reserve (" << n << ") is bigger than capacity (" << this->capacity() << ")" << std::endl;
-					value_type	*new_array;
-					new_array = _alloc.allocate(new_capacity);
-					for (size_t i = 0; i < _size; i++)	//copies array into new_array by constructing on allocated slots
-						_alloc.construct(new_array + i, _array[i]);
-					// _alloc.deallocate(_array, _capacity);
-					// _alloc.destroy(_array);
-					for (iterator it = begin(); it != end(); it++)
-						_alloc.destroy(it);
-	// std::cout << "dealloc" << std::endl;
-					_alloc.deallocate(_array, _capacity);				
-//wow wow wow this is nonsense 
-					_array = new_array;
-					_capacity = new_capacity;
-				}
+			}
+			catch (std::exception &e)
+			{
+				std::cout << "Error :\t vector::alloc error : " << e.what() << std::endl;
 			}
 		}
 

@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 17:24:33 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/23 14:11:09 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/24 13:54:41 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ class   reverse_iterator
 		typedef typename ft::iterator_traits<Iterator>::pointer				pointer;
 		typedef typename ft::iterator_traits<Iterator>::reference			reference;
 
-	/*	CONSTRUCTORS, DESTRUCTOR	*/
+	/*	CONSTRUCTORS, OPERATOR=	*/
 	
 		reverse_iterator() : _base()
 		{
