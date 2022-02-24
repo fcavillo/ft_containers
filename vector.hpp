@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 00:42:45 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/24 17:49:27 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/24 17:59:16 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -562,13 +562,14 @@ class vector
 		return !(lhs < rhs);
 	}
 	
+	//if v1 > v2, !v2 >= v1
 	template <class T, class Alloc>
 	bool operator> (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)	
 	{
-		return (ft::lexicographical_compare(rhs.begin(), rhs.end(), lhs.begin(), lhs.end()));
+		return !(rhs > lhs);
 	}
 	
-	//is v1 <= v2, then !v1 > v2
+	//if v1 <= v2, then !v1 > v2
 	template <class T, class Alloc>
 	bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)	
 	{
