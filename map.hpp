@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/29 18:56:46 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/23 19:31:44 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/24 12:04:49 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1022,7 +1022,12 @@ class map
 		return (!(lhs < rhs));
 	}
   
-
+	template< class Key, class T, class Compare, class Alloc >
+	void swap( std::map<Key,T,Compare,Alloc>& lhs,
+			std::map<Key,T,Compare,Alloc>& rhs )
+	{
+		lhs.swap(rhs);
+	}
 
 
 
