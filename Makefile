@@ -6,7 +6,7 @@
 #    By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/01/21 01:49:00 by fcavillo          #+#    #+#              #
-#    Updated: 2022/01/21 01:49:27 by fcavillo         ###   ########.fr        #
+#    Updated: 2022/02/28 16:48:24 by fcavillo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,8 @@ CC	= clang++
 
 CFLAGS	= -Wall -Wextra -Werror -std=c++98
 
-SRCS =	main.cpp \
+#SRCS =	main.cpp 
+SRCS =	speedtest.cpp
 
 OBJS = $(SRCS:.cpp=.o)
 

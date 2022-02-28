@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 00:42:45 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/24 17:59:16 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/28 16:50:23 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -481,9 +481,6 @@ class vector
 		
 		void swap (vector& x)
 		{
-			if (x == *this)
-				return;
-			
 			allocator_type	tmp_alloc 	= x._alloc;
 			size_type		tmp_size 	= x._size;
 			size_type		tmp_capacity = x._capacity;

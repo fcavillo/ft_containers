@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/29 17:53:20 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/16 15:14:15 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/28 17:22:46 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,9 +106,6 @@ class stack
 	template <class T_, class Container_>
 	friend bool operator<  (const stack<T_,Container_>& lhs, const stack<T_,Container_>& rhs);
 
-	template <class T_, class Container_>
-	friend bool operator>  (const stack<T_,Container_>& lhs, const stack<T_,Container_>& rhs);
-
 	protected:
 
 		container_type		c;
@@ -132,22 +129,25 @@ class stack
 		return (lhs.c < rhs.c);
 	}
 
+	// l >= r == l !< r
 	template <class T, class Container>
 	bool operator>= (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
 	{
 		return !(lhs < rhs);
 	}
 
+	// l > r == l !<= r
 	template <class T, class Container>
 	bool operator>  (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
 	{
-		return (lhs.c > rhs.c);
+		return !(lhs <= rhs);
 	}
 	
+	// l <= r == r !< l
 	template <class T, class Container>
 	bool operator<= (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
 	{
-		return !(lhs > rhs);
+		return !(rhs < lhs);
 	}
 
 };	//namespace end;
