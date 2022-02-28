@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 15:23:19 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/18 11:41:56 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/02/24 19:39:09 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,23 +30,23 @@
 namespace   ft
 {
 
-    //boolean is true is const
-    template <bool isConst, typename falseConst, typename trueConst>
-    struct chooseConst {};
+	//boolean is true is const
+	template <bool isConst, typename falseConst, typename trueConst>
+	struct chooseConst {};
 
-    //sets 2nd parameter as ref and pointer
-    template <typename falseConst, typename trueConst>
-    struct chooseConst<false, falseConst, trueConst>
-    {
-        typedef falseConst type;
-    };
+	//sets 2nd parameter as ref and pointer
+	template <typename falseConst, typename trueConst>
+	struct chooseConst<false, falseConst, trueConst>
+	{
+		typedef falseConst type;
+	};
 
-    //sets 3rd parameter as (const) ref and pointer
-    template <typename falseConst, typename trueConst>
-    struct chooseConst<true, falseConst, trueConst>
-    {
-        typedef trueConst type;
-    };
+	//sets 3rd parameter as (const) ref and pointer
+	template <typename falseConst, typename trueConst>
+	struct chooseConst<true, falseConst, trueConst>
+	{
+		typedef trueConst type;
+	};
 
 template < class Key,											// map::key_type
 		   class T,												// map::mapped_type
@@ -62,16 +62,14 @@ class map_iterator
 		typedef	Compare				key_compare;
 		typedef size_t				size_type;
 		typedef std::ptrdiff_t		difference_type;
-		typedef ft::pair<const key_type, mapped_type>				value_type;
-		typedef typename std::bidirectional_iterator_tag			iterator_category;;
-		// typedef value_type				*pointer;
-		// typedef value_type				&reference;
-            typedef typename chooseConst<Con, value_type&, const value_type&>::type       reference;
-            typedef typename chooseConst<Con, value_type*, const value_type*>::type       pointer;
+		typedef ft::pair<const key_type, mapped_type>								value_type;
+		typedef typename std::bidirectional_iterator_tag							iterator_category;;
+  		typedef typename chooseConst<Con, value_type&, const value_type&>::type		reference;
+		typedef typename chooseConst<Con, value_type*, const value_type*>::type		pointer;
 			
 			
-//	private :
-//set back quick boiiiii
+	private :
+	
 		Node*		_node;		//curent node pointed by iterator
 		Node*		_last;		//pointer to NULL pointer Type Nil : non-existant leaves, past-the-end element
 		key_compare	_comp;		//used way of comparing keys to sort the map, needed to know wich way to iterate
