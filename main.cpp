@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 01:24:09 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/24 17:49:56 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/03/01 17:56:17 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,14 +71,14 @@ int		main()
 	// 
 //	ft::map<int, char>	map;
 /*test enable_if*/
-	ft::vector<int>	vect(10, 5);
-	ft::vector<int>	copy(vect.begin(), vect.end());
+	// ft::vector<int>	vect(10, 5);
+	// ft::vector<int>	copy(vect.begin(), vect.end());
 /*test enable_if end*/
 
-	ft::swap(vect, copy);
+	// ft::swap(vect, copy);
 
 	ft::map<int, char>  map2;
-	for (int i = 0; i < 15; i++)
+	for (int i = 0; i < 63; i++)
 		map2[i] = i + 97;
 	// map2[8] = 'i';
 	// map2[5] = 'i';
@@ -93,21 +93,21 @@ int		main()
 
 	std::cout << "1" << std::endl;
 	// ft::map<int, char>::const_iterator	it = map.begin();
-	// ft::map<int, char>::const_iterator	ite = map.end();
-	ft::map<int, char>::iterator			it2 = map2.begin();
-	ft::map<int, char>::iterator			ite2 = map2.end();
-	ft::map<int, char>::reverse_iterator	rit = map2.rbegin();
-	ft::map<int, char>::reverse_iterator	rite = map2.rend();
+	// // ft::map<int, char>::const_iterator	ite = map.end();
+	// ft::map<int, char>::iterator			it2 = map2.begin();
+	// ft::map<int, char>::iterator			ite2 = map2.end();
+	// ft::map<int, char>::reverse_iterator	rit = map2.rbegin();
+	// ft::map<int, char>::reverse_iterator	rite = map2.rend();
 
-	ft::map<int, char>	map;
-	ft::pair<int, char>	p;
+	// ft::map<int, char>	map;
+	// ft::pair<int, char>	p;
 
-	p.first = 5;
-	p.second = 'u';
+	// p.first = 5;
+	// p.second = 'u';
 
-	map.insert(p);
-	map.insert(it2, p);
-	map.insert(it2, ite2);
+	// map.insert(p);
+	// map.insert(it2, p);
+	// map.insert(it2, ite2);
 	// ft::map<int, char>::reverse_iterator	rit2 = map2.rbegin();
 	// ft::map<int, char>::reverse_iterator	rite2 = map2.rend();
 	// rite--;
@@ -116,14 +116,14 @@ int		main()
 	// std::cout << rite->first << std::endl;	
 	// rite--;
 	// std::cout << rite->first << std::endl;	
-	std::cout << "2" << std::endl;
+	// std::cout << "2" << std::endl;
 	// std::cout << rit->first << std::endl;
 	// std::cout << rite->first << std::endl;
 	// std::cout << it2->first << std::endl;
 	// std::cout << ite2->first << std::endl;
-	map2.erase(it2, ++(++(++it2)));
+	// map2.erase(it2, ++(++(++it2)));
 
-	std::cout << "3" << std::endl;
+	// std::cout << "3" << std::endl;
 	// rite2--;
 	// std::cout << rit2->first << rite2->first << std::endl;
 	// map3.insert(map2.begin(), map2.end());
@@ -137,7 +137,7 @@ int		main()
 		// for (; it2 != ite2; it2++)
 			// std::cout << "[" << it2->first << "] " << it2->second << std::endl;
 
-	// map2.printBT();
+ map2.printBT();
 	// std::cout << map2.size() << std::endl;
 	// map2.clear();
 	// std::cout << map2.size() << std::endl;
