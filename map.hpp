@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/29 18:56:46 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/03/01 17:55:10 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/03/01 18:38:50 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ class map
 			Node*					parent;
 			Node*					left;
 			Node*					right;
-int	height;
+			int						height;
 		};
 
 	
@@ -208,18 +208,8 @@ int	height;
 		/*	Destructors of the elements are called and the used storage is deallocated	*/
 		~map ()
 		{
-iterator first = begin();
-iterator last = end();
-while (first != last)
-{
-	//printf("dest.test : %d\n", first->first);
-	(first++);			
-}
-//printf("destr1\n");
 			clear();
-//printf("destr2\n");
 			deallocNode(_root);
-//printf("destr3\n");
 			return ;
 		}
 
@@ -415,7 +405,6 @@ while (first != last)
 		/*	Erases a specific node at position	*/
 		void erase (iterator position)
 		{
-//printf("erase.a1()\n");
 			deleteNode(position.getNode(), position->first);
 			return ;
 		}
@@ -432,10 +421,8 @@ while (first != last)
 		/*	Erases every node from [first to last[	*/
 		void erase (iterator first, iterator last)
 		{
-//printf("erase.b1()\n");
 			while (first != last)
 				erase(first++);
-//printf("erase2()\n");
 			return ;
 		}
 
@@ -469,9 +456,7 @@ while (first != last)
 		/*	Erases all elements from the container	*/
 		void clear()
 		{
-//printf("clear1\n");
 			erase(begin(), end());
-//printf("clear2\n");
 		}
 
 	/*	OBSERVERS	*/
@@ -622,8 +607,7 @@ while (first != last)
 			newNode->parent = 0;
 			newNode->left = 0;
 			newNode->right = 0;
-
-newNode->height = 1;
+			newNode->height = 1;
 			return (newNode);
 		}
 
@@ -673,7 +657,6 @@ newNode->height = 1;
 		*	Returns 0 if key already exists, 	*/
 		Node*	insertNode(Node* position, const value_type& pair)
 		{
-// //printf("inserting %d\n", pair.first);
 			//first node creation
 			if (_root == _last)
 			{
@@ -721,8 +704,8 @@ newNode->height = 1;
 			}
 
 			newNode->parent = position;
-////printf("in insert\n");			
-setHeight(newNode);			
+			
+			setHeight(newNode);			
 
 			balanceTree(&_root, newNode);
 
@@ -741,11 +724,10 @@ setHeight(newNode);
 			//confusedNode is the node to balance from once the target is deleted
 			//this is usually the parent, unless we delete _root then it is 0 to make balanceTree useless
 			Node*	confusedNode = 0;
-//printf("delete1() : %d\n", position->data.first);			
+			
 			/* DELETING THE PARENTLESS ROOT	*/
 			if (!target->parent)
 			{
-//printf("deleteroot()\n");			
 				//case 1 : only one node in the tree
 				if (target->right == _last && target->left == _last)
 				{
@@ -780,7 +762,6 @@ setHeight(newNode);
 					//in the left subtree, delete the highest that was moved to root
 					return (deleteNode(target->left, leftSubtreeHighest->data.first));	
 				}
-//printf("deleterootEnd()\n");			
 			}
 			/*	DELETING A NODE	*/
 			//case 1 : target is a leaf
@@ -847,89 +828,53 @@ setHeight(newNode);
 
 				_allocPair.destroy(&target->data);
 				_allocPair.construct(&target->data, leftSubtreeHighest->data);	//copy highestNode to root
-//printf("delete2child()\n");			
+
 				//in the left subtree, delete the highest that was moved to root
 				return (deleteNode(target->left, leftSubtreeHighest->data.first));					
 			}
-//printf("deleteheight()\n");			
 			
-setHeight(confusedNode);			
-//printf("deletebalance()\n");			
+			setHeight(confusedNode);			
 			balanceTree(&_root, confusedNode);
 
-//printf("deletedealloc()\n");			
 			deallocNode(target);
 
 			_size--;
-//printf("deleteNode()\n");			
 			return (0);
 		}
 
 		/*	AVL tree specifics	*/
 
-		/*	Calucaltes the height from root, longest way to a leaf	*/
-		int	treeHeight(Node* root, int height)
+		/*	Sets the node height based on it's highest children + 1	*/
+		void	setHeight(Node*	node)
 		{
-			//reached leaf + 1
-			if (!root || root == _last)
-				return (height - 1);
-
-			int	leftHeight = treeHeight(root->left, height + 1);
-			int rightHeight = treeHeight(root->right, height + 1);
-
-			if (leftHeight > rightHeight)
-				return (leftHeight);
+			if (!node)
+				return;
+			
+			if ((!node->left || node->left == _last) && (!node->right || node->right == _last))		
+				node->height = 1;
+			else if (!node->left || node->left == _last)
+				node->height = 1 + node->right->height;
+			else if (!node->right || node->right == _last)
+				node->height = 1 + node->left->height;
 			else
-				return (rightHeight);
+				node->height = 1 + heightMax(node->right->height, node->left->height);			
 		}
-
-void	setHeight(Node*	node)
-{
-if (!node)
-	return;
-//printf("in setHeight\n");
-//printf("setheight1() for node %d\n", node->data.first);			
-	
-	if ((!node->left || node->left == _last) && (!node->right || node->right == _last))
-{
-//printf("height0()\n");			
-		node->height = 1;
-}
-	else if (!node->left || node->left == _last)
-{
-//printf("height1.0()\n");			
-//printf("node right  = %d\n", node->right->data.first );
-//printf("height1.1()\n");			
-		node->height = 1 + node->right->height;
-//printf("height1.2() done\n");
-}
-	else if (!node->right || node->right == _last)
-{
-//printf("height2()\n");			
-		node->height = 1 + node->left->height;
-}
-	else
-{
-//printf("height3()\n");			
-		node->height = 1 + std::max(node->right->height, node->left->height);
-}
-//printf("setheight2() of %d for %d\n", node->height, node->data.first);			
-}
 
 		/* The balance factor is calculated from left height - right height	*/
 		int		balanceFactor(Node* node)
 		{
 			if (!node || node == _last)
 				return 0;
-//			return (treeHeight(node->left, 1) - treeHeight(node->right, 1));
-return (nodeHeight(node->left) - nodeHeight(node->right));
+
+			return (nodeHeight(node->left) - nodeHeight(node->right));
 		}
-int	nodeHeight(Node* node)
-{
-	if (!node || node == _last)
-		return (0);
-	return (node->height);
-}
+		
+		int	nodeHeight(Node* node)
+		{
+			if (!node || node == _last)
+				return (0);
+			return (node->height);
+		}
 
 		//checks from node to root if each one is balanced (bf should be -1, 0 or 1)
 		//https://www.programiz.com/dsa/avl-tree
@@ -941,32 +886,23 @@ int	nodeHeight(Node* node)
 				int	bf;
 				setHeight(node);
 				bf = balanceFactor(node);
-////printf("bf = %d for node %d\n", bf, node->data.first);				
+
 				if (bf > 1 && balanceFactor(node->left) > 0)			//ll
-				{
-//					//printf("r\n");
 					rotateRight(root, node);
-				}
 				else if (bf > 1 && balanceFactor(node->left) <= 0)		//lr
 				{
-//					//printf("r\n");
 					rotateLeft(root, node->left);
 					rotateRight(root, node);
 				}
 				else if (bf < -1 && balanceFactor(node->right) >= 0)	//rl
 				{
-//					//printf("r\n");
 					rotateRight(root, node->right);
 					rotateLeft(root, node);
 				}
 				else if (bf < -1 && balanceFactor(node->right) < 0)		//rr
-				{
-//					//printf("r\n");
 					rotateLeft(root, node);
-				}
 				node = node->parent;
 			}
-// //printf("balanced\n");
 			return ;
 		}
 
@@ -993,8 +929,8 @@ int	nodeHeight(Node* node)
 			if (!nodeUp->parent)
 				*root = nodeUp;
 
-			nodeDown->height = std::max(nodeHeight(nodeDown->left), nodeHeight(nodeDown->right)) + 1;
-			nodeUp->height = std::max(nodeHeight(nodeUp->left), nodeHeight(nodeUp->right)) + 1;
+			nodeDown->height = heightMax(nodeHeight(nodeDown->left), nodeHeight(nodeDown->right)) + 1;
+			nodeUp->height = heightMax(nodeHeight(nodeUp->left), nodeHeight(nodeUp->right)) + 1;
 
 			return ;
 		}
@@ -1021,46 +957,18 @@ int	nodeHeight(Node* node)
 
 			if (!nodeUp->parent)
 				*root = nodeUp;
-			nodeDown->height = std::max(nodeHeight(nodeDown->left), nodeHeight(nodeDown->right)) + 1;
-			nodeUp->height = std::max(nodeHeight(nodeUp->left), nodeHeight(nodeUp->right)) + 1;			
+			
+			nodeDown->height = heightMax(nodeHeight(nodeDown->left), nodeHeight(nodeDown->right)) + 1;
+			nodeUp->height = heightMax(nodeHeight(nodeUp->left), nodeHeight(nodeUp->right)) + 1;			
 			return ;
 		}
 
-		
-/* 	This is a public member function, created for the correction.
-	It is based on the answer from @Adrian Schneider :
-	https://stackoverflow.com/questions/36802354/print-binary-tree-in-a-pretty-way-using-c
-	This has to be a public member function since it needs access to the private _root
-	
-	It is a great way to visualize the tree and it's balanced structure.
-	It works best for perfectly balanced trees, 
-	with a node total number of 3, 15, 63, 255, 511... ((powers of 2) - 1) */
-
-public :
-void printBT(const std::string& prefix, const Node* node, bool isLeft)
-{
-	if( node && node != _last )
-	{
-		usleep(125000);
-		std::cout << prefix;
-
-		std::cout << (isLeft ? "├──" : "└──" );
-
-		// print the value of the node
-		std::cout << node->data.first << std::endl;
-
-		// enter the next tree level - left and right branch
-		printBT( prefix + (isLeft ? "│   " : "    "), node->left, true);
-		printBT( prefix + (isLeft ? "│   " : "    "), node->right, false);
-	}
-}
-
-void printBT()
-{
-	printBT("", _root, false);    
-}
-
-/*	printBT end	*/
+		int	heightMax(int i, int j)
+		{
+			if (i > j)
+				return (i);
+			return (j);
+		}
 
 };
 

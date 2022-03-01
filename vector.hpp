@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 00:42:45 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/28 16:50:23 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/03/01 18:23:52 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -563,7 +563,7 @@ class vector
 	template <class T, class Alloc>
 	bool operator> (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)	
 	{
-		return !(rhs > lhs);
+		return !(rhs >= lhs);
 	}
 	
 	//if v1 <= v2, then !v1 > v2
