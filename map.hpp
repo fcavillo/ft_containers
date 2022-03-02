@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/29 18:56:46 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/03/01 18:38:50 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/03/02 17:21:44 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,8 +110,8 @@ class map
 		/*	key_compare is the used way of comparing keys, which sets the order of the nodes in the map */
 		typedef	Compare				key_compare;
 
-		/*	By default, std::allocator is used, here for a pair-sized allocation
-		*	to alloc for nodes, I am using rebind, a class in std::allocator 
+		/*	By default, std::allocator is used, here for a pair-sized allocation.
+		*	To alloc for nodes, I am using rebind, a class in std::allocator 
 		*	in wich member "other" can be used to allocate other types	*/
 		typedef Alloc														allocator_type;
 		typedef typename allocator_type::template rebind<Node>::other 		node_allocator;		

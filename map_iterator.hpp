@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 15:23:19 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/02/28 17:10:14 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/03/02 16:52:03 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ namespace   ft
 		typedef falseConst type;
 	};
 
-	//sets 3rd parameter as (const) ref and pointer
+	//sets 2nd parameter as (const) ref and pointer
 	template <typename falseConst, typename trueConst>
 	struct chooseConst<true, falseConst, trueConst>
 	{
@@ -164,7 +164,7 @@ class map_iterator
 				else if (_node->right && _comp(prevNode->data.first, _node->right->data.first))
 				{
 					_node = _node->right;
-						_node = lowestNode(_node);
+					_node = lowestNode(_node);
 				}
 				//go up until I am a left child
 				else
