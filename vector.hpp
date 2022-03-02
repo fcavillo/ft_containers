@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 00:42:45 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/03/01 18:23:52 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/03/02 12:15:54 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,8 +156,7 @@ class vector
 		{
 			if (_array)
 			{
-				for (iterator it = begin(); it != end(); it++)
-					_alloc.destroy(it);
+				clear();
 				_alloc.deallocate(_array, _capacity);
 			}
 			return ;
@@ -294,7 +293,6 @@ class vector
 						//copies array into new_array by constructing on newly allocated slot
 						for (size_t i = 0; i < _size; i++)
 							_alloc.construct(new_array + i, _array[i]);
-//test leaks 
 						for (iterator it = begin(); it != end(); it++)
 							_alloc.destroy(it);
 						_alloc.deallocate(_array, _capacity);				
@@ -428,7 +426,6 @@ class vector
 				tmp.push_back(*it);
 
 			swap(tmp);
-//leaks : clear tmp ?
 		}
 
 
@@ -449,7 +446,6 @@ class vector
 				tmp.push_back(*it);
 		
 			swap(tmp);
-//leaks : clear tmp ?
 		}		
 
 		/*	Erases the array value located at position.

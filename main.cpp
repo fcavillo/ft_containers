@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 01:24:09 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/03/01 18:43:41 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/03/02 12:13:56 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,27 @@ void printBT()
 
 int		main()
 {
+	ft::vector<std::string>	vect;
+
+	for (int i = 0; i < 100; i++)
+		vect.push_back("hoyyyyyy");
+	
+	ft::vector<std::string>	vect2;
+
+	for (int i = 0; i < 100; i++)
+		vect2.push_back("heyyyy");		
+std::cout << "1" << std::endl;
+	vect.insert(vect.begin(), vect2.begin(), vect2.end());
+std::cout << "2" << std::endl;
+	
+	std::cout << vect.max_size() << std::endl;
+
+	vect.reserve(1000);
+	vect.reserve(10000);
+	vect.reserve(100000);
+	vect.reserve(1000000);
+	vect.reserve(10000000);
+	
 	// ft::map<int, char>	mp1;
 	// ft::map<int, char>	mp2;
 
@@ -77,9 +98,9 @@ int		main()
 
 	// ft::swap(vect, copy);
 
-	ft::map<int, char>  map2;
-	for (int i = 0; i < 10000000; i++)
-		map2[i] = i + 97;
+//	ft::map<int, char>  map2;
+//	for (int i = 0; i < 1000; i++)
+//		map2[i] = i + 97;
 	// map2[8] = 'i';
 	// map2[5] = 'i';
 	// map2[10] = 'i';
@@ -91,7 +112,7 @@ int		main()
 	// ft::map<int, char> const	map(map2);
 	// ft::map<int, char>  map3;
 
-	std::cout << "1" << std::endl;
+	// std::cout << "1" << std::endl;
 	// ft::map<int, char>::const_iterator	it = map.begin();
 	// // ft::map<int, char>::const_iterator	ite = map.end();
 	// ft::map<int, char>::iterator			it2 = map2.begin();
