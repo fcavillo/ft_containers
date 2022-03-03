@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 #include <deque>
-#if 1 //CREATE A REAL STL EXAMPLE
+#if 0 //CREATE A REAL STL EXAMPLE
 	#include <map>
 	#include <stack>
 	#include <vector>
@@ -22,7 +22,7 @@ struct Buffer
 	char buff[BUFFER_SIZE];
 };
 
-//time ./a.out nb
+
 #define COUNT (MAX_RAM / (int)sizeof(Buffer))
 
 template<typename T>
@@ -94,7 +94,7 @@ int main(int argc, char** argv) {
 	}
 
 	int sum = 0;
-	for (int i = 0; i < 100000; i++)
+	for (int i = 0; i < 10000; i++)
 	{
 		int access = rand();
 		sum += map_int[access];

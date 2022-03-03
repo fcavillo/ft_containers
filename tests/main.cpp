@@ -6,7 +6,7 @@
 /*   By: fcavillo <fcavillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 01:24:09 by fcavillo          #+#    #+#             */
-/*   Updated: 2022/03/02 17:06:44 by fcavillo         ###   ########.fr       */
+/*   Updated: 2022/03/03 12:17:11 by fcavillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,15 +57,6 @@ void printBT()
 
 int		main()
 {
-	ft::vector<int>	vect(5, 5);
-
-	ft::vector<int>::iterator		it = vect.begin();
-	ft::vector<int>::const_iterator	c_it = vect.begin();
-
-	if (it == c_it)
-		std::cout << "same" << std::endl;
-	else
-		std::cout << "diff" << std::endl;
 
 	return (0);
 }

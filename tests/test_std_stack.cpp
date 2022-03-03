@@ -10,7 +10,7 @@ void test_stack_constructor()
   std::vector<int> myvector (2,200);        // vector with 2 elements
 
   std::stack<int> first;                    // empty stack
-  std::stack<int, std::deque<int>> second(mydeque);         // stack initialized to copy of deque
+  std::stack<int, std::deque<int> > second(mydeque);         // stack initialized to copy of deque
 
   std::stack<int,std::vector<int> > third;  // empty stack using vector
   std::stack<int,std::vector<int> > fourth (myvector);
